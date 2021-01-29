@@ -3,7 +3,6 @@ import { ChakraProvider } from '@chakra-ui/react';
 import { AnimatePresence } from 'framer-motion';
 import Head from 'next/head';
 import '../styles/globals.scss';
-import Navbar from '../components/Navbar';
 
 function MyApp({ Component, pageProps, router }: AppProps) {
     return (
