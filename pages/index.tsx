@@ -3,7 +3,7 @@ import Head from 'next/head';
 import Navbar from '../components/Navbar';
 import tmdbFetch from 'utils/tmdbFetch';
 import { useEffect } from 'react';
-import { Box, Flex } from '@chakra-ui/react';
+import { Box, Flex, Heading } from '@chakra-ui/react';
 import TrailerCarousel from 'components/TrailerCarousel';
 import axios from 'axios';
 
@@ -24,17 +24,28 @@ const Home = ({ trending, config, videos }: HomeProps) => {
             <Navbar />
 
             <Flex
-                p="1rem 1rem"
+                p="2rem 1rem"
                 direction="column"
                 maxWidth="1250px"
                 margin="auto"
-                alignItems="center"
             >
+                <Heading size="lg" as="h1" alignSelf="flex-start" mb="1rem">
+                    Trending Today
+                </Heading>
                 <TrailerCarousel
                     results={trending.results}
                     config={config}
                     trailers={videos}
                 />
+                <Heading
+                    size="lg"
+                    as="h1"
+                    alignSelf="flex-start"
+                    mb="1rem"
+                    my="1rem"
+                >
+                    Popular
+                </Heading>
             </Flex>
         </>
     );
