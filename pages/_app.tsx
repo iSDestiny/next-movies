@@ -3,6 +3,7 @@ import { ChakraProvider } from '@chakra-ui/react';
 import { AnimatePresence } from 'framer-motion';
 import Head from 'next/head';
 import '../styles/globals.scss';
+import 'pure-react-carousel/dist/react-carousel.es.css';
 
 function MyApp({ Component, pageProps, router }: AppProps) {
     return (

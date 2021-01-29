@@ -67,16 +67,16 @@ const Navbar = () => {
                                     >
                                         Next Movies
                                         {/* <Image
-                                        priority
-                                        width="220"
-                                        height="50"
-                                        alt="personal brand logo"
-                                        src={
-                                            colorMode === 'light'
-                                                ? '/static/logos/brand/j-full-logo-transparent-black.png'
-                                                : '/static/logos/brand/j-full-logo-transparent-white.png'
-                                        }
-                                    /> */}
+                                            priority
+                                            width="220"
+                                            height="50"
+                                            alt="personal brand logo"
+                                            src={
+                                                colorMode === 'light'
+                                                    ? '/static/logos/brand/j-full-logo-transparent-black.png'
+                                                    : '/static/logos/brand/j-full-logo-transparent-white.png'
+                                            }
+                                        /> */}
                                     </Link>
                                 </NextLink>
                             </Box>
