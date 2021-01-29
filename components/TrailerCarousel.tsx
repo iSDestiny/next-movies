@@ -1,4 +1,12 @@
-import { Box, Icon } from '@chakra-ui/react';
+import {
+    Box,
+    Flex,
+    Heading,
+    Icon,
+    Link,
+    Tooltip,
+    VStack
+} from '@chakra-ui/react';
 import {
     CarouselProvider,
     Slider,
@@ -15,6 +23,7 @@ import VideoModal from './VideoModal';
 import { FaAngleLeft, FaAngleRight, FaPlay } from 'react-icons/fa';
 import { GrPrevious, GrNext } from 'react-icons/gr';
 import MotionBox from './MotionBox';
+import NextLink from 'next/link';
 
 interface TrailerCarouselProps {
     results: Trending['results'];
@@ -32,6 +41,7 @@ const TrailerCarousel = ({
         [...Array(trailers.length).keys()].map(() => false)
     );
     const [isHover, setIsHover] = useState(false);
+    const [isHoverPoster, setIsHoverPoster] = useState(false);
 
     const setTrailerMode = (index: number, status: boolean) => {
         setTrailerModes((prev) => {
@@ -50,15 +60,24 @@ const TrailerCarousel = ({
         }
     };
 
+    const posterHoverVariants = {
+        mouseInPoster: {
+            opacity: 1
+        },
+        mouseOutPoster: {
+            opacity: 0
+        }
+    };
+
     const totalSlides = results.filter(
         (res, index) => trailers[index].results.length > 0
     ).length;
 
     return (
-        <Box w="700px">
+        <Box w="1000px">
             <CarouselProvider
-                naturalSlideHeight={400}
-                naturalSlideWidth={700}
+                naturalSlideHeight={563}
+                naturalSlideWidth={1000}
                 totalSlides={totalSlides}
                 infinite
             >
@@ -68,9 +87,11 @@ const TrailerCarousel = ({
                             (
                                 {
                                     backdrop_path,
-                                    original_name,
+                                    name,
+                                    title,
                                     poster_path,
-                                    id
+                                    id,
+                                    media_type
                                 },
                                 index
                             ) => {
@@ -79,66 +100,183 @@ const TrailerCarousel = ({
                                     return (
                                         <Box key={id} cursor="pointer">
                                             <>
-                                                {/* <Image
-                                                    src={`${base_url}${poster_sizes[2]}${poster_path}`}
-                                                    alt={`${original_name} poster`}
-                                                    width={200}
-                                                    height={400}
-                                                /> */}
                                                 <Slide index={index}>
                                                     <Box
-                                                        onMouseEnter={() =>
-                                                            setIsHover(true)
-                                                        }
-                                                        onMouseLeave={() =>
-                                                            setIsHover(false)
-                                                        }
+                                                        height="100%"
+                                                        bgColor="rgba(0,0,0,0.8)"
                                                     >
                                                         <Box
-                                                            cursor="pointer"
-                                                            onClick={() =>
-                                                                setTrailerMode(
-                                                                    index,
-                                                                    true
+                                                            onMouseEnter={() =>
+                                                                setIsHover(true)
+                                                            }
+                                                            onMouseLeave={() =>
+                                                                setIsHover(
+                                                                    false
                                                                 )
                                                             }
                                                         >
-                                                            <Image
-                                                                src={`${base_url}${backdrop_sizes[1]}${backdrop_path}`}
-                                                                alt={`${original_name} backdrop`}
-                                                                width={780}
-                                                                height={400}
-                                                            />
+                                                            <Box
+                                                                cursor="pointer"
+                                                                onClick={() =>
+                                                                    setTrailerMode(
+                                                                        index,
+                                                                        true
+                                                                    )
+                                                                }
+                                                            >
+                                                                <Image
+                                                                    src={`${base_url}${backdrop_sizes[1]}${backdrop_path}`}
+                                                                    alt={`${
+                                                                        name ||
+                                                                        title
+                                                                    } backdrop`}
+                                                                    width={1000}
+                                                                    height={563}
+                                                                />
+                                                            </Box>
+                                                            <MotionBox
+                                                                whileHover={{
+                                                                    scale: 1.3
+                                                                }}
+                                                                animate={
+                                                                    isHover
+                                                                        ? 'mouseIn'
+                                                                        : 'mouseOut'
+                                                                }
+                                                                variants={
+                                                                    hoverVariants
+                                                                }
+                                                                onClick={() =>
+                                                                    setTrailerMode(
+                                                                        index,
+                                                                        true
+                                                                    )
+                                                                }
+                                                                position="absolute"
+                                                                top="42%"
+                                                                left="46%"
+                                                                zIndex="20"
+                                                            >
+                                                                <Icon
+                                                                    as={FaPlay}
+                                                                    fontSize="3.5rem"
+                                                                    color="white"
+                                                                />
+                                                            </MotionBox>
                                                         </Box>
-                                                        <MotionBox
-                                                            whileHover={{
-                                                                scale: 1.3
-                                                            }}
-                                                            animate={
-                                                                isHover
-                                                                    ? 'mouseIn'
-                                                                    : 'mouseOut'
-                                                            }
-                                                            variants={
-                                                                hoverVariants
-                                                            }
+                                                        <Flex
                                                             onClick={() =>
                                                                 setTrailerMode(
                                                                     index,
                                                                     true
                                                                 )
                                                             }
+                                                            onMouseEnter={() =>
+                                                                setIsHover(true)
+                                                            }
+                                                            onMouseLeave={() =>
+                                                                setIsHover(
+                                                                    false
+                                                                )
+                                                            }
+                                                            zIndex="5"
                                                             position="absolute"
-                                                            top="35%"
-                                                            left="46%"
-                                                            zIndex="20"
+                                                            bottom="0"
+                                                            bgGradient="linear(to-t, black, transparent)"
+                                                            height="200px"
+                                                            alignItems="flex-end"
+                                                            width="100%"
+                                                            color="white"
+                                                            p="1rem"
                                                         >
-                                                            <Icon
-                                                                as={FaPlay}
-                                                                fontSize="3.5rem"
-                                                                color="white"
-                                                            />
-                                                        </MotionBox>
+                                                            <NextLink
+                                                                href={
+                                                                    media_type ===
+                                                                    'movie'
+                                                                        ? `/movies/${id}`
+                                                                        : `/tv/${id}`
+                                                                }
+                                                                passHref
+                                                            >
+                                                                <Link
+                                                                    height="230px"
+                                                                    onMouseEnter={() => {
+                                                                        setIsHoverPoster(
+                                                                            true
+                                                                        );
+                                                                        setIsHover(
+                                                                            false
+                                                                        );
+                                                                    }}
+                                                                    onMouseLeave={() => {
+                                                                        setIsHover(
+                                                                            true
+                                                                        );
+                                                                        setIsHoverPoster(
+                                                                            false
+                                                                        );
+                                                                    }}
+                                                                    onClick={(
+                                                                        e
+                                                                    ) =>
+                                                                        e.stopPropagation()
+                                                                    }
+                                                                    position="relative"
+                                                                >
+                                                                    <Image
+                                                                        src={`${base_url}${poster_sizes[1]}${poster_path}`}
+                                                                        alt={`${
+                                                                            name ||
+                                                                            title
+                                                                        } poster`}
+                                                                        width={
+                                                                            154
+                                                                        }
+                                                                        height={
+                                                                            230
+                                                                        }
+                                                                    />
+                                                                    <MotionBox
+                                                                        zIndex="5"
+                                                                        height="100%"
+                                                                        width="100%"
+                                                                        position="absolute"
+                                                                        top="0"
+                                                                        bgColor="rgba(0,0,0,0.3)"
+                                                                        variants={
+                                                                            posterHoverVariants
+                                                                        }
+                                                                        animate={
+                                                                            isHoverPoster
+                                                                                ? 'mouseInPoster'
+                                                                                : 'mouseOutPoster'
+                                                                        }
+                                                                    />
+                                                                </Link>
+                                                            </NextLink>
+                                                            <VStack
+                                                                spacing="0.5rem"
+                                                                alignItems="flex-start"
+                                                                ml="2rem"
+                                                            >
+                                                                <Heading
+                                                                    as="h1"
+                                                                    size="lg"
+                                                                >
+                                                                    {name ||
+                                                                        title}
+                                                                </Heading>
+                                                                <Heading
+                                                                    as="h2"
+                                                                    size="md"
+                                                                >
+                                                                    {
+                                                                        results[0]
+                                                                            .name
+                                                                    }
+                                                                </Heading>
+                                                            </VStack>
+                                                        </Flex>
                                                     </Box>
                                                 </Slide>
                                             </>
@@ -159,7 +297,7 @@ const TrailerCarousel = ({
                     </Slider>
                     <Box
                         position="absolute"
-                        top="40%"
+                        top="45%"
                         left="1rem"
                         color="white"
                         zIndex="4"
@@ -170,7 +308,7 @@ const TrailerCarousel = ({
                     </Box>
                     <Box
                         position="absolute"
-                        top="40%"
+                        top="45%"
                         right="1rem"
                         color="white"
                         zIndex="4"
