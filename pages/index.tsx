@@ -26,7 +26,7 @@ const Home = ({ trending, config, videos }: HomeProps) => {
             <Flex
                 p="2rem 1rem"
                 direction="column"
-                maxWidth="1250px"
+                maxWidth="1400px"
                 margin="auto"
             >
                 <Heading size="lg" as="h1" alignSelf="flex-start" mb="1rem">

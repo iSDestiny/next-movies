@@ -43,7 +43,7 @@ const Navbar = () => {
                         as="nav"
                         justify="space-between"
                         align="center"
-                        maxW="1200px"
+                        maxW="1400px"
                         margin="auto"
                         padding="0 1rem"
                         height="65px"

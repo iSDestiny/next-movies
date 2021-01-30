@@ -71,8 +71,8 @@ const CarouselSlide = ({
                                 <Image
                                     src={`${base_url}${backdrop_sizes[1]}${backdrop_path}`}
                                     alt={`${name || title} backdrop`}
-                                    width={1000}
-                                    height={563}
+                                    layout="fill"
+                                    objectFit="fill"
                                 />
                             </Box>
                             <MotionBox
@@ -117,6 +117,7 @@ const CarouselSlide = ({
                                 passHref
                             >
                                 <Link
+                                    flexShrink={0}
                                     height="230px"
                                     onMouseEnter={() => {
                                         setIsHoverPoster(true);
