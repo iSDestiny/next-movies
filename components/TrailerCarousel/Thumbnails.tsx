@@ -2,8 +2,14 @@ import { Box, Stack } from '@chakra-ui/react';
 import Image from 'next/image';
 import { Dot } from 'pure-react-carousel';
 import classes from './Thumbnails.module.scss';
+import dynamic from 'next/dynamic';
 import { CarouselContext } from 'pure-react-carousel';
 import { useContext, useEffect, useState } from 'react';
+
+const ScrollIntoViewIfNeeded = dynamic(
+    () => import('react-scroll-into-view-if-needed'),
+    { ssr: false }
+);
 
 interface ThumbnailsProps {
     config: TMDBConfig;
@@ -41,30 +47,31 @@ const Thumbnails = ({ config, trendingResults, height }: ThumbnailsProps) => {
             width={{ base: '100%', lg: 'auto' }}
         >
             {trendingResults.map(({ poster_path, id }, index) => (
-                <Box position="relative">
-                    <Box
-                        key={id}
-                        as={Dot}
-                        slide={index}
-                        p="5px"
-                        flexShrink={0}
-                        height="137px"
-                    >
-                        <Image
-                            src={`${base_url}${poster_sizes[0]}${poster_path}`}
-                            width={92}
-                            height={137}
+                <Box position="relative" key={id}>
+                    <ScrollIntoViewIfNeeded active={index === currentSlide}>
+                        <Box
+                            as={Dot}
+                            slide={index}
+                            p="5px"
+                            flexShrink={0}
+                            height="137px"
+                        >
+                            <Image
+                                src={`${base_url}${poster_sizes[0]}${poster_path}`}
+                                width={92}
+                                height={137}
+                            />
+                        </Box>
+                        <Box
+                            display={index === currentSlide ? 'block' : 'none'}
+                            zIndex="1"
+                            position="absolute"
+                            bgColor="rgba(255,255,255,0.5)"
+                            top="0"
+                            width="100%"
+                            height="100%"
                         />
-                    </Box>
-                    <Box
-                        display={index === currentSlide ? 'block' : 'none'}
-                        zIndex="1"
-                        position="absolute"
-                        bgColor="rgba(255,255,255,0.4)"
-                        top="0"
-                        width="100%"
-                        height="100%"
-                    />
+                    </ScrollIntoViewIfNeeded>
                 </Box>
             ))}
         </Stack>
