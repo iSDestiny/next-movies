@@ -11,13 +11,38 @@ interface HomeProps {
     trending: Trending;
     config: TMDBConfig;
     videos: Video[];
+    popularMovies: Movie[];
+    popularTVShows: TVShow[];
+    topRatedMovies: Movie[];
+    topRatedTVShows: TVShow[];
+    upcomingMovies: Movie[];
+    nowPlayingMovies: Movie[];
+    airingTodayTVShows: TVShow[];
+    onTheAirTVShows: TVShow[];
 }
 
-const Home = ({ trending, config, videos }: HomeProps) => {
+const Home = ({
+    trending,
+    config,
+    videos,
+    popularTVShows,
+    popularMovies,
+    topRatedMovies,
+    topRatedTVShows,
+    upcomingMovies,
+    nowPlayingMovies,
+    airingTodayTVShows,
+    onTheAirTVShows
+}: HomeProps) => {
     useEffect(() => {
         console.log(trending);
         console.log(config);
         console.log(videos);
+        console.log(popularTVShows);
+        console.log(popularMovies);
+        console.log(topRatedMovies);
+        console.log(nowPlayingMovies);
+        console.log(airingTodayTVShows);
     }, []);
     return (
         <>
@@ -53,16 +78,44 @@ const Home = ({ trending, config, videos }: HomeProps) => {
 
 export const getStaticProps: GetStaticProps = async (context) => {
     let trending: Trending | null;
+    let upcomingMovies: Movie[] | null;
+    let nowPlayingMovies: Movie[] | null;
+    let airingTodayTVShows: TVShow[] | null;
+    let onTheAirTVShows: TVShow[] | null;
+    let popularMovies: Movie[] | null;
+    let popularTVShows: TVShow[] | null;
+    let topRatedMovies: Movie[] | null;
+    let topRatedTVShows: TVShow[] | null;
     let config: TMDBConfig | null;
     let videos: Video[] | null;
 
     try {
-        const { data: trendingData }: { data: Trending } = await tmdbFetch.get(
-            '/trending/all/day'
-        );
-        const { data: configData }: { data: TMDBConfig } = await tmdbFetch.get(
-            '/configuration'
-        );
+        const { data: trendingData } = await tmdbFetch.get('/trending/all/day');
+        const { data: configData } = await tmdbFetch.get('/configuration');
+        const {
+            data: { results: upcomingMovieData }
+        } = await tmdbFetch.get('/movie/upcoming');
+        const {
+            data: { results: nowPlayingMovieData }
+        } = await tmdbFetch.get('/movie/now_playing');
+        const {
+            data: { results: onTheAirTVShowData }
+        } = await tmdbFetch.get('/tv/on_the_air');
+        const {
+            data: { results: airingTodayTVShowData }
+        } = await tmdbFetch.get('/tv/airing_today');
+        const {
+            data: { results: popularMovieData }
+        } = await tmdbFetch.get('/movie/popular');
+        const {
+            data: { results: popularTVShowData }
+        } = await tmdbFetch.get('/tv/popular');
+        const {
+            data: { results: topRatedMovieData }
+        } = await tmdbFetch.get('/movie/top_rated');
+        const {
+            data: { results: topRatedTVShowData }
+        } = await tmdbFetch.get('/tv/top_rated');
         const videoRes = await Promise.all(
             trendingData.results.map(async ({ id, media_type }) => {
                 if (media_type === 'movie')
@@ -73,6 +126,14 @@ export const getStaticProps: GetStaticProps = async (context) => {
         );
         const videoData = videoRes.map(({ data }) => data);
 
+        upcomingMovies = upcomingMovieData;
+        nowPlayingMovies = nowPlayingMovieData;
+        airingTodayTVShows = airingTodayTVShowData;
+        onTheAirTVShows = onTheAirTVShowData;
+        popularMovies = popularMovieData;
+        popularTVShows = popularTVShowData;
+        topRatedMovies = topRatedMovieData;
+        topRatedTVShows = topRatedTVShowData;
         videos = videoData;
         trending = trendingData;
         config = configData;
@@ -81,7 +142,19 @@ export const getStaticProps: GetStaticProps = async (context) => {
     }
 
     return {
-        props: { trending, config, videos },
+        props: {
+            trending,
+            config,
+            videos,
+            popularMovies,
+            popularTVShows,
+            topRatedMovies,
+            topRatedTVShows,
+            upcomingMovies,
+            nowPlayingMovies,
+            airingTodayTVShows,
+            onTheAirTVShows
+        },
         revalidate: 3600
     };
 };

@@ -29,6 +29,7 @@ const VideoModal = ({ url, name, isOpen, onClose }: VideoModalProps) => {
                             url={url}
                             width={1280}
                             height={720}
+                            playing
                             controls
                         />
                     </ModalBody>
