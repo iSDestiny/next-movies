@@ -120,7 +120,10 @@ const TrailerCarousel = ({
                     borderRadius="20%"
                 >
                     <ButtonBack>
-                        <Icon as={FaAngleLeft} fontSize="2.5rem" />
+                        <Icon
+                            as={FaAngleLeft}
+                            fontSize={['1.5rem', '2rem', '2.5rem']}
+                        />
                     </ButtonBack>
                 </Box>
                 <Box
@@ -134,7 +137,10 @@ const TrailerCarousel = ({
                     borderRadius="20%"
                 >
                     <ButtonNext>
-                        <Icon as={FaAngleRight} fontSize="2.5rem" />
+                        <Icon
+                            as={FaAngleRight}
+                            fontSize={['1.5rem', '2rem', '2.5rem']}
+                        />
                     </ButtonNext>
                 </Box>
             </Box>

@@ -69,7 +69,7 @@ const CarouselSlide = ({
                                 onClick={() => setTrailerMode(index, true)}
                             >
                                 <Image
-                                    src={`${base_url}${backdrop_sizes[1]}${backdrop_path}`}
+                                    src={`${base_url}${backdrop_sizes[2]}${backdrop_path}`}
                                     alt={`${name || title} backdrop`}
                                     layout="fill"
                                     objectFit="fill"
@@ -83,13 +83,14 @@ const CarouselSlide = ({
                                 variants={hoverVariants}
                                 onClick={() => setTrailerMode(index, true)}
                                 position="absolute"
-                                top="42%"
-                                left="46%"
+                                top="45%"
+                                left="47%"
                                 zIndex="20"
                             >
                                 <Icon
                                     as={FaPlay}
-                                    fontSize="3.5rem"
+                                    // fontSize={{ base: '2rem', sm: '3rem' }}
+                                    fontSize={['2rem', '2.5rem', '3rem']}
                                     color="white"
                                 />
                             </MotionBox>
@@ -102,11 +103,11 @@ const CarouselSlide = ({
                             position="absolute"
                             bottom="0"
                             bgGradient="linear(to-t, black, transparent)"
-                            height="200px"
+                            height={{ base: '100px', md: '200px' }}
                             alignItems="flex-end"
                             width="100%"
                             color="white"
-                            p="1rem"
+                            p={['0.5rem', '1rem']}
                         >
                             <NextLink
                                 href={
@@ -118,7 +119,8 @@ const CarouselSlide = ({
                             >
                                 <Link
                                     flexShrink={0}
-                                    height="230px"
+                                    height={['90px', 134, 170, 230]}
+                                    width={['60px', 90, 114, 154]}
                                     onMouseEnter={() => {
                                         setIsHoverPoster(true);
                                         setIsHover(false);
@@ -133,8 +135,8 @@ const CarouselSlide = ({
                                     <Image
                                         src={`${base_url}${poster_sizes[1]}${poster_path}`}
                                         alt={`${name || title} poster`}
-                                        width={154}
-                                        height={230}
+                                        layout="fill"
+                                        objectFit="contain"
                                     />
                                     <MotionBox
                                         zIndex="5"
@@ -153,14 +155,20 @@ const CarouselSlide = ({
                                 </Link>
                             </NextLink>
                             <VStack
-                                spacing="0.5rem"
+                                spacing={['0.2rem', '0.3rem', '0.5rem']}
                                 alignItems="flex-start"
-                                ml="2rem"
+                                ml={['0.5rem', '1rem', '1.5rem', '2rem']}
                             >
-                                <Heading as="h1" size="lg">
+                                <Heading
+                                    as="h1"
+                                    fontSize={['16px', '20px', '24px', '28px']}
+                                >
                                     {name || title}
                                 </Heading>
-                                <Heading as="h2" size="md">
+                                <Heading
+                                    as="h2"
+                                    fontSize={['10px', '14px', '20px', '24px']}
+                                >
                                     {videos[0].name}
                                 </Heading>
                             </VStack>
