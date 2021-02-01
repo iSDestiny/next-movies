@@ -5,6 +5,7 @@ import {
     Flex,
     Heading,
     HStack,
+    useBreakpointValue,
     VStack
 } from '@chakra-ui/react';
 import { useState } from 'react';
@@ -24,14 +25,27 @@ interface HomeSectionProps {
 function HomeSection({ heading, carousels, config }: HomeSectionProps) {
     const [currentCarousel, setCurrentCarousel] = useState(0);
     const { base_url, poster_sizes } = config.images;
+    const headingSize = useBreakpointValue(['sm', 'md', 'lg']);
+    const buttonSize = useBreakpointValue({ base: 'sm', lg: 'md' });
 
     return (
-        <VStack mb="1rem" mt="2rem" spacing="1rem" align="flex-start">
-            <HStack spacing="1.5rem">
-                <Heading size="lg" as="h1" alignSelf="flex-start">
+        <VStack
+            as="section"
+            mb="1rem"
+            mt="2.5rem"
+            spacing="1rem"
+            align="flex-start"
+        >
+            <HStack spacing="1.5rem" align="center" justify="flex-start">
+                <Heading
+                    size={headingSize}
+                    as="h1"
+                    alignSelf="flex-start"
+                    my="auto"
+                >
                     {heading}
                 </Heading>
-                <ButtonGroup size="md" isAttached>
+                <ButtonGroup size={buttonSize} isAttached>
                     {carousels.map(({ name }, index) => (
                         <Button
                             key={name}

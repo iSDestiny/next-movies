@@ -51,19 +51,22 @@ const Home = ({
             <Navbar />
 
             <Flex
+                as="main"
                 p="2rem 1rem"
                 direction="column"
                 maxWidth="1400px"
                 margin="auto"
             >
-                <Heading size="lg" as="h1" alignSelf="flex-start" mb="1rem">
-                    Trending Today
-                </Heading>
-                <TrailerCarousel
-                    results={trending.results}
-                    config={config}
-                    trailers={videos}
-                />
+                <section>
+                    <Heading size="lg" alignSelf="flex-start" mb="1rem">
+                        Trending Today
+                    </Heading>
+                    <TrailerCarousel
+                        results={trending.results}
+                        config={config}
+                        trailers={videos}
+                    />
+                </section>
                 <HomeSection
                     heading="Popular"
                     config={config}

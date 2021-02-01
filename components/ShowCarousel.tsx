@@ -1,4 +1,4 @@
-import { Box, Heading, Icon } from '@chakra-ui/react';
+import { Box, Heading, Icon, useBreakpointValue } from '@chakra-ui/react';
 import {
     ButtonBack,
     ButtonNext,
@@ -22,16 +22,18 @@ function ShowCarousel({
     base_url,
     poster_sizes
 }: ShowCarouselProps) {
+    const noOfSlides = useBreakpointValue([3, 4, 5, 6, 7]);
+
     return (
         <Box width="100%">
             <Box
                 as={CarouselProvider}
-                naturalSlideHeight={2000}
+                naturalSlideHeight={1900}
                 naturalSlideWidth={1078}
                 totalSlides={items.length}
-                step={7}
-                dragStep={7}
-                visibleSlides={7}
+                step={noOfSlides}
+                dragStep={noOfSlides}
+                visibleSlides={noOfSlides}
                 infinite
             >
                 <Box position="relative">
@@ -41,7 +43,7 @@ function ShowCarousel({
                                 { title, name, id, vote_average, poster_path },
                                 index
                             ) => (
-                                <Slide key={id} index={index}>
+                                <Box as={Slide} key={id} index={index}>
                                     <Box>
                                         <Image
                                             src={`${base_url}${poster_sizes[2]}${poster_path}`}
@@ -49,11 +51,14 @@ function ShowCarousel({
                                             height={276}
                                             width={185}
                                         />
-                                        <Heading size="md">
+                                        <Heading
+                                            fontSize="1.1rem"
+                                            noOfLines={3}
+                                        >
                                             {name || title}
                                         </Heading>
                                     </Box>
-                                </Slide>
+                                </Box>
                             )
                         )}
                     </Slider>
