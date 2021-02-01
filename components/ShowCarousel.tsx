@@ -1,4 +1,4 @@
-import { Box, Heading, Icon, useBreakpointValue } from '@chakra-ui/react';
+import { Link, Box, Heading, Icon, useBreakpointValue } from '@chakra-ui/react';
 import {
     ButtonBack,
     ButtonNext,
@@ -7,6 +7,7 @@ import {
     Slide
 } from 'pure-react-carousel';
 import Image from 'next/image';
+import NextLink from 'next/link';
 import { FaAngleLeft, FaAngleRight } from 'react-icons/fa';
 
 interface ShowCarouselProps {
@@ -44,20 +45,29 @@ function ShowCarousel({
                                 index
                             ) => (
                                 <Box as={Slide} key={id} index={index}>
-                                    <Box>
-                                        <Image
-                                            src={`${base_url}${poster_sizes[2]}${poster_path}`}
-                                            alt={`${name || title} poster`}
-                                            height={276}
-                                            width={185}
-                                        />
-                                        <Heading
-                                            fontSize="1.1rem"
-                                            noOfLines={3}
-                                        >
-                                            {name || title}
-                                        </Heading>
-                                    </Box>
+                                    <NextLink
+                                        href={
+                                            title
+                                                ? `/movies/${id}`
+                                                : `/tv/${id}`
+                                        }
+                                        passHref
+                                    >
+                                        <Link>
+                                            <Image
+                                                src={`${base_url}${poster_sizes[2]}${poster_path}`}
+                                                alt={`${name || title} poster`}
+                                                height={276}
+                                                width={185}
+                                            />
+                                            <Heading
+                                                fontSize="1.1rem"
+                                                noOfLines={3}
+                                            >
+                                                {name || title}
+                                            </Heading>
+                                        </Link>
+                                    </NextLink>
                                 </Box>
                             )
                         )}

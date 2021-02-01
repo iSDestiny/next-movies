@@ -8,6 +8,7 @@ import TrailerCarousel from 'components/TrailerCarousel';
 import axios from 'axios';
 import ShowCarousel from 'components/ShowCarousel';
 import HomeSection from 'components/HomeSection';
+import Footer from 'components/Footer';
 
 interface HomeProps {
     trending: Trending;
@@ -100,6 +101,7 @@ const Home = ({
                     ]}
                 />
             </Flex>
+            <Footer />
         </>
     );
 };
