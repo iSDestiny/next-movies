@@ -1,4 +1,4 @@
-import { Box, Heading } from '@chakra-ui/react';
+import { Box, Heading, Icon } from '@chakra-ui/react';
 import {
     ButtonBack,
     ButtonNext,
@@ -7,6 +7,7 @@ import {
     Slide
 } from 'pure-react-carousel';
 import Image from 'next/image';
+import { FaAngleLeft, FaAngleRight } from 'react-icons/fa';
 
 interface ShowCarouselProps {
     name: string;
@@ -25,7 +26,7 @@ function ShowCarousel({
         <Box width="100%">
             <Box
                 as={CarouselProvider}
-                naturalSlideHeight={2400}
+                naturalSlideHeight={2000}
                 naturalSlideWidth={1078}
                 totalSlides={items.length}
                 step={7}
@@ -33,7 +34,7 @@ function ShowCarousel({
                 visibleSlides={7}
                 infinite
             >
-                <Box>
+                <Box position="relative">
                     <Slider>
                         {items.map(
                             (
@@ -56,9 +57,41 @@ function ShowCarousel({
                             )
                         )}
                     </Slider>
-                    <Box>
-                        <ButtonBack>back</ButtonBack>
-                        <ButtonNext>next</ButtonNext>
+                    <Box
+                        p="4px"
+                        position="absolute"
+                        top="25%"
+                        left="1rem"
+                        color="white"
+                        zIndex="4"
+                        display={{ base: 'none', md: 'block' }}
+                        bgColor="rgba(0,0,0,0.7)"
+                        borderRadius="20%"
+                    >
+                        <ButtonBack>
+                            <Icon
+                                as={FaAngleLeft}
+                                fontSize={['1.5rem', '2rem', '2.5rem']}
+                            />
+                        </ButtonBack>
+                    </Box>
+                    <Box
+                        p="4px"
+                        position="absolute"
+                        top="25%"
+                        right="1.35rem"
+                        color="white"
+                        zIndex="4"
+                        display={{ base: 'none', md: 'block' }}
+                        bgColor="rgba(0,0,0,0.7)"
+                        borderRadius="20%"
+                    >
+                        <ButtonNext>
+                            <Icon
+                                as={FaAngleRight}
+                                fontSize={['1.5rem', '2rem', '2.5rem']}
+                            />
+                        </ButtonNext>
                     </Box>
                 </Box>
             </Box>
