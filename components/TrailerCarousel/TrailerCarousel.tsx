@@ -11,10 +11,8 @@ import {
 import {
     CarouselProvider,
     Slider,
-    Slide,
     ButtonBack,
-    ButtonNext,
-    Image as CarouselImage
+    ButtonNext
 } from 'pure-react-carousel';
 import ModalVideo from 'react-modal-video';
 import Image from 'next/image';

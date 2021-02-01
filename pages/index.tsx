@@ -6,6 +6,8 @@ import { useEffect } from 'react';
 import { Box, Flex, Heading } from '@chakra-ui/react';
 import TrailerCarousel from 'components/TrailerCarousel';
 import axios from 'axios';
+import ShowCarousel from 'components/ShowCarousel';
+import HomeSection from 'components/HomeSection';
 
 interface HomeProps {
     trending: Trending;
@@ -62,15 +64,38 @@ const Home = ({
                     config={config}
                     trailers={videos}
                 />
-                <Heading
-                    size="lg"
-                    as="h1"
-                    alignSelf="flex-start"
-                    mb="1rem"
-                    my="1rem"
-                >
-                    Popular
-                </Heading>
+                <HomeSection
+                    heading="Popular"
+                    config={config}
+                    carousels={[
+                        { name: 'Movies', items: popularMovies },
+                        { name: 'TV', items: popularTVShows }
+                    ]}
+                />
+                <HomeSection
+                    heading="Top Rated"
+                    config={config}
+                    carousels={[
+                        { name: 'Movies', items: topRatedMovies },
+                        { name: 'TV', items: topRatedTVShows }
+                    ]}
+                />
+                <HomeSection
+                    heading="Explore Movies"
+                    config={config}
+                    carousels={[
+                        { name: 'Now Playing', items: nowPlayingMovies },
+                        { name: 'Upcoming', items: upcomingMovies }
+                    ]}
+                />
+                <HomeSection
+                    heading="Explore TV Shows"
+                    config={config}
+                    carousels={[
+                        { name: 'Airing Today', items: airingTodayTVShows },
+                        { name: 'Airing This Week', items: onTheAirTVShows }
+                    ]}
+                />
             </Flex>
         </>
     );
