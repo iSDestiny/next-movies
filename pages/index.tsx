@@ -3,7 +3,7 @@ import Head from 'next/head';
 import Navbar from '../components/Navbar';
 import tmdbFetch from 'utils/tmdbFetch';
 import { useEffect } from 'react';
-import { Box, Flex, Heading } from '@chakra-ui/react';
+import { Box, Flex, Heading, useBreakpointValue } from '@chakra-ui/react';
 import TrailerCarousel from 'components/TrailerCarousel';
 import axios from 'axios';
 import ShowCarousel from 'components/ShowCarousel';
@@ -37,6 +37,7 @@ const Home = ({
     airingTodayTVShows,
     onTheAirTVShows
 }: HomeProps) => {
+    const headingSize = useBreakpointValue(['sm', 'md', 'lg']);
     useEffect(() => {
         console.log(trending);
         console.log(config);
@@ -59,8 +60,12 @@ const Home = ({
                 margin="auto"
             >
                 <section>
-                    <Heading size="lg" alignSelf="flex-start" mb="1rem">
-                        Trending Today
+                    <Heading
+                        size={headingSize}
+                        alignSelf="flex-start"
+                        mb="1rem"
+                    >
+                        Trending
                     </Heading>
                     <TrailerCarousel
                         results={trending.results}

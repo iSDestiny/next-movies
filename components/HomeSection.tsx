@@ -8,7 +8,9 @@ import {
     useBreakpointValue,
     VStack
 } from '@chakra-ui/react';
+import { AnimatePresence } from 'framer-motion';
 import { useState } from 'react';
+import MotionBox from './MotionBox';
 import ShowCarousel from './ShowCarousel';
 
 interface CarouselProps {
@@ -29,13 +31,7 @@ function HomeSection({ heading, carousels, config }: HomeSectionProps) {
     const buttonSize = useBreakpointValue({ base: 'sm', lg: 'md' });
 
     return (
-        <VStack
-            as="section"
-            mb="1rem"
-            mt="2.5rem"
-            spacing="1rem"
-            align="flex-start"
-        >
+        <VStack as="section" mt="2.5rem" spacing="1rem" align="flex-start">
             <HStack spacing="1.5rem" align="center" justify="flex-start">
                 <Heading
                     size={headingSize}
@@ -66,6 +62,20 @@ function HomeSection({ heading, carousels, config }: HomeSectionProps) {
                 base_url={base_url}
                 poster_sizes={poster_sizes}
             />
+            {/* <AnimatePresence>
+                {carousels.map(({ name, items }, index) => {
+                    if (currentCarousel === index)
+                        return (
+                            <ShowCarousel
+                                name={name}
+                                items={items}
+                                base_url={base_url}
+                                poster_sizes={poster_sizes}
+                            />
+                        );
+                    return null;
+                })}
+            </AnimatePresence> */}
         </VStack>
     );
 }

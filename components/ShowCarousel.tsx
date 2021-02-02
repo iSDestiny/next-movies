@@ -1,4 +1,13 @@
-import { Link, Box, Heading, Icon, useBreakpointValue } from '@chakra-ui/react';
+import {
+    Link,
+    Box,
+    Text,
+    Heading,
+    Icon,
+    useBreakpointValue,
+    Flex,
+    Tooltip
+} from '@chakra-ui/react';
 import {
     ButtonBack,
     ButtonNext,
@@ -8,7 +17,10 @@ import {
 } from 'pure-react-carousel';
 import Image from 'next/image';
 import NextLink from 'next/link';
-import { FaAngleLeft, FaAngleRight } from 'react-icons/fa';
+import { FaAngleLeft, FaAngleRight, FaStar } from 'react-icons/fa';
+import MotionBox from './MotionBox';
+import { AnimatePresence } from 'framer-motion';
+import Rating from './Rating';
 
 interface ShowCarouselProps {
     name: string;
@@ -24,7 +36,7 @@ function ShowCarousel({
     poster_sizes
 }: ShowCarouselProps) {
     const noOfSlides = useBreakpointValue([3, 4, 5, 6, 7]);
-    const naturalHeight = useBreakpointValue([2100, 2080, 2050, 2000]);
+    const naturalHeight = useBreakpointValue([2300, 2200, 2200, 2200]);
 
     return (
         <Box width="100%">
@@ -38,43 +50,99 @@ function ShowCarousel({
                 visibleSlides={noOfSlides}
                 infinite
             >
+                {/* <AnimatePresence> */}
+
                 <Box position="relative">
                     <Slider>
                         {items.map(
                             (
-                                { title, name, id, vote_average, poster_path },
+                                {
+                                    title,
+                                    name,
+                                    id,
+                                    vote_average,
+                                    vote_count,
+                                    poster_path
+                                },
                                 index
                             ) => (
-                                <Box as={Slide} key={id} index={index}>
-                                    <NextLink
-                                        href={
-                                            title
-                                                ? `/movies/${id}`
-                                                : `/tv/${id}`
-                                        }
-                                        passHref
+                                <Box
+                                    as={Slide}
+                                    key={`${name}-${id}`}
+                                    index={index}
+                                >
+                                    <MotionBox
+                                        opacity="0"
+                                        animate={{ opacity: 1 }}
+                                        exit={{ opacity: 0 }}
+                                        transition={{ delay: 0.1 }}
                                     >
-                                        <Link>
-                                            <Image
-                                                src={`${base_url}${poster_sizes[2]}${poster_path}`}
-                                                alt={`${name || title} poster`}
-                                                height={276}
-                                                width={185}
-                                            />
-                                            <Heading
-                                                fontSize={[
-                                                    '0.75rem',
-                                                    '0.78rem',
-                                                    '0.95rem',
-                                                    '1rem',
-                                                    '1.1rem'
-                                                ]}
-                                                noOfLines={3}
+                                        <NextLink
+                                            href={
+                                                title
+                                                    ? `/movies/${id}`
+                                                    : `/tv/${id}`
+                                            }
+                                            passHref
+                                        >
+                                            <Link
+                                                _hover={{
+                                                    textDecor: 'none'
+                                                }}
                                             >
-                                                {name || title}
-                                            </Heading>
-                                        </Link>
-                                    </NextLink>
+                                                <Box position="relative">
+                                                    <Image
+                                                        src={`${base_url}${poster_sizes[2]}${poster_path}`}
+                                                        alt={`${
+                                                            name || title
+                                                        } poster`}
+                                                        height={276}
+                                                        width={185}
+                                                    />
+                                                </Box>
+                                                <Flex align="center" mb="2px">
+                                                    <Icon
+                                                        as={FaStar}
+                                                        fontSize={[
+                                                            '0.8rem',
+                                                            '1rem',
+                                                            '1.2rem',
+                                                            '1.4rem',
+                                                            '1.5rem'
+                                                        ]}
+                                                        color="yellow.400"
+                                                        mr="5px"
+                                                    />
+                                                    <Text
+                                                        fontSize={[
+                                                            '0.75rem',
+                                                            '0.78rem',
+                                                            '0.95rem',
+                                                            '1rem',
+                                                            '1.1rem'
+                                                        ]}
+                                                    >
+                                                        {vote_count > 0
+                                                            ? vote_average
+                                                            : 'NR'}
+                                                    </Text>
+                                                </Flex>
+
+                                                <Heading
+                                                    fontSize={[
+                                                        '0.7rem',
+                                                        '0.78rem',
+                                                        '0.95rem',
+                                                        '1rem',
+                                                        '1.1rem'
+                                                    ]}
+                                                    noOfLines={3}
+                                                >
+                                                    {name || title}
+                                                </Heading>
+                                            </Link>
+                                        </NextLink>
+                                    </MotionBox>
                                 </Box>
                             )
                         )}
@@ -116,6 +184,7 @@ function ShowCarousel({
                         </ButtonNext>
                     </Box>
                 </Box>
+                {/* </AnimatePresence> */}
             </Box>
         </Box>
     );
