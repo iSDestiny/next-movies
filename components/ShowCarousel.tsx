@@ -24,12 +24,13 @@ function ShowCarousel({
     poster_sizes
 }: ShowCarouselProps) {
     const noOfSlides = useBreakpointValue([3, 4, 5, 6, 7]);
+    const naturalHeight = useBreakpointValue([2100, 2080, 2050, 2000]);
 
     return (
         <Box width="100%">
             <Box
                 as={CarouselProvider}
-                naturalSlideHeight={1900}
+                naturalSlideHeight={naturalHeight}
                 naturalSlideWidth={1078}
                 totalSlides={items.length}
                 step={noOfSlides}
@@ -61,7 +62,13 @@ function ShowCarousel({
                                                 width={185}
                                             />
                                             <Heading
-                                                fontSize="1.1rem"
+                                                fontSize={[
+                                                    '0.75rem',
+                                                    '0.78rem',
+                                                    '0.95rem',
+                                                    '1rem',
+                                                    '1.1rem'
+                                                ]}
                                                 noOfLines={3}
                                             >
                                                 {name || title}
