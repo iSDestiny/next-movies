@@ -55,7 +55,7 @@ interface TMDBImages {
     still_sizes?: string[] | null;
 }
 
-interface Video {
+interface Videos {
     id: number;
     results?: VideoResultsEntity[] | null;
 }
@@ -117,7 +117,7 @@ interface MovieDetails {
     backdrop_path: string;
     belongs_to_collection: BelongsToCollection;
     budget: number;
-    genres?: GenresEntity[] | null;
+    genres?: GenresEntityOrKeywordsEntity[] | null;
     homepage: string;
     id: number;
     imdb_id: string;
@@ -138,6 +138,14 @@ interface MovieDetails {
     video: boolean;
     vote_average: number;
     vote_count: number;
+    release_dates: ReleaseDates;
+    reviews: Reviews;
+    similar: SimilarOrRecommendations;
+    images: Images;
+    credits: Credits;
+    videos: Videos;
+    recommendations: SimilarOrRecommendations;
+    keywords: Keywords;
 }
 interface BelongsToCollection {
     id: number;
@@ -145,7 +153,7 @@ interface BelongsToCollection {
     poster_path: string;
     backdrop_path: string;
 }
-interface GenresEntity {
+interface GenresEntityOrKeywordsEntity {
     id: number;
     name: string;
 }
@@ -163,6 +171,110 @@ interface SpokenLanguagesEntity {
     english_name: string;
     iso_639_1: string;
     name: string;
+}
+interface ReleaseDates {
+    results?: ResultsEntity[] | null;
+}
+interface ResultsEntity {
+    iso_3166_1: string;
+    release_dates?: ReleaseDatesEntity[] | null;
+}
+interface ReleaseDatesEntity {
+    certification: string;
+    iso_639_1?: string | null;
+    note: string;
+    release_date: string;
+    type: number;
+}
+interface Reviews {
+    page: number;
+    results?: ResultsEntity1[] | null;
+    total_pages: number;
+    total_results: number;
+}
+interface ResultsEntity1 {
+    author: string;
+    author_details: AuthorDetails;
+    content: string;
+    created_at: string;
+    id: string;
+    updated_at: string;
+    url: string;
+}
+interface AuthorDetails {
+    name: string;
+    username: string;
+    avatar_path?: string | null;
+    rating?: number | null;
+}
+interface SimilarOrRecommendations {
+    page: number;
+    results?: ResultsEntity2[] | null;
+    total_pages: number;
+    total_results: number;
+}
+interface ResultsEntity2 {
+    genre_ids?: number[] | null;
+    original_language: string;
+    original_title: string;
+    id: number;
+    video: boolean;
+    vote_average: number;
+    overview: string;
+    release_date: string;
+    vote_count: number;
+    title: string;
+    adult: boolean;
+    backdrop_path: string;
+    poster_path: string;
+    popularity: number;
+}
+interface Images {
+    backdrops?: BackdropsEntityOrPostersEntity[] | null;
+    posters?: BackdropsEntityOrPostersEntity[] | null;
+}
+interface BackdropsEntityOrPostersEntity {
+    aspect_ratio: number;
+    file_path: string;
+    height: number;
+    iso_639_1?: string | null;
+    vote_average: number;
+    vote_count: number;
+    width: number;
+}
+interface Credits {
+    cast?: CastEntity[] | null;
+    crew?: CrewEntity[] | null;
+}
+interface CastEntity {
+    adult: boolean;
+    gender: number;
+    id: number;
+    known_for_department: string;
+    name: string;
+    original_name: string;
+    popularity: number;
+    profile_path?: string | null;
+    cast_id: number;
+    character: string;
+    credit_id: string;
+    order: number;
+}
+interface CrewEntity {
+    adult: boolean;
+    gender: number;
+    id: number;
+    known_for_department: string;
+    name: string;
+    original_name: string;
+    popularity: number;
+    profile_path?: string | null;
+    credit_id: string;
+    department: string;
+    job: string;
+}
+interface Keywords {
+    keywords?: GenresEntityOrKeywordsEntity[] | null;
 }
 
 interface Credits {

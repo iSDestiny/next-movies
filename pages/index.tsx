@@ -16,7 +16,7 @@ import { ungzip } from 'node-gzip';
 interface HomeProps {
     trending: Trending;
     config: TMDBConfig;
-    videos: Video[];
+    videos: Videos[];
     popularMovies: Movie[];
     popularTVShows: TVShow[];
     topRatedMovies: Movie[];
@@ -137,7 +137,7 @@ export const getStaticProps: GetStaticProps = async (context) => {
     let topRatedMovies: Movie[] | null;
     let topRatedTVShows: TVShow[] | null;
     let config: TMDBConfig | null;
-    let videos: Video[] | null;
+    let videos: Videos[] | null;
 
     try {
         const { data: trendingData } = await tmdbFetch.get('/trending/all/day');
