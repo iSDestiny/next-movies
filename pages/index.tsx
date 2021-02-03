@@ -9,6 +9,9 @@ import axios from 'axios';
 import ShowCarousel from 'components/ShowCarousel';
 import HomeSection from 'components/HomeSection';
 import Footer from 'components/Footer';
+import tmdbFetchGzip from 'utils/tmdbFetchGzip';
+import addLeadingZeroToDate from 'utils/addLeadingZeroToDate';
+import { ungzip } from 'node-gzip';
 
 interface HomeProps {
     trending: Trending;
@@ -22,6 +25,7 @@ interface HomeProps {
     nowPlayingMovies: Movie[];
     airingTodayTVShows: TVShow[];
     onTheAirTVShows: TVShow[];
+    uncompressed?: string;
 }
 
 const Home = ({
@@ -35,7 +39,8 @@ const Home = ({
     upcomingMovies,
     nowPlayingMovies,
     airingTodayTVShows,
-    onTheAirTVShows
+    onTheAirTVShows,
+    uncompressed
 }: HomeProps) => {
     const headingSize = useBreakpointValue(['sm', 'md', 'lg']);
     useEffect(() => {
@@ -47,6 +52,16 @@ const Home = ({
         console.log(topRatedMovies);
         console.log(nowPlayingMovies);
         console.log(airingTodayTVShows);
+        const lines = uncompressed.trim().split('\n');
+        const json = lines.map((line) => {
+            try {
+                return JSON.parse(line).id;
+            } catch (err) {
+                console.log('err');
+                return 'err';
+            }
+        });
+        console.log(json);
     }, []);
     return (
         <>
@@ -176,6 +191,27 @@ export const getStaticProps: GetStaticProps = async (context) => {
         console.log(err);
     }
 
+    const date = new Date();
+    const month = date.getMonth() + 1;
+    const day = date.getDate();
+    const year = date.getFullYear();
+    const res = await tmdbFetchGzip.get(
+        `/movie_ids_${addLeadingZeroToDate(month)}_${addLeadingZeroToDate(
+            day
+        )}_${year}.json.gz`,
+        {
+            responseType: 'arraybuffer',
+            headers: {
+                'Accept-Encoding': 'gzip',
+                'Content-Encoding': 'gzip'
+                // 'Transfer-Encoding': 'gzip'
+            }
+        }
+    );
+
+    const uncompressed = await ungzip(res.data);
+    // console.log(uncompressed.toString());
+
     return {
         props: {
             trending,
@@ -188,7 +224,8 @@ export const getStaticProps: GetStaticProps = async (context) => {
             upcomingMovies,
             nowPlayingMovies,
             airingTodayTVShows,
-            onTheAirTVShows
+            onTheAirTVShows,
+            uncompressed: uncompressed.toString()
         },
         revalidate: 3600
     };

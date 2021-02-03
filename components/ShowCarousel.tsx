@@ -17,7 +17,7 @@ import {
 } from 'pure-react-carousel';
 import Image from 'next/image';
 import NextLink from 'next/link';
-import { FaAngleLeft, FaAngleRight, FaStar } from 'react-icons/fa';
+import { FaAngleLeft, FaAngleRight, FaRegStar, FaStar } from 'react-icons/fa';
 import MotionBox from './MotionBox';
 import { AnimatePresence } from 'framer-motion';
 import Rating from './Rating';
@@ -102,7 +102,11 @@ function ShowCarousel({
                                                 </Box>
                                                 <Flex align="center" mb="2px">
                                                     <Icon
-                                                        as={FaStar}
+                                                        as={
+                                                            vote_count > 0
+                                                                ? FaStar
+                                                                : FaRegStar
+                                                        }
                                                         fontSize={[
                                                             '0.8rem',
                                                             '1rem',

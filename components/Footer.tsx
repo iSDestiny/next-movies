@@ -9,7 +9,7 @@ const Footer = () => {
             direction="column"
             bgColor="gray.900"
             color="white"
-            p="2rem"
+            p={['1rem', '1rem', '1.5rem', '2rem']}
         >
             <Text>Created By Jason Bugallon</Text>
             <Text>

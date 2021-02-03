@@ -1,10 +1,13 @@
 declare module 'react-modal-video';
 
-interface Trending {
+interface QueryList {
     page: number;
-    results?: TrendingResultsEntity[] | null;
     total_pages: number;
     total_results: number;
+}
+
+interface Trending extends QueryList {
+    results?: TrendingResultsEntity[] | null;
 }
 
 interface TrendingResultsEntity {
@@ -27,6 +30,14 @@ interface TrendingResultsEntity {
     title?: string | null;
     adult?: boolean | null;
     release_date?: string | null;
+}
+
+interface PopularMovies extends QueryList {
+    results?: Movie[] | null;
+}
+
+interface PopularTVShows extends QueryList {
+    results?: TVShow[] | null;
 }
 
 interface TMDBConfig {
@@ -60,6 +71,14 @@ interface VideoResultsEntity {
     type: string;
 }
 
+interface BulkMovie {
+    adult: boolean;
+    id: number;
+    original_title: string;
+    popularity: number;
+    video: boolean;
+}
+
 interface Movie {
     adult: boolean;
     backdrop_path: string;
@@ -91,4 +110,110 @@ interface TVShow {
     poster_path: string;
     vote_average: number;
     vote_count: number;
+}
+
+interface MovieDetails {
+    adult: boolean;
+    backdrop_path: string;
+    belongs_to_collection: BelongsToCollection;
+    budget: number;
+    genres?: GenresEntity[] | null;
+    homepage: string;
+    id: number;
+    imdb_id: string;
+    original_language: string;
+    original_title: string;
+    overview: string;
+    popularity: number;
+    poster_path: string;
+    production_companies?: ProductionCompaniesEntity[] | null;
+    production_countries?: ProductionCountriesEntity[] | null;
+    release_date: string;
+    revenue: number;
+    runtime: number;
+    spoken_languages?: SpokenLanguagesEntity[] | null;
+    status: string;
+    tagline: string;
+    title: string;
+    video: boolean;
+    vote_average: number;
+    vote_count: number;
+}
+interface BelongsToCollection {
+    id: number;
+    name: string;
+    poster_path: string;
+    backdrop_path: string;
+}
+interface GenresEntity {
+    id: number;
+    name: string;
+}
+interface ProductionCompaniesEntity {
+    id: number;
+    logo_path?: string | null;
+    name: string;
+    origin_country: string;
+}
+interface ProductionCountriesEntity {
+    iso_3166_1: string;
+    name: string;
+}
+interface SpokenLanguagesEntity {
+    english_name: string;
+    iso_639_1: string;
+    name: string;
+}
+
+interface Credits {
+    id: number;
+    cast?: Cast[] | null;
+    crew?: Crew[] | null;
+}
+interface Cast {
+    adult: boolean;
+    gender: number;
+    id: number;
+    known_for_department: string;
+    name: string;
+    original_name: string;
+    popularity: number;
+    profile_path?: string | null;
+    cast_id: number;
+    character: string;
+    credit_id: string;
+    order: number;
+}
+interface Crew {
+    adult: boolean;
+    gender: number;
+    id: number;
+    known_for_department: string;
+    name: string;
+    original_name: string;
+    popularity: number;
+    profile_path?: string | null;
+    credit_id: string;
+    department: string;
+    job: string;
+}
+
+interface Keyword {
+    id: number;
+    name: string;
+}
+
+interface Images {
+    id: number;
+    backdrops?: BackdropsEntityOrPostersEntity[] | null;
+    posters?: BackdropsEntityOrPostersEntity[] | null;
+}
+interface BackdropsEntityOrPostersEntity {
+    aspect_ratio: number;
+    file_path: string;
+    height: number;
+    iso_639_1?: string | null;
+    vote_average: number;
+    vote_count: number;
+    width: number;
 }
