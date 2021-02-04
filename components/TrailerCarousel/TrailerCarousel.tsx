@@ -30,7 +30,7 @@ import useDimensions from 'react-cool-dimensions';
 interface TrailerCarouselProps {
     results: Trending['results'];
     config: TMDBConfig;
-    trailers: Video[];
+    trailers: Videos[];
 }
 
 const TrailerCarousel = ({
