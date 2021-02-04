@@ -57,6 +57,7 @@ const ShowHeader = ({
                 layout="fill"
                 objectFit="cover"
                 objectPosition="200px 0%"
+                priority
             />
             <Box
                 position="absolute"
@@ -85,6 +86,7 @@ const ShowHeader = ({
                         width={300}
                         height={450}
                         layout="fixed"
+                        priority
                     />
                 </Box>
                 <VStack

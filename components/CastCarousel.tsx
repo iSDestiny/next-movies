@@ -67,7 +67,7 @@ const CastCarousel = ({ cast, config }: CastCarouselProps) => {
                                         height={178}
                                         layout="fixed"
                                     />
-                                    <Box p="0.3rem">
+                                    <Box>
                                         <Heading size="sm">{name}</Heading>
                                         <Text fontSize="14px">{character}</Text>
                                     </Box>
@@ -88,10 +88,7 @@ const CastCarousel = ({ cast, config }: CastCarouselProps) => {
                     borderRadius="20%"
                 >
                     <ButtonBack>
-                        <Icon
-                            as={FaAngleLeft}
-                            fontSize={['1.5rem', '2rem', '2rem']}
-                        />
+                        <Icon as={FaAngleLeft} fontSize={['1.5rem', '2rem']} />
                     </ButtonBack>
                 </Box>
                 <Box
@@ -106,10 +103,7 @@ const CastCarousel = ({ cast, config }: CastCarouselProps) => {
                     borderRadius="20%"
                 >
                     <ButtonNext>
-                        <Icon
-                            as={FaAngleRight}
-                            fontSize={['1.5rem', '2rem', '2rem']}
-                        />
+                        <Icon as={FaAngleRight} fontSize={['1.5rem', '2rem']} />
                     </ButtonNext>
                 </Box>
             </Box>

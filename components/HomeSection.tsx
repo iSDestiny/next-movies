@@ -29,6 +29,8 @@ function HomeSection({ heading, carousels, config }: HomeSectionProps) {
     const { base_url, poster_sizes } = config.images;
     const headingSize = useBreakpointValue(['sm', 'md', 'lg']);
     const buttonSize = useBreakpointValue({ base: 'sm', lg: 'md' });
+    const noOfSlides = useBreakpointValue([3, 4, 5, 6, 7]);
+    const naturalHeight = useBreakpointValue([2300, 2200, 2200, 2200]);
 
     return (
         <VStack as="section" mt="2.5rem" spacing="1rem" align="flex-start">
@@ -61,6 +63,12 @@ function HomeSection({ heading, carousels, config }: HomeSectionProps) {
                 items={carousels[currentCarousel].items}
                 base_url={base_url}
                 poster_sizes={poster_sizes}
+                noOfSlides={noOfSlides}
+                naturalHeight={naturalHeight}
+                starSize={['0.8rem', '1rem', '1.2rem', '1.4rem', '1.5rem']}
+                ratingSize={['0.75rem', '0.78rem', '0.95rem', '1rem', '1.1rem']}
+                headingSize={['0.7rem', '0.78rem', '0.95rem', '1rem', '1.1rem']}
+                buttonSize={['1.5rem', '2rem', '2.5rem']}
             />
             {/* <AnimatePresence>
                 {carousels.map(({ name, items }, index) => {

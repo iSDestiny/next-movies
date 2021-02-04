@@ -24,6 +24,7 @@ import { FaPlay, FaRegStar, FaStar } from 'react-icons/fa';
 import VideoModal from 'components/VideoModal';
 import ShowHeader from 'components/ShowHeader';
 import CastCarousel from 'components/CastCarousel';
+import ShowCarousel from 'components/ShowCarousel';
 
 interface MovieProps {
     movieData: MovieDetails;
@@ -95,6 +96,50 @@ const Movie = ({ movieData, config }: MovieProps) => {
                 >
                     <VStack width="70%" spacing="2rem">
                         <CastCarousel cast={credits.cast} config={config} />
+                        {recommendations.length > 0 && (
+                            <VStack
+                                spacing="1rem"
+                                width="100%"
+                                align="flex-start"
+                                mb="1rem"
+                            >
+                                <Heading size="lg">Recommendations</Heading>
+                                <ShowCarousel
+                                    name="Recommendations"
+                                    items={recommendations}
+                                    base_url={base_url}
+                                    poster_sizes={poster_sizes}
+                                    noOfSlides={5}
+                                    naturalHeight={2100}
+                                    buttonSize={['1.5rem', '2rem']}
+                                    starSize={'1.2rem'}
+                                    ratingSize={'1rem'}
+                                    headingSize="0.9rem"
+                                />
+                            </VStack>
+                        )}
+                        {similar.length > 0 && (
+                            <VStack
+                                spacing="1rem"
+                                width="100%"
+                                align="flex-start"
+                                mb="1rem"
+                            >
+                                <Heading size="lg">Similar </Heading>
+                                <ShowCarousel
+                                    name="Recommendations"
+                                    items={similar}
+                                    base_url={base_url}
+                                    poster_sizes={poster_sizes}
+                                    noOfSlides={5}
+                                    naturalHeight={2100}
+                                    buttonSize={['1.5rem', '2rem']}
+                                    starSize={'1.2rem'}
+                                    ratingSize={'1rem'}
+                                    headingSize="0.9rem"
+                                />
+                            </VStack>
+                        )}
                     </VStack>
                     <VStack width="30%" spacing="2rem"></VStack>
                 </Flex>
