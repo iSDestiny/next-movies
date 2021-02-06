@@ -11,8 +11,8 @@ import {
     Tag,
     Wrap,
     WrapItem,
-    useBreakpointValue,
-    useColorMode
+    useColorMode,
+    useBreakpointValue
 } from '@chakra-ui/react';
 import Image from 'next/image';
 import { useState } from 'react';
@@ -68,6 +68,7 @@ const ShowHeader = ({
         '375px',
         '450px'
     ]);
+    const bgOpacity = useBreakpointValue({ base: '0', md: '0.84' });
     const [isTrailerOpen, setIsTrailerOpen] = useState(false);
     const { colorMode } = useColorMode();
     return (
@@ -78,7 +79,7 @@ const ShowHeader = ({
                     src={`${secure_base_url}${backdrop_sizes[3]}${backdrop_path}`}
                     layout="fill"
                     objectFit="cover"
-                    objectPosition="200px 0%"
+                    objectPosition={`${posterWidth} 0`}
                     priority
                 />
                 <Box
@@ -86,7 +87,7 @@ const ShowHeader = ({
                     zIndex="0"
                     width="100%"
                     height="100%"
-                    bgGradient="linear(to-r, rgba(0,0,0,1) 200px, rgba(0,0,0,0.84))"
+                    bgGradient={`linear(to-r, rgba(0,0,0,1) ${posterWidth}, rgba(0,0,0,${bgOpacity}))`}
                 />
                 <HStack
                     p="2rem 1rem"

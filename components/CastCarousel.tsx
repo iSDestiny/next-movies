@@ -78,7 +78,6 @@ const CastCarousel = ({ cast, config, headingSize }: CastCarouselProps) => {
                                         align="flex-start"
                                         // width="140px"
                                         // height="300px"
-                                        borderRadius="5px"
                                         // border="2px solid black"
                                         overflow="hidden"
                                     >
