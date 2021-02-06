@@ -12,6 +12,7 @@ interface SideDataItem {
     heading: string;
     data: string | number;
     isDollar?: boolean;
+    headingSize: string;
 }
 
 interface ShowSideDataProps {
@@ -20,16 +21,22 @@ interface ShowSideDataProps {
     budget: number;
     revenue: number;
     keywords: GenresEntityOrKeywordsEntity[];
+    headingSize: string;
 }
 
-const SideDataItem = ({ heading, data, isDollar }: SideDataItem) => {
+const SideDataItem = ({
+    heading,
+    headingSize,
+    data,
+    isDollar
+}: SideDataItem) => {
     const displayData = () => {
         if (isDollar) return `$${data.toLocaleString()}`;
         return data;
     };
     return (
         <Box>
-            <Heading as="h4" size="md">
+            <Heading as="h4" size={headingSize}>
                 {heading}
             </Heading>
             <Text>{data ? displayData() : '-'}</Text>
@@ -42,17 +49,36 @@ const ShowSideData = ({
     origLanguage,
     budget,
     revenue,
-    keywords
+    keywords,
+    headingSize
 }: ShowSideDataProps) => {
     return (
         // <VStack spacing="1rem">
         <>
-            <SideDataItem heading="Status" data={status} />
-            <SideDataItem heading="Original Language" data={origLanguage} />
-            <SideDataItem heading="Budget" data={budget} isDollar />
-            <SideDataItem heading="Revenue" data={revenue} isDollar />
+            <SideDataItem
+                heading="Status"
+                data={status}
+                headingSize={headingSize}
+            />
+            <SideDataItem
+                heading="Original Language"
+                data={origLanguage}
+                headingSize={headingSize}
+            />
+            <SideDataItem
+                heading="Budget"
+                data={budget}
+                isDollar
+                headingSize={headingSize}
+            />
+            <SideDataItem
+                heading="Revenue"
+                data={revenue}
+                isDollar
+                headingSize={headingSize}
+            />
             <Box>
-                <Heading as="h4" size="md" mb="0.5rem">
+                <Heading as="h4" size={headingSize} mb="0.5rem">
                     Keywords
                 </Heading>
                 <Wrap>

@@ -4,7 +4,8 @@ import {
     Box,
     VStack,
     Icon,
-    useColorMode
+    useColorMode,
+    useBreakpointValue
 } from '@chakra-ui/react';
 import {
     ButtonBack,
@@ -19,28 +20,45 @@ import { FaAngleLeft, FaAngleRight } from 'react-icons/fa';
 interface CastCarouselProps {
     cast: CastEntity[];
     config: TMDBConfig;
+    headingSize: string;
 }
 
-const CastCarousel = ({ cast, config }: CastCarouselProps) => {
+const CastCarousel = ({ cast, config, headingSize }: CastCarouselProps) => {
     const { secure_base_url, profile_sizes } = config.images;
     const { colorMode } = useColorMode();
-    const visibleSlides = 6;
+    const naturalHeight = useBreakpointValue([245, 250]);
+    const visibleSlides = useBreakpointValue([3, 4, 5, 5, 6]);
+    const nameSize = useBreakpointValue([
+        '0.7rem',
+        '0.75rem',
+        '0.85rem',
+        '0.85rem',
+        '1rem'
+    ]);
+    const characterSize = useBreakpointValue([
+        '0.65rem',
+        '0.7rem',
+        '0.8rem',
+        '0.8rem',
+        '0.95rem'
+    ]);
 
     return (
         <Box width="100%">
-            <Heading as="h2" size="lg" mb="1rem">
+            <Heading as="h2" size={headingSize} mb="1rem">
                 Cast
             </Heading>
             {cast.length > 0 ? (
                 <Box
                     position="relative"
                     as={CarouselProvider}
-                    naturalSlideHeight={220}
+                    naturalSlideHeight={naturalHeight}
                     naturalSlideWidth={138}
                     step={visibleSlides}
                     dragStep={visibleSlides}
                     visibleSlides={visibleSlides}
                     totalSlides={cast.length}
+                    infinite
                 >
                     <Box
                         as={Slider}
@@ -58,7 +76,7 @@ const CastCarousel = ({ cast, config }: CastCarouselProps) => {
                                 >
                                     <VStack
                                         align="flex-start"
-                                        width="140px"
+                                        // width="140px"
                                         // height="300px"
                                         borderRadius="5px"
                                         // border="2px solid black"
@@ -72,11 +90,12 @@ const CastCarousel = ({ cast, config }: CastCarouselProps) => {
                                             }
                                             width={138}
                                             height={178}
-                                            layout="fixed"
                                         />
                                         <Box>
-                                            <Heading size="sm">{name}</Heading>
-                                            <Text fontSize="14px">
+                                            <Heading as="p" fontSize={nameSize}>
+                                                {name}
+                                            </Heading>
+                                            <Text fontSize={characterSize}>
                                                 {character}
                                             </Text>
                                         </Box>

@@ -9,7 +9,9 @@ import {
     Divider,
     Icon,
     Button,
-    DarkMode
+    DarkMode,
+    Stack,
+    useBreakpointValue
 } from '@chakra-ui/react';
 import Navbar from 'components/Navbar';
 import { GetStaticPaths, GetStaticProps } from 'next';
@@ -26,6 +28,7 @@ import ShowHeader from 'components/ShowHeader';
 import CastCarousel from 'components/CastCarousel';
 import ShowCarousel from 'components/ShowCarousel';
 import ShowSideData from 'components/ShowSideData';
+import Footer from 'components/Footer';
 
 interface MovieProps {
     movieData: MovieDetails;
@@ -34,6 +37,19 @@ interface MovieProps {
 }
 
 const Movie = ({ movieData, config, languages }: MovieProps) => {
+    const noOfSlides = useBreakpointValue([3, 3, 4, 4, 5]);
+    const naturalHeight = useBreakpointValue([2200, 2050, 2000, 2000, 2100]);
+    const headingSize = useBreakpointValue({ base: 'sm', md: 'md', xl: 'lg' });
+    const sideDataHeadingSize = useBreakpointValue({ base: 'sm', md: 'md' });
+    const starSize = ['0.8rem', '0.9rem', '1rem', '1rem', '1.1rem'];
+    const ratingSize = ['0.7rem', '0.8rem', '0.9rem', '0.9rem', '1rem'];
+    const carouselHeadingSize = [
+        '0.65rem',
+        '0.75rem',
+        '0.85rem',
+        '0.85rem',
+        '0.9rem'
+    ];
     const { base_url, poster_sizes, backdrop_sizes } = config.images;
     const {
         title,
@@ -76,7 +92,7 @@ const Movie = ({ movieData, config, languages }: MovieProps) => {
         <>
             <Navbar />
             <Box as="main">
-                <ShowHeader
+                {/* <ShowHeader
                     {...{
                         title,
                         config,
@@ -92,18 +108,23 @@ const Movie = ({ movieData, config, languages }: MovieProps) => {
                         vote_count,
                         tagline
                     }}
-                />
+                /> */}
 
-                <HStack
+                <Stack
                     as="main"
                     p="2rem 1rem"
                     maxWidth="1400px"
                     margin="auto"
-                    spacing="1.5rem"
+                    spacing={{ base: 0, lg: '1.5rem' }}
                     align="flex-start"
+                    direction={{ base: 'column', lg: 'row' }}
                 >
-                    <VStack width="80%" spacing="2rem">
-                        <CastCarousel cast={credits.cast} config={config} />
+                    <VStack width={{ base: '100%', lg: '80%' }}>
+                        <CastCarousel
+                            cast={credits.cast}
+                            config={config}
+                            headingSize={headingSize}
+                        />
                         {recommendations.length > 0 && (
                             <VStack
                                 spacing="1rem"
@@ -111,18 +132,20 @@ const Movie = ({ movieData, config, languages }: MovieProps) => {
                                 align="flex-start"
                                 mb="1rem"
                             >
-                                <Heading size="lg">Recommendations</Heading>
+                                <Heading size={headingSize}>
+                                    Recommendations
+                                </Heading>
                                 <ShowCarousel
                                     name="Recommendations"
                                     items={recommendations}
                                     base_url={base_url}
                                     poster_sizes={poster_sizes}
-                                    noOfSlides={5}
-                                    naturalHeight={2000}
-                                    buttonSize={['1.5rem', '2rem']}
-                                    starSize={'1.2rem'}
-                                    ratingSize={'1rem'}
-                                    headingSize="0.9rem"
+                                    noOfSlides={noOfSlides}
+                                    naturalHeight={naturalHeight}
+                                    buttonSize={['1rem', '1.5rem', '2rem']}
+                                    starSize={starSize}
+                                    headingSize={carouselHeadingSize}
+                                    ratingSize={ratingSize}
                                 />
                             </VStack>
                         )}
@@ -133,24 +156,29 @@ const Movie = ({ movieData, config, languages }: MovieProps) => {
                                 align="flex-start"
                                 mb="1rem"
                             >
-                                <Heading size="lg">Similar </Heading>
+                                <Heading size={headingSize}>Similar</Heading>
                                 <ShowCarousel
                                     name="Recommendations"
                                     items={similar}
                                     base_url={base_url}
                                     poster_sizes={poster_sizes}
-                                    noOfSlides={5}
-                                    naturalHeight={2100}
-                                    buttonSize={['1.5rem', '2rem']}
-                                    starSize={'1.2rem'}
-                                    ratingSize={'1rem'}
-                                    headingSize="0.9rem"
+                                    noOfSlides={noOfSlides}
+                                    naturalHeight={naturalHeight}
+                                    buttonSize={['1rem', '1.5rem', '2rem']}
+                                    starSize={starSize}
+                                    headingSize={carouselHeadingSize}
+                                    ratingSize={ratingSize}
                                 />
                             </VStack>
                         )}
                     </VStack>
-                    <VStack width="20%" spacing="2rem" align="flex-start">
+                    <VStack
+                        width={{ base: '100%', lg: '20%' }}
+                        spacing="2rem"
+                        align="flex-start"
+                    >
                         <ShowSideData
+                            headingSize={sideDataHeadingSize}
                             status={status}
                             origLanguage={
                                 languages.find(
@@ -163,8 +191,9 @@ const Movie = ({ movieData, config, languages }: MovieProps) => {
                             keywords={keywords}
                         />
                     </VStack>
-                </HStack>
+                </Stack>
             </Box>
+            <Footer />
         </>
     );
 };

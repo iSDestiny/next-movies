@@ -21,6 +21,7 @@ import { FaAngleLeft, FaAngleRight, FaRegStar, FaStar } from 'react-icons/fa';
 import MotionBox from './MotionBox';
 import { AnimatePresence } from 'framer-motion';
 import Rating from './Rating';
+import useDimensions from 'react-cool-dimensions';
 
 interface ShowCarouselProps {
     name: string;
@@ -47,6 +48,7 @@ function ShowCarousel({
     headingSize,
     buttonSize
 }: ShowCarouselProps) {
+    const { ref, width } = useDimensions<HTMLDivElement>();
     if (items.length > 0)
         return (
             <Box width="100%">
@@ -100,47 +102,63 @@ function ShowCarousel({
                                                         textDecor: 'none'
                                                     }}
                                                 >
-                                                    <Box position="relative">
-                                                        <Image
-                                                            src={`${base_url}${poster_sizes[2]}${poster_path}`}
-                                                            alt={`${
-                                                                name || title
-                                                            } poster`}
-                                                            height={276}
-                                                            width={185}
-                                                        />
-                                                    </Box>
-                                                    <Flex
-                                                        align="center"
-                                                        mb="2px"
-                                                    >
-                                                        <Icon
-                                                            as={
-                                                                vote_count > 0
-                                                                    ? FaStar
-                                                                    : FaRegStar
-                                                            }
-                                                            fontSize={starSize}
-                                                            color="yellow.400"
-                                                            mr="5px"
-                                                        />
-                                                        <Text
+                                                    <Box ref={ref}>
+                                                        <Box
+                                                            position="relative"
+                                                            id="hello"
+                                                        >
+                                                            <Image
+                                                                src={`${base_url}${poster_sizes[2]}${poster_path}`}
+                                                                alt={`${
+                                                                    name ||
+                                                                    title
+                                                                } poster`}
+                                                                height={276}
+                                                                width={185}
+                                                            />
+                                                        </Box>
+                                                        <Flex
+                                                            align="center"
+                                                            mb="2px"
+                                                        >
+                                                            <Icon
+                                                                as={
+                                                                    vote_count >
+                                                                    0
+                                                                        ? FaStar
+                                                                        : FaRegStar
+                                                                }
+                                                                fontSize={
+                                                                    starSize
+                                                                }
+                                                                color="yellow.400"
+                                                                mr="5px"
+                                                            />
+                                                            <Text
+                                                                fontSize={
+                                                                    ratingSize
+                                                                }
+                                                            >
+                                                                {vote_count > 0
+                                                                    ? vote_average
+                                                                    : 'NR'}
+                                                            </Text>
+                                                        </Flex>
+
+                                                        <Heading
                                                             fontSize={
-                                                                ratingSize
+                                                                headingSize
+                                                            }
+                                                            noOfLines={3}
+                                                            width={
+                                                                width > 185
+                                                                    ? 185
+                                                                    : width
                                                             }
                                                         >
-                                                            {vote_count > 0
-                                                                ? vote_average
-                                                                : 'NR'}
-                                                        </Text>
-                                                    </Flex>
-
-                                                    <Heading
-                                                        fontSize={headingSize}
-                                                        noOfLines={3}
-                                                    >
-                                                        {name || title}
-                                                    </Heading>
+                                                            {name || title}
+                                                        </Heading>
+                                                    </Box>
                                                 </Link>
                                             </NextLink>
                                         </MotionBox>

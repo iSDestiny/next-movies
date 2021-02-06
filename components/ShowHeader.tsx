@@ -8,7 +8,9 @@ import {
     Flex,
     DarkMode,
     Button,
-    Tag
+    Tag,
+    Wrap,
+    WrapItem
 } from '@chakra-ui/react';
 import Image from 'next/image';
 import { useState } from 'react';
@@ -111,13 +113,13 @@ const ShowHeader = ({
                             </Text>
                             <Text>{release_date}</Text>
                             <DotDivider size="5px" color="white" />
-                            <HStack spacing="0.3rem">
+                            <Wrap spacing="0.3rem">
                                 {genres.map(({ id, name }, index) => (
-                                    <Tag size="sm" key={id}>
-                                        {name}
-                                    </Tag>
+                                    <WrapItem key={id}>
+                                        <Tag size="sm">{name}</Tag>
+                                    </WrapItem>
                                 ))}
-                            </HStack>
+                            </Wrap>
                             <DotDivider size="5px" color="white" />
                             <Text>
                                 {runtime > 60
