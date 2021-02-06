@@ -36,7 +36,7 @@ interface ShowCarouselProps {
 }
 
 function ShowCarousel({
-    name,
+    name: carouselName,
     items,
     base_url,
     poster_sizes,
@@ -78,7 +78,7 @@ function ShowCarousel({
                                 ) => (
                                     <Box
                                         as={Slide}
-                                        key={`${name}-${id}`}
+                                        key={`${carouselName}-${name}-${id}-${index}`}
                                         index={index}
                                     >
                                         <MotionBox

@@ -160,6 +160,9 @@ const ShowHeader = ({
                                 onClick={() => setIsTrailerOpen(true)}
                                 variant="ghost"
                                 leftIcon={<FaPlay />}
+                                display={
+                                    videos.length > 0 ? 'inline-flex' : 'none'
+                                }
                             >
                                 Play Trailer
                             </Button>

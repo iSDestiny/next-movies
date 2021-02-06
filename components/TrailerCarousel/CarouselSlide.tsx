@@ -55,6 +55,8 @@ const CarouselSlide = ({
             opacity: 0
         }
     };
+
+    if (videos.length <= 0) return null;
     return (
         <Box cursor="pointer">
             <>
@@ -169,7 +171,7 @@ const CarouselSlide = ({
                                     as="h2"
                                     fontSize={['10px', '14px', '20px', '24px']}
                                 >
-                                    {videos[0].name}
+                                    {videos[0]?.name}
                                 </Heading>
                             </VStack>
                         </Flex>

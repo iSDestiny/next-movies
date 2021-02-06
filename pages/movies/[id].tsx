@@ -25,13 +25,15 @@ import VideoModal from 'components/VideoModal';
 import ShowHeader from 'components/ShowHeader';
 import CastCarousel from 'components/CastCarousel';
 import ShowCarousel from 'components/ShowCarousel';
+import ShowSideData from 'components/ShowSideData';
 
 interface MovieProps {
     movieData: MovieDetails;
     config: TMDBConfig;
+    languages: Language[];
 }
 
-const Movie = ({ movieData, config }: MovieProps) => {
+const Movie = ({ movieData, config, languages }: MovieProps) => {
     const { base_url, poster_sizes, backdrop_sizes } = config.images;
     const {
         title,
@@ -39,7 +41,11 @@ const Movie = ({ movieData, config }: MovieProps) => {
         backdrop_path,
         poster_path,
         release_date,
+        revenue,
+        original_language,
+        budget,
         status,
+        keywords: { keywords },
         production_countries,
         tagline,
         overview,
@@ -49,7 +55,6 @@ const Movie = ({ movieData, config }: MovieProps) => {
         videos: { results: videos },
         recommendations: { results: recommendations },
         credits,
-        keywords: { keywords },
         images,
         similar: { results: similar },
         reviews: { results: reviews },
@@ -63,6 +68,8 @@ const Movie = ({ movieData, config }: MovieProps) => {
 
     useEffect(() => {
         console.log(movieData);
+        console.log(config);
+        console.log(languages);
     }, []);
 
     return (
@@ -87,14 +94,15 @@ const Movie = ({ movieData, config }: MovieProps) => {
                     }}
                 />
 
-                <Flex
+                <HStack
                     as="main"
                     p="2rem 1rem"
                     maxWidth="1400px"
                     margin="auto"
-                    direction="row"
+                    spacing="1.5rem"
+                    align="flex-start"
                 >
-                    <VStack width="70%" spacing="2rem">
+                    <VStack width="80%" spacing="2rem">
                         <CastCarousel cast={credits.cast} config={config} />
                         {recommendations.length > 0 && (
                             <VStack
@@ -110,7 +118,7 @@ const Movie = ({ movieData, config }: MovieProps) => {
                                     base_url={base_url}
                                     poster_sizes={poster_sizes}
                                     noOfSlides={5}
-                                    naturalHeight={2100}
+                                    naturalHeight={2000}
                                     buttonSize={['1.5rem', '2rem']}
                                     starSize={'1.2rem'}
                                     ratingSize={'1rem'}
@@ -141,8 +149,21 @@ const Movie = ({ movieData, config }: MovieProps) => {
                             </VStack>
                         )}
                     </VStack>
-                    <VStack width="30%" spacing="2rem"></VStack>
-                </Flex>
+                    <VStack width="20%" spacing="2rem" align="flex-start">
+                        <ShowSideData
+                            status={status}
+                            origLanguage={
+                                languages.find(
+                                    ({ iso_639_1 }) =>
+                                        iso_639_1 === original_language
+                                ).english_name
+                            }
+                            budget={budget}
+                            revenue={revenue}
+                            keywords={keywords}
+                        />
+                    </VStack>
+                </HStack>
             </Box>
         </>
     );
@@ -152,6 +173,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
     const { id } = params;
     let movieData: MovieDetails;
     let config: TMDBConfig;
+    let languages: Language[];
     // let videos: VideoResultsEntity[];
     // let recommendations: Movie[];
     // let credits: Credits;
@@ -159,6 +181,9 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
     // let images: Images;
     try {
         const { data: configData } = await tmdbFetch.get('/configuration');
+        const { data: languageData } = await tmdbFetch.get(
+            '/configuration/languages'
+        );
         // const {
         //     data: { results: videoData }
         // } = await tmdbFetch.get(`/movie/${id}/videos`);
@@ -180,6 +205,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
         });
         config = configData;
         movieData = data;
+        languages = languageData;
     } catch (err) {
         console.log(err);
     }
@@ -187,7 +213,8 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
     return {
         props: {
             movieData,
-            config
+            config,
+            languages
         }
     };
 };

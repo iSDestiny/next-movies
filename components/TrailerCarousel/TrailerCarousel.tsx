@@ -17,7 +17,7 @@ import {
 import ModalVideo from 'react-modal-video';
 import Image from 'next/image';
 import ReactPlayer from 'react-player/youtube';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import VideoModal from '../VideoModal';
 import { FaAngleLeft, FaAngleRight, FaPlay } from 'react-icons/fa';
 import { GrPrevious, GrNext } from 'react-icons/gr';
@@ -39,11 +39,15 @@ const TrailerCarousel = ({
     trailers
 }: TrailerCarouselProps) => {
     const filteredResults = results.filter(
-        (res, index) => trailers[index].results.length > 0
+        (res, index) =>
+            trailers[index].results && trailers[index].results.length > 0
+    );
+    const filteredVideos = trailers.filter(
+        (trailer) => trailer.results.length > 0
     );
     const totalSlides = filteredResults.length;
     const [trailerModes, setTrailerModes] = useState<boolean[]>(
-        [...Array(trailers.length).keys()].map(() => false)
+        [...Array(filteredVideos.length).keys()].map(() => false)
     );
     const { ref, width, height } = useDimensions<HTMLDivElement>();
 
@@ -54,6 +58,11 @@ const TrailerCarousel = ({
             return newTrailer;
         });
     };
+
+    useEffect(() => {
+        console.log(filteredResults);
+        console.log(filteredVideos);
+    }, []);
 
     return (
         // <Box w="1200px" bgColor="black">
@@ -84,7 +93,7 @@ const TrailerCarousel = ({
                                 },
                                 index
                             ) => {
-                                const { results } = trailers[index];
+                                const { results } = filteredVideos[index];
                                 return (
                                     <CarouselSlide
                                         key={id}
