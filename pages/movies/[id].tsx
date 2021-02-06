@@ -92,7 +92,7 @@ const Movie = ({ movieData, config, languages }: MovieProps) => {
         <>
             <Navbar />
             <Box as="main">
-                {/* <ShowHeader
+                <ShowHeader
                     {...{
                         title,
                         config,
@@ -108,7 +108,7 @@ const Movie = ({ movieData, config, languages }: MovieProps) => {
                         vote_count,
                         tagline
                     }}
-                /> */}
+                />
 
                 <Stack
                     as="main"
