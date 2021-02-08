@@ -29,6 +29,7 @@ import CastCarousel from 'components/CastCarousel';
 import ShowCarousel from 'components/ShowCarousel';
 import ShowSideData from 'components/ShowSideData';
 import Footer from 'components/Footer';
+import GeneralLayout from 'layouts/GeneralLayout';
 
 interface MovieProps {
     movieData: MovieDetails;
@@ -89,8 +90,7 @@ const Movie = ({ movieData, config, languages }: MovieProps) => {
     }, []);
 
     return (
-        <>
-            <Navbar />
+        <GeneralLayout title={title}>
             <Box as="main">
                 <ShowHeader
                     {...{
@@ -193,8 +193,7 @@ const Movie = ({ movieData, config, languages }: MovieProps) => {
                     </VStack>
                 </Stack>
             </Box>
-            <Footer />
-        </>
+        </GeneralLayout>
     );
 };
 

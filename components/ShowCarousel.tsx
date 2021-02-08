@@ -22,6 +22,7 @@ import MotionBox from './MotionBox';
 import { AnimatePresence } from 'framer-motion';
 import Rating from './Rating';
 import useDimensions from 'react-cool-dimensions';
+import { createRef, useEffect, useRef, useState } from 'react';
 
 interface ShowCarouselProps {
     name: string;
@@ -48,7 +49,15 @@ function ShowCarousel({
     headingSize,
     buttonSize
 }: ShowCarouselProps) {
-    const { ref, width } = useDimensions<HTMLDivElement>();
+    // const ref = useRef();
+    const { ref, width, observe } = useDimensions<HTMLDivElement>();
+    // useEffect(() => {
+    //     console.log(width);
+    // }, [width, ref]);
+    // useEffect(() => {
+    //     console.log(items);
+    // }, [items]);
+
     if (items.length > 0)
         return (
             <Box width="100%">
@@ -62,8 +71,6 @@ function ShowCarousel({
                     visibleSlides={noOfSlides}
                     infinite
                 >
-                    {/* <AnimatePresence> */}
-
                     <Box position="relative">
                         <Slider>
                             {items.map(
@@ -80,7 +87,9 @@ function ShowCarousel({
                                 ) => (
                                     <Box
                                         as={Slide}
-                                        key={`${carouselName}-${name}-${id}-${index}`}
+                                        key={`${carouselName}-${
+                                            name || title
+                                        }-${id}-${index}`}
                                         index={index}
                                     >
                                         <MotionBox
@@ -102,13 +111,17 @@ function ShowCarousel({
                                                         textDecor: 'none'
                                                     }}
                                                 >
-                                                    <Box ref={ref}>
+                                                    <Box ref={observe}>
                                                         <Box
                                                             position="relative"
                                                             id="hello"
                                                         >
                                                             <Image
-                                                                src={`${base_url}${poster_sizes[2]}${poster_path}`}
+                                                                src={
+                                                                    poster_path
+                                                                        ? `${base_url}${poster_sizes[2]}${poster_path}`
+                                                                        : '/images/default-placeholder-image.png'
+                                                                }
                                                                 alt={`${
                                                                     name ||
                                                                     title
@@ -197,7 +210,6 @@ function ShowCarousel({
                             </ButtonNext>
                         </Box>
                     </Box>
-                    {/* </AnimatePresence> */}
                 </Box>
             </Box>
         );

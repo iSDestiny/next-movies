@@ -12,6 +12,7 @@ import Footer from 'components/Footer';
 import tmdbFetchGzip from 'utils/tmdbFetchGzip';
 import addLeadingZeroToDate from 'utils/addLeadingZeroToDate';
 import { ungzip } from 'node-gzip';
+import GeneralLayout from 'layouts/GeneralLayout';
 
 interface HomeProps {
     trending: Trending;
@@ -64,9 +65,7 @@ const Home = ({
         console.log(json);
     }, []);
     return (
-        <>
-            <Navbar />
-
+        <GeneralLayout title="Home">
             <Flex
                 as="main"
                 p="2rem 1rem"
@@ -121,8 +120,7 @@ const Home = ({
                     ]}
                 />
             </Flex>
-            <Footer />
-        </>
+        </GeneralLayout>
     );
 };
 
