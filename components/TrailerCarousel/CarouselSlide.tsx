@@ -56,7 +56,7 @@ const CarouselSlide = ({
         }
     };
 
-    if (videos.length <= 0) return null;
+    if (videos && videos.length <= 0) return null;
     return (
         <Box cursor="pointer">
             <>

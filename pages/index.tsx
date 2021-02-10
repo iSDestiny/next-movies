@@ -26,7 +26,6 @@ interface HomeProps {
     nowPlayingMovies: Movie[];
     airingTodayTVShows: TVShow[];
     onTheAirTVShows: TVShow[];
-    uncompressed?: string;
 }
 
 const Home = ({
@@ -40,8 +39,7 @@ const Home = ({
     upcomingMovies,
     nowPlayingMovies,
     airingTodayTVShows,
-    onTheAirTVShows,
-    uncompressed
+    onTheAirTVShows
 }: HomeProps) => {
     const headingSize = useBreakpointValue(['sm', 'md', 'lg']);
     useEffect(() => {
@@ -53,16 +51,6 @@ const Home = ({
         console.log(topRatedMovies);
         console.log(nowPlayingMovies);
         console.log(airingTodayTVShows);
-        const lines = uncompressed.trim().split('\n');
-        const json = lines.map((line) => {
-            try {
-                return JSON.parse(line).id;
-            } catch (err) {
-                console.log('err');
-                return 'err';
-            }
-        });
-        console.log(json);
     }, []);
     return (
         <GeneralLayout title="Home">
@@ -82,7 +70,7 @@ const Home = ({
                         Trending
                     </Heading>
                     <TrailerCarousel
-                        results={trending.results}
+                        results={trending?.results}
                         config={config}
                         trailers={videos}
                     />
@@ -125,91 +113,75 @@ const Home = ({
 };
 
 export const getStaticProps: GetStaticProps = async (context) => {
-    let trending: Trending | null;
-    let upcomingMovies: Movie[] | null;
-    let nowPlayingMovies: Movie[] | null;
-    let airingTodayTVShows: TVShow[] | null;
-    let onTheAirTVShows: TVShow[] | null;
-    let popularMovies: Movie[] | null;
-    let popularTVShows: TVShow[] | null;
-    let topRatedMovies: Movie[] | null;
-    let topRatedTVShows: TVShow[] | null;
-    let config: TMDBConfig | null;
-    let videos: Videos[] | null;
+    let trending: Trending | null = null;
+    let upcomingMovies: Movie[] | null = null;
+    let nowPlayingMovies: Movie[] | null = null;
+    let airingTodayTVShows: TVShow[] | null = null;
+    let onTheAirTVShows: TVShow[] | null = null;
+    let popularMovies: Movie[] | null = null;
+    let popularTVShows: TVShow[] | null = null;
+    let topRatedMovies: Movie[] | null = null;
+    let topRatedTVShows: TVShow[] | null = null;
+    let config: TMDBConfig | null = null;
+    let videos: Videos[] | null = null;
 
-    try {
-        const { data: trendingData } = await tmdbFetch.get('/trending/all/day');
-        const { data: configData } = await tmdbFetch.get('/configuration');
-        const {
-            data: { results: upcomingMovieData }
-        } = await tmdbFetch.get('/movie/upcoming');
-        const {
-            data: { results: nowPlayingMovieData }
-        } = await tmdbFetch.get('/movie/now_playing');
-        const {
-            data: { results: onTheAirTVShowData }
-        } = await tmdbFetch.get('/tv/on_the_air');
-        const {
-            data: { results: airingTodayTVShowData }
-        } = await tmdbFetch.get('/tv/airing_today');
-        const {
-            data: { results: popularMovieData }
-        } = await tmdbFetch.get('/movie/popular');
-        const {
-            data: { results: popularTVShowData }
-        } = await tmdbFetch.get('/tv/popular');
-        const {
-            data: { results: topRatedMovieData }
-        } = await tmdbFetch.get('/movie/top_rated');
-        const {
-            data: { results: topRatedTVShowData }
-        } = await tmdbFetch.get('/tv/top_rated');
-        const videoRes = await Promise.all(
-            trendingData.results.map(async ({ id, media_type }) => {
-                if (media_type === 'movie')
-                    return tmdbFetch.get(`/movie/${id}/videos`);
-                else if (media_type === 'tv')
-                    return tmdbFetch.get(`/tv/${id}/videos`);
-            })
-        );
-        const videoData = videoRes.map(({ data }) => data);
+    const { data: trendingData } = await tmdbFetch.get('/trending/all/day');
+    trending = trendingData;
 
-        upcomingMovies = upcomingMovieData;
-        nowPlayingMovies = nowPlayingMovieData;
-        airingTodayTVShows = airingTodayTVShowData;
-        onTheAirTVShows = onTheAirTVShowData;
-        popularMovies = popularMovieData;
-        popularTVShows = popularTVShowData;
-        topRatedMovies = topRatedMovieData;
-        topRatedTVShows = topRatedTVShowData;
-        videos = videoData;
-        trending = trendingData;
-        config = configData;
-    } catch (err) {
-        console.log(err);
-    }
-
-    const date = new Date();
-    const month = date.getMonth() + 1;
-    const day = date.getDate();
-    const year = date.getFullYear();
-    const res = await tmdbFetchGzip.get(
-        `/movie_ids_${addLeadingZeroToDate(month)}_${addLeadingZeroToDate(
-            day
-        )}_${year}.json.gz`,
-        {
-            responseType: 'arraybuffer',
-            headers: {
-                'Accept-Encoding': 'gzip',
-                'Content-Encoding': 'gzip'
-                // 'Transfer-Encoding': 'gzip'
-            }
-        }
+    const videoRes = (await Promise.allSettled(
+        trendingData.results.map(async ({ id, media_type }) => {
+            if (media_type === 'movie')
+                return tmdbFetch.get(`/movie/${id}/videos`);
+            else if (media_type === 'tv')
+                return tmdbFetch.get(`/tv/${id}/videos`);
+        })
+    )) as any;
+    const videoData = videoRes.map(({ status, value }) =>
+        status === 'fulfilled' ? value.data : null
     );
+    videos = videoData;
 
-    const uncompressed = await ungzip(res.data);
-    // console.log(uncompressed.toString());
+    const { data: configData } = await tmdbFetch.get('/configuration');
+    config = configData;
 
+    const {
+        data: { results: upcomingMovieData }
+    } = await tmdbFetch.get('/movie/upcoming');
+    upcomingMovies = upcomingMovieData;
+
+    const {
+        data: { results: nowPlayingMovieData }
+    } = await tmdbFetch.get('/movie/now_playing');
+    nowPlayingMovies = nowPlayingMovieData;
+
+    const {
+        data: { results: onTheAirTVShowData }
+    } = await tmdbFetch.get('/tv/on_the_air');
+    onTheAirTVShows = onTheAirTVShowData;
+
+    const {
+        data: { results: airingTodayTVShowData }
+    } = await tmdbFetch.get('/tv/airing_today');
+    airingTodayTVShows = airingTodayTVShowData;
+
+    const {
+        data: { results: popularMovieData }
+    } = await tmdbFetch.get('/movie/popular');
+    popularMovies = popularMovieData;
+
+    const {
+        data: { results: popularTVShowData }
+    } = await tmdbFetch.get('/tv/popular');
+    const {
+        data: { results: topRatedMovieData }
+    } = await tmdbFetch.get('/movie/top_rated');
+    const {
+        data: { results: topRatedTVShowData }
+    } = await tmdbFetch.get('/tv/top_rated');
+
+    popularTVShows = popularTVShowData;
+    topRatedMovies = topRatedMovieData;
+    topRatedTVShows = topRatedTVShowData;
     return {
         props: {
             trending,
@@ -222,8 +194,7 @@ export const getStaticProps: GetStaticProps = async (context) => {
             upcomingMovies,
             nowPlayingMovies,
             airingTodayTVShows,
-            onTheAirTVShows,
-            uncompressed: uncompressed.toString()
+            onTheAirTVShows
         },
         revalidate: 3600
     };

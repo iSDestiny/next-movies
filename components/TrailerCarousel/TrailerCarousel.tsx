@@ -38,12 +38,16 @@ const TrailerCarousel = ({
     config,
     trailers
 }: TrailerCarouselProps) => {
+    if (!results || !trailers) return null;
+
     const filteredResults = results.filter(
         (res, index) =>
-            trailers[index].results && trailers[index].results.length > 0
+            trailers[index] &&
+            trailers[index].results &&
+            trailers[index].results.length > 0
     );
     const filteredVideos = trailers.filter(
-        (trailer) => trailer.results.length > 0
+        (trailer) => trailer && trailer.results.length > 0
     );
     const totalSlides = filteredResults.length;
     const [trailerModes, setTrailerModes] = useState<boolean[]>(
@@ -65,7 +69,6 @@ const TrailerCarousel = ({
     }, []);
 
     return (
-        // <Box w="1200px" bgColor="black">
         <Stack
             as={CarouselProvider}
             w="100%"
@@ -157,7 +160,6 @@ const TrailerCarousel = ({
                 height={height}
             />
         </Stack>
-        // </Box>
     );
 };
 
