@@ -32,6 +32,8 @@ import ShowSideData from 'components/ShowSideData';
 import Footer from 'components/Footer';
 import GeneralLayout from 'layouts/GeneralLayout';
 import MediaCarousel from 'components/MediaCarousel';
+import MediaGroupItem from 'components/MediaGroup';
+import MediaGroup from 'components/MediaGroup';
 
 interface MovieProps {
     movieData: MovieDetails;
@@ -40,8 +42,8 @@ interface MovieProps {
 }
 
 const Movie = ({ movieData, config, languages }: MovieProps) => {
-    const [currentCarousel, setCurrentCarousel] = useState(0);
     const noOfSlides = useBreakpointValue([3, 3, 4, 4, 5]);
+    const backdropSlides = useBreakpointValue({ base: 1, sm: 2 });
     const naturalHeight = useBreakpointValue([2200, 2050, 2000, 2000, 2100]);
     const headingSize = useBreakpointValue({ base: 'sm', md: 'md', xl: 'lg' });
     const sideDataHeadingSize = useBreakpointValue({ base: 'sm', md: 'md' });
@@ -101,8 +103,13 @@ const Movie = ({ movieData, config, languages }: MovieProps) => {
             : [];
 
     const media = [
-        { items: backdrops, width: 533, height: 300, noOfSlides: 2 },
-        { items: posters, width: 185, height: 276, noOfSlides: 5 }
+        {
+            items: backdrops,
+            width: 533,
+            height: 300,
+            noOfSlides: backdropSlides
+        },
+        { items: posters, width: 185, height: 276, noOfSlides }
     ];
 
     useEffect(() => {
@@ -147,65 +154,11 @@ const Movie = ({ movieData, config, languages }: MovieProps) => {
                             config={config}
                             headingSize={headingSize}
                         />
-
-                        {/* {posters.length > 0 && ( */}
-                        <VStack
-                            spacing="1rem"
-                            width="100%"
-                            align="flex-start"
-                            mb="1rem"
-                        >
-                            <HStack justify="flex-start" spacing="1.5rem">
-                                <Heading size={headingSize}>Media</Heading>
-                                <ButtonGroup size="md" isAttached>
-                                    {['Backdrops', 'Posters'].map(
-                                        (name, index) => (
-                                            <Button
-                                                key={name}
-                                                colorScheme="teal"
-                                                variant={
-                                                    index === currentCarousel
-                                                        ? 'solid'
-                                                        : 'outline'
-                                                }
-                                                onClick={() =>
-                                                    setCurrentCarousel(index)
-                                                }
-                                            >
-                                                {name}
-                                            </Button>
-                                        )
-                                    )}
-                                </ButtonGroup>
-                            </HStack>
-                            <MediaCarousel
-                                naturalHeight={media[currentCarousel].height}
-                                naturalWidth={media[currentCarousel].width}
-                                name={title}
-                                items={media[currentCarousel].items}
-                                noOfSlides={media[currentCarousel].noOfSlides}
-                                buttonSize={['1rem', '1.5rem', '2rem']}
-                            />
-                        </VStack>
-                        {/* )} */}
-                        {/* {backdrops.length > 0 && (
-                            <VStack
-                                spacing="1rem"
-                                width="100%"
-                                align="flex-start"
-                                mb="1rem"
-                            >
-                                <Heading size={headingSize}>Media</Heading>
-                                <MediaCarousel
-                                    naturalHeight={300}
-                                    naturalWidth={533}
-                                    name={title}
-                                    items={backdrops}
-                                    noOfSlides={2}
-                                    buttonSize={['1rem', '1.5rem', '2rem']}
-                                />
-                            </VStack>
-                        )} */}
+                        <MediaGroup
+                            headingSize={headingSize}
+                            media={media}
+                            title={title}
+                        />
                         {recommendations.length > 0 && (
                             <VStack
                                 spacing="1rem"
@@ -235,7 +188,7 @@ const Movie = ({ movieData, config, languages }: MovieProps) => {
                                 spacing="1rem"
                                 width="100%"
                                 align="flex-start"
-                                mb="1rem"
+                                pb="1rem"
                             >
                                 <Heading size={headingSize}>Similar</Heading>
                                 <ShowCarousel

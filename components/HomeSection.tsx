@@ -28,13 +28,17 @@ function HomeSection({ heading, carousels, config }: HomeSectionProps) {
     const [currentCarousel, setCurrentCarousel] = useState(0);
     const { base_url, poster_sizes } = config.images;
     const headingSize = useBreakpointValue(['sm', 'md', 'lg']);
-    const buttonSize = useBreakpointValue({ base: 'sm', lg: 'md' });
+    const buttonSize = useBreakpointValue({ base: 'xs', sm: 'sm', lg: 'md' });
     const noOfSlides = useBreakpointValue([3, 4, 5, 6, 7]);
     const naturalHeight = useBreakpointValue([2300, 2200, 2200, 2200]);
 
     return (
         <VStack as="section" mt="2.5rem" spacing="1rem" align="flex-start">
-            <HStack spacing="1.5rem" align="center" justify="flex-start">
+            <HStack
+                spacing={{ base: '0.8rem', md: '1rem', lg: '1.5rem' }}
+                align="center"
+                justify="flex-start"
+            >
                 <Heading
                     size={headingSize}
                     as="h1"

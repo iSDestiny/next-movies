@@ -9,6 +9,7 @@ import {
 import Image from 'next/image';
 import NextLink from 'next/link';
 import { FaAngleLeft, FaAngleRight } from 'react-icons/fa';
+import MotionBox from './MotionBox';
 
 interface MediaCarouselProps {
     naturalHeight: number;
@@ -43,16 +44,18 @@ function MediaCarousel({
                     <Slider>
                         {items.map(({ path, original }, index) => (
                             <Slide key={`${path}-${index}`} index={index}>
-                                <NextLink href={original} passHref>
-                                    <Link target="_blank">
-                                        <Image
-                                            alt={`${name}-${index}`}
-                                            src={path}
-                                            width={naturalWidth}
-                                            height={naturalHeight}
-                                        />
-                                    </Link>
-                                </NextLink>
+                                <MotionBox animate={{ opacity: 1 }} opacity={0}>
+                                    <NextLink href={original} passHref>
+                                        <Link target="_blank">
+                                            <Image
+                                                alt={`${name}-${index}`}
+                                                src={path}
+                                                width={naturalWidth}
+                                                height={naturalHeight}
+                                            />
+                                        </Link>
+                                    </NextLink>
+                                </MotionBox>
                             </Slide>
                         ))}
                     </Slider>
