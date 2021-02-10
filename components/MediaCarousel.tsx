@@ -1,29 +1,32 @@
-import { Box, Icon } from '@chakra-ui/react';
+import { Box, Icon, Link } from '@chakra-ui/react';
 import {
     ButtonBack,
     ButtonNext,
     CarouselProvider,
     Slider,
-    Slide,
-    CarouselProvider
+    Slide
 } from 'pure-react-carousel';
+import Image from 'next/image';
+import NextLink from 'next/link';
 import { FaAngleLeft, FaAngleRight } from 'react-icons/fa';
 
-interface MediaCarouselProps<T> {
+interface MediaCarouselProps {
     naturalHeight: number;
     naturalWidth: number;
     noOfSlides: number;
     buttonSize: string | string[];
-    items: T[];
+    items: Media[];
+    name: string;
 }
 
-function MediaCarousel<T>({
+function MediaCarousel({
     naturalHeight,
     naturalWidth,
     noOfSlides,
     buttonSize,
-    items
-}: MediaCarouselProps<T>) {
+    items,
+    name
+}: MediaCarouselProps) {
     return (
         <Box width="100%">
             <Box
@@ -37,11 +40,26 @@ function MediaCarousel<T>({
                 infinite
             >
                 <Box position="relative">
-                    <Slider></Slider>
+                    <Slider>
+                        {items.map(({ path, original }, index) => (
+                            <Slide key={`${path}-${index}`} index={index}>
+                                <NextLink href={original} passHref>
+                                    <Link target="_blank">
+                                        <Image
+                                            alt={`${name}-${index}`}
+                                            src={path}
+                                            width={naturalWidth}
+                                            height={naturalHeight}
+                                        />
+                                    </Link>
+                                </NextLink>
+                            </Slide>
+                        ))}
+                    </Slider>
                     <Box
                         p="4px"
                         position="absolute"
-                        top="25%"
+                        top="40%"
                         left="1rem"
                         color="white"
                         zIndex="4"
@@ -56,7 +74,7 @@ function MediaCarousel<T>({
                     <Box
                         p="4px"
                         position="absolute"
-                        top="25%"
+                        top="40%"
                         right="1.35rem"
                         color="white"
                         zIndex="4"

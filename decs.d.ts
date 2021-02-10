@@ -325,6 +325,11 @@ interface BackdropsEntityOrPostersEntity {
     width: number;
 }
 
+interface Media {
+    path: string;
+    original: string;
+}
+
 interface Language {
     iso_639_1: string;
     english_name: string;

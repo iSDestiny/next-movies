@@ -11,7 +11,8 @@ import {
     Button,
     DarkMode,
     Stack,
-    useBreakpointValue
+    useBreakpointValue,
+    ButtonGroup
 } from '@chakra-ui/react';
 import Navbar from 'components/Navbar';
 import { GetStaticPaths, GetStaticProps } from 'next';
@@ -30,6 +31,7 @@ import ShowCarousel from 'components/ShowCarousel';
 import ShowSideData from 'components/ShowSideData';
 import Footer from 'components/Footer';
 import GeneralLayout from 'layouts/GeneralLayout';
+import MediaCarousel from 'components/MediaCarousel';
 
 interface MovieProps {
     movieData: MovieDetails;
@@ -38,6 +40,7 @@ interface MovieProps {
 }
 
 const Movie = ({ movieData, config, languages }: MovieProps) => {
+    const [currentCarousel, setCurrentCarousel] = useState(0);
     const noOfSlides = useBreakpointValue([3, 3, 4, 4, 5]);
     const naturalHeight = useBreakpointValue([2200, 2050, 2000, 2000, 2100]);
     const headingSize = useBreakpointValue({ base: 'sm', md: 'md', xl: 'lg' });
@@ -51,7 +54,7 @@ const Movie = ({ movieData, config, languages }: MovieProps) => {
         '0.85rem',
         '0.9rem'
     ];
-    const { base_url, poster_sizes, backdrop_sizes } = config.images;
+    const { secure_base_url, poster_sizes, backdrop_sizes } = config.images;
     const {
         title,
         genres,
@@ -82,6 +85,25 @@ const Movie = ({ movieData, config, languages }: MovieProps) => {
             iso_3166_1 === 'US' ||
             iso_3166_1 === production_countries[0].iso_3166_1
     )?.release_dates[0].certification;
+    const posters: Media[] =
+        images && images.posters
+            ? images.posters.map(({ file_path }) => ({
+                  path: `${secure_base_url}${poster_sizes[2]}${file_path}`,
+                  original: `${secure_base_url}${poster_sizes[6]}${file_path}`
+              }))
+            : [];
+    const backdrops: Media[] =
+        images && images.posters
+            ? images.backdrops.map(({ file_path }) => ({
+                  path: `${secure_base_url}${backdrop_sizes[1]}${file_path}`,
+                  original: `${secure_base_url}${backdrop_sizes[3]}${file_path}`
+              }))
+            : [];
+
+    const media = [
+        { items: backdrops, width: 533, height: 300, noOfSlides: 2 },
+        { items: posters, width: 185, height: 276, noOfSlides: 5 }
+    ];
 
     useEffect(() => {
         console.log(movieData);
@@ -125,6 +147,65 @@ const Movie = ({ movieData, config, languages }: MovieProps) => {
                             config={config}
                             headingSize={headingSize}
                         />
+
+                        {/* {posters.length > 0 && ( */}
+                        <VStack
+                            spacing="1rem"
+                            width="100%"
+                            align="flex-start"
+                            mb="1rem"
+                        >
+                            <HStack justify="flex-start" spacing="1.5rem">
+                                <Heading size={headingSize}>Media</Heading>
+                                <ButtonGroup size="md" isAttached>
+                                    {['Backdrops', 'Posters'].map(
+                                        (name, index) => (
+                                            <Button
+                                                key={name}
+                                                colorScheme="teal"
+                                                variant={
+                                                    index === currentCarousel
+                                                        ? 'solid'
+                                                        : 'outline'
+                                                }
+                                                onClick={() =>
+                                                    setCurrentCarousel(index)
+                                                }
+                                            >
+                                                {name}
+                                            </Button>
+                                        )
+                                    )}
+                                </ButtonGroup>
+                            </HStack>
+                            <MediaCarousel
+                                naturalHeight={media[currentCarousel].height}
+                                naturalWidth={media[currentCarousel].width}
+                                name={title}
+                                items={media[currentCarousel].items}
+                                noOfSlides={media[currentCarousel].noOfSlides}
+                                buttonSize={['1rem', '1.5rem', '2rem']}
+                            />
+                        </VStack>
+                        {/* )} */}
+                        {/* {backdrops.length > 0 && (
+                            <VStack
+                                spacing="1rem"
+                                width="100%"
+                                align="flex-start"
+                                mb="1rem"
+                            >
+                                <Heading size={headingSize}>Media</Heading>
+                                <MediaCarousel
+                                    naturalHeight={300}
+                                    naturalWidth={533}
+                                    name={title}
+                                    items={backdrops}
+                                    noOfSlides={2}
+                                    buttonSize={['1rem', '1.5rem', '2rem']}
+                                />
+                            </VStack>
+                        )} */}
                         {recommendations.length > 0 && (
                             <VStack
                                 spacing="1rem"
@@ -138,7 +219,7 @@ const Movie = ({ movieData, config, languages }: MovieProps) => {
                                 <ShowCarousel
                                     name="Recommendations"
                                     items={recommendations}
-                                    base_url={base_url}
+                                    base_url={secure_base_url}
                                     poster_sizes={poster_sizes}
                                     noOfSlides={noOfSlides}
                                     naturalHeight={naturalHeight}
@@ -160,7 +241,7 @@ const Movie = ({ movieData, config, languages }: MovieProps) => {
                                 <ShowCarousel
                                     name="Recommendations"
                                     items={similar}
-                                    base_url={base_url}
+                                    base_url={secure_base_url}
                                     poster_sizes={poster_sizes}
                                     noOfSlides={noOfSlides}
                                     naturalHeight={naturalHeight}
