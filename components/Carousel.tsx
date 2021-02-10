@@ -42,36 +42,46 @@ const Carousel: FunctionComponent<CarouselProps> = ({
             >
                 <Box position="relative">
                     <Slider>{children}</Slider>
-                    <Box
-                        p="4px"
-                        position="absolute"
-                        top={buttonYPos}
-                        left={buttonXPos}
-                        color="white"
-                        zIndex="4"
-                        display={{ base: 'none', md: 'block' }}
-                        bgColor="rgba(0,0,0,0.7)"
-                        borderRadius="20%"
-                    >
-                        <ButtonBack>
-                            <Icon as={FaAngleLeft} fontSize={buttonSize} />
-                        </ButtonBack>
-                    </Box>
-                    <Box
-                        p="4px"
-                        position="absolute"
-                        top={buttonYPos}
-                        right={buttonXPos}
-                        color="white"
-                        zIndex="4"
-                        display={{ base: 'none', md: 'block' }}
-                        bgColor="rgba(0,0,0,0.7)"
-                        borderRadius="20%"
-                    >
-                        <ButtonNext>
-                            <Icon as={FaAngleRight} fontSize={buttonSize} />
-                        </ButtonNext>
-                    </Box>
+                    {noOfSlides <= totalSlides && (
+                        <>
+                            <Box
+                                p="4px"
+                                position="absolute"
+                                top={buttonYPos}
+                                left={buttonXPos}
+                                color="white"
+                                zIndex="4"
+                                display={{ base: 'none', md: 'block' }}
+                                bgColor="rgba(0,0,0,0.7)"
+                                borderRadius="20%"
+                            >
+                                <ButtonBack>
+                                    <Icon
+                                        as={FaAngleLeft}
+                                        fontSize={buttonSize}
+                                    />
+                                </ButtonBack>
+                            </Box>
+                            <Box
+                                p="4px"
+                                position="absolute"
+                                top={buttonYPos}
+                                right={buttonXPos}
+                                color="white"
+                                zIndex="4"
+                                display={{ base: 'none', md: 'block' }}
+                                bgColor="rgba(0,0,0,0.7)"
+                                borderRadius="20%"
+                            >
+                                <ButtonNext>
+                                    <Icon
+                                        as={FaAngleRight}
+                                        fontSize={buttonSize}
+                                    />
+                                </ButtonNext>
+                            </Box>
+                        </>
+                    )}
                 </Box>
             </Box>
         </Box>
