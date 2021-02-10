@@ -114,7 +114,7 @@ const Movie = ({ movieData, config, languages }: MovieProps) => {
         { type: 'poster', items: posters, width: 185, height: 276, noOfSlides },
         {
             type: 'video',
-            items: [],
+            items: videos,
             width: 533,
             height: 300,
             noOfSlides: backdropSlides

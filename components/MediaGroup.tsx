@@ -10,10 +10,11 @@ import {
 } from '@chakra-ui/react';
 import { useState } from 'react';
 import MediaCarousel from './MediaCarousel';
+import VideoCarousel from './VideoCarousel';
 
 interface MediaGroupItem {
-    type: string;
-    items: Media[];
+    type: 'poster' | 'backdrop' | 'video';
+    items: Media[] | VideoResultsEntity[];
     width: number;
     height: number;
     noOfSlides: number;
@@ -59,19 +60,36 @@ const MediaGroup = ({ headingSize, media, title }: MediaGroupProps) => {
             {media.map(({ width, height, items, noOfSlides, type }, index) => {
                 if (currentCarousel === index) {
                     if (items.length > 0)
-                        return (
-                            <MediaCarousel
-                                key={index}
-                                naturalHeight={height}
-                                naturalWidth={width}
-                                name={title}
-                                items={items}
-                                noOfSlides={noOfSlides}
-                                buttonSize={['1rem', '1.5rem', '2rem']}
-                            />
-                        );
+                        if (type === 'video')
+                            return (
+                                <VideoCarousel
+                                    key={index}
+                                    naturalHeight={height}
+                                    naturalWidth={width}
+                                    noOfSlides={noOfSlides}
+                                    buttonSize={['1rem', '1.5rem', '2rem']}
+                                    videos={items as VideoResultsEntity[]}
+                                />
+                            );
+                        else
+                            return (
+                                <MediaCarousel
+                                    key={index}
+                                    naturalHeight={height}
+                                    naturalWidth={width}
+                                    name={title}
+                                    items={items as Media[]}
+                                    noOfSlides={noOfSlides}
+                                    buttonSize={['1rem', '1.5rem', '2rem']}
+                                />
+                            );
                     return (
-                        <Flex justify="center" align="center" width="100%">
+                        <Flex
+                            justify="center"
+                            align="center"
+                            width="100%"
+                            key={index}
+                        >
                             <Text size="sm">{`No ${type}s to display`}</Text>
                         </Flex>
                     );

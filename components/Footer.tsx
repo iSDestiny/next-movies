@@ -13,7 +13,7 @@ const Footer = () => {
         >
             <Text>Created By Jason Bugallon</Text>
             <Text>
-                Data fetched from{' '}
+                Data and design belongs to{' '}
                 <Link
                     rel="noopener noreferrer"
                     target="_blank"
@@ -24,6 +24,7 @@ const Footer = () => {
                     TMDb
                 </Link>
             </Text>
+            <Text>Made with Next.js and Deployed on Vercel</Text>
             <Text>{`Next Movies © ${new Date().getFullYear()}`}</Text>
         </Flex>
     );
