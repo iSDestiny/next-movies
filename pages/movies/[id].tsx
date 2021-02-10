@@ -47,6 +47,7 @@ const Movie = ({ movieData, config, languages }: MovieProps) => {
     const naturalHeight = useBreakpointValue([2200, 2050, 2000, 2000, 2100]);
     const headingSize = useBreakpointValue({ base: 'sm', md: 'md', xl: 'lg' });
     const sideDataHeadingSize = useBreakpointValue({ base: 'sm', md: 'md' });
+    const buttonSize = ['1rem', '1.5rem', '2rem'];
     const starSize = ['0.8rem', '0.9rem', '1rem', '1rem', '1.1rem'];
     const ratingSize = ['0.7rem', '0.8rem', '0.9rem', '0.9rem', '1rem'];
     const carouselHeadingSize = [
@@ -104,12 +105,20 @@ const Movie = ({ movieData, config, languages }: MovieProps) => {
 
     const media = [
         {
+            type: 'backdrop',
             items: backdrops,
             width: 533,
             height: 300,
             noOfSlides: backdropSlides
         },
-        { items: posters, width: 185, height: 276, noOfSlides }
+        { type: 'poster', items: posters, width: 185, height: 276, noOfSlides },
+        {
+            type: 'video',
+            items: [],
+            width: 533,
+            height: 300,
+            noOfSlides: backdropSlides
+        }
     ];
 
     useEffect(() => {
@@ -150,6 +159,7 @@ const Movie = ({ movieData, config, languages }: MovieProps) => {
                 >
                     <VStack width={{ base: '100%', lg: '80%' }}>
                         <CastCarousel
+                            buttonSize={buttonSize}
                             cast={credits.cast}
                             config={config}
                             headingSize={headingSize}

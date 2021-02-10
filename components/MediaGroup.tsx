@@ -12,6 +12,7 @@ import { useState } from 'react';
 import MediaCarousel from './MediaCarousel';
 
 interface MediaGroupItem {
+    type: string;
     items: Media[];
     width: number;
     height: number;
@@ -41,7 +42,7 @@ const MediaGroup = ({ headingSize, media, title }: MediaGroupProps) => {
             <HStack justify="flex-start" spacing="1.5rem">
                 <Heading size={headingSize}>Media</Heading>
                 <ButtonGroup size={groupButtonSize} isAttached>
-                    {['Backdrops', 'Posters'].map((name, index) => (
+                    {['Backdrops', 'Posters', 'Videos'].map((name, index) => (
                         <Button
                             key={name}
                             colorScheme="teal"
@@ -55,7 +56,7 @@ const MediaGroup = ({ headingSize, media, title }: MediaGroupProps) => {
                     ))}
                 </ButtonGroup>
             </HStack>
-            {media.map(({ width, height, items, noOfSlides }, index) => {
+            {media.map(({ width, height, items, noOfSlides, type }, index) => {
                 if (currentCarousel === index) {
                     if (items.length > 0)
                         return (
@@ -71,7 +72,7 @@ const MediaGroup = ({ headingSize, media, title }: MediaGroupProps) => {
                         );
                     return (
                         <Flex justify="center" align="center" width="100%">
-                            <Text size="sm">No items to display</Text>
+                            <Text size="sm">{`No ${type}s to display`}</Text>
                         </Flex>
                     );
                 }
