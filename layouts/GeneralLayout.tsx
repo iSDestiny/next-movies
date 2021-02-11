@@ -1,3 +1,4 @@
+import { Box } from '@chakra-ui/react';
 import Footer from 'components/Footer';
 import Navbar from 'components/Navbar';
 import { FunctionComponent } from 'react';
@@ -10,7 +11,7 @@ const GeneralLayout: FunctionComponent<LayoutProps> = ({ title, children }) => {
     return (
         <>
             <Navbar />
-            {children}
+            <Box pt="65px">{children}</Box>
             <Footer />
         </>
     );

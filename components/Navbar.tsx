@@ -9,7 +9,7 @@ import {
     useBreakpointValue,
     useColorMode
 } from '@chakra-ui/react';
-import { AnimatePresence } from 'framer-motion';
+import { AnimatePresence, useViewportScroll } from 'framer-motion';
 import Image from 'next/image';
 import NextLink from 'next/link';
 import { useRouter } from 'next/router';
@@ -21,13 +21,45 @@ import MobileNav from './MobileNav';
 import MotionBox from './MotionBox';
 
 const Navbar = () => {
+    const [isNavHidden, setIsNavHidden] = useState(false);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const { colorMode, toggleColorMode } = useColorMode();
+    const { scrollY } = useViewportScroll();
     const router = useRouter();
+    const hideVariants = {
+        show: {
+            y: 0,
+            transition: {
+                type: 'spring',
+                stiffness: 700,
+                damping: 100
+            }
+        },
+        hide: {
+            y: '-100%',
+            transition: {
+                type: 'spring',
+                stiffness: 700,
+                damping: 100
+            }
+        }
+    };
 
     useEffect(() => {
         document.body.style.overflowY = isMenuOpen ? 'hidden' : 'auto';
     }, [isMenuOpen]);
+
+    useEffect(() => {
+        const handleNavScroll = () => {
+            setIsNavHidden(scrollY.getPrevious() < scrollY.get());
+        };
+
+        const unsubY = scrollY.onChange(handleNavScroll);
+
+        return () => {
+            unsubY();
+        };
+    }, []);
 
     return (
         <FocusLock disabled={!isMenuOpen}>
@@ -43,7 +75,16 @@ const Navbar = () => {
                 )}
             </AnimatePresence>
             <DarkMode>
-                <Box as="header" bgColor="gray.900">
+                <MotionBox
+                    initial={false}
+                    variants={hideVariants}
+                    animate={isNavHidden ? 'hide' : 'show'}
+                    as="header"
+                    bgColor="gray.900"
+                    position="fixed"
+                    width="100%"
+                    zIndex="5"
+                >
                     <Flex
                         as="nav"
                         justify="space-between"
@@ -58,7 +99,7 @@ const Navbar = () => {
                             spacing={{ base: '0.5rem', md: '1.5rem' }}
                             listStyleType="none"
                             align="center"
-                            justify="center"
+                            justify="flex-start"
                         >
                             <MotionBox
                                 pl="1rem"
@@ -172,7 +213,7 @@ const Navbar = () => {
                             </HStack>
                         </HStack>
                     </Flex>
-                </Box>
+                </MotionBox>
             </DarkMode>
         </FocusLock>
     );
