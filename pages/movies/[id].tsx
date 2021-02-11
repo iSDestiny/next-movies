@@ -119,6 +119,15 @@ const Movie = ({ movieData, config, languages }: MovieProps) => {
             noOfSlides: backdropSlides
         }
     ];
+    const origLanguage = languages.find(
+        ({ iso_639_1 }) => iso_639_1 === original_language
+    ).english_name;
+    const sideDataItems = [
+        { heading: 'Status', data: status },
+        { heading: 'Original Language', data: origLanguage },
+        { heading: 'Budget', data: budget, isDollar: true },
+        { heading: 'Revenue', data: revenue, isDollar: true }
+    ];
 
     useEffect(() => {
         console.log(movieData);
@@ -222,15 +231,7 @@ const Movie = ({ movieData, config, languages }: MovieProps) => {
                     >
                         <ShowSideData
                             headingSize={sideDataHeadingSize}
-                            status={status}
-                            origLanguage={
-                                languages.find(
-                                    ({ iso_639_1 }) =>
-                                        iso_639_1 === original_language
-                                ).english_name
-                            }
-                            budget={budget}
-                            revenue={revenue}
+                            items={sideDataItems}
                             keywords={keywords}
                         />
                     </VStack>

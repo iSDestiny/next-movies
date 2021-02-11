@@ -8,18 +8,24 @@ import {
     Tag
 } from '@chakra-ui/react';
 
-interface SideDataItem {
+interface SideDataItemProps {
     heading: string;
     data: string | number;
     isDollar?: boolean;
     headingSize: string;
 }
 
+interface SideDataItem {
+    heading: string;
+    data: any;
+    isDollar?: boolean;
+}
 interface ShowSideDataProps {
-    status: string;
-    origLanguage: string;
-    budget: number;
-    revenue: number;
+    // status: string;
+    // origLanguage: string;
+    // budget: number;
+    // revenue: number;
+    items: SideDataItem[];
     keywords: GenresEntityOrKeywordsEntity[];
     headingSize: string;
 }
@@ -29,7 +35,7 @@ const SideDataItem = ({
     headingSize,
     data,
     isDollar
-}: SideDataItem) => {
+}: SideDataItemProps) => {
     const displayData = () => {
         if (isDollar) return `$${data.toLocaleString()}`;
         return data;
@@ -39,22 +45,27 @@ const SideDataItem = ({
             <Heading as="h4" size={headingSize}>
                 {heading}
             </Heading>
-            <Text>{data ? displayData() : '-'}</Text>
+            {heading !== 'Network' ? (
+                <Text>{data ? displayData() : '-'}</Text>
+            ) : (
+                <>{data}</>
+            )}
         </Box>
     );
 };
 
 const ShowSideData = ({
-    status,
-    origLanguage,
-    budget,
-    revenue,
+    // status,
+    // origLanguage,
+    // budget,
+    // revenue,
+    items,
     keywords,
     headingSize
 }: ShowSideDataProps) => {
     return (
         <>
-            <SideDataItem
+            {/* <SideDataItem
                 heading="Status"
                 data={status}
                 headingSize={headingSize}
@@ -75,7 +86,16 @@ const ShowSideData = ({
                 data={revenue}
                 isDollar
                 headingSize={headingSize}
-            />
+            /> */}
+            {items.map(({ heading, data, isDollar }, index) => (
+                <SideDataItem
+                    key={index}
+                    heading={heading}
+                    data={data}
+                    isDollar={isDollar}
+                    headingSize={headingSize}
+                />
+            ))}
             <Box>
                 <Heading as="h4" size={headingSize} mb="0.5rem">
                     Keywords

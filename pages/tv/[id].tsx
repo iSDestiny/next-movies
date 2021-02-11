@@ -16,6 +16,8 @@ import React, { useEffect } from 'react';
 import addLeadingZeroToDate from 'utils/addLeadingZeroToDate';
 import tmdbFetch from 'utils/tmdbFetch';
 import tmdbFetchGzip from 'utils/tmdbFetchGzip';
+import Image from 'next/image';
+import ShowSideData from 'components/ShowSideData';
 
 interface TVShowProps {
     tvShowData: TVShowDetails;
@@ -39,7 +41,12 @@ const TVShow = ({ tvShowData, config, languages }: TVShowProps) => {
         '0.85rem',
         '0.9rem'
     ];
-    const { secure_base_url, poster_sizes, backdrop_sizes } = config.images;
+    const {
+        secure_base_url,
+        poster_sizes,
+        backdrop_sizes,
+        logo_sizes
+    } = config.images;
     const {
         name: title,
         genres,
@@ -49,7 +56,7 @@ const TVShow = ({ tvShowData, config, languages }: TVShowProps) => {
         original_language,
         status,
         seasons,
-        keywords: { keywords },
+        keywords: { results: keywords },
         tagline,
         overview,
         vote_average,
@@ -65,7 +72,8 @@ const TVShow = ({ tvShowData, config, languages }: TVShowProps) => {
         number_of_episodes,
         number_of_seasons,
         production_countries,
-        episode_run_time: runtime
+        episode_run_time: runtime,
+        networks
     } = tvShowData;
     const certification = content_ratings.find(
         ({ iso_3166_1 }) =>
@@ -86,6 +94,9 @@ const TVShow = ({ tvShowData, config, languages }: TVShowProps) => {
                   original: `${secure_base_url}${backdrop_sizes[3]}${file_path}`
               }))
             : [];
+    const origLanguage = languages.find(
+        ({ iso_639_1 }) => iso_639_1 === original_language
+    ).english_name;
 
     const media: MediaGroupItem[] = [
         {
@@ -103,6 +114,22 @@ const TVShow = ({ tvShowData, config, languages }: TVShowProps) => {
             height: 300,
             noOfSlides: backdropSlides
         }
+    ];
+    const sideDataItems = [
+        { heading: 'Status', data: status },
+        {
+            heading: 'Network',
+            data: (
+                <Image
+                    alt={`${networks[0].name}`}
+                    src={`${secure_base_url}${logo_sizes[1]}${networks[0].logo_path}`}
+                    width={55}
+                    height={30}
+                />
+            )
+        },
+        { heading: 'Type', data: type },
+        { heading: 'Original Language', data: origLanguage }
     ];
 
     useEffect(() => {
@@ -203,19 +230,11 @@ const TVShow = ({ tvShowData, config, languages }: TVShowProps) => {
                         spacing="2rem"
                         align="flex-start"
                     >
-                        {/* <ShowSideData
+                        <ShowSideData
                             headingSize={sideDataHeadingSize}
-                            status={status}
-                            origLanguage={
-                                languages.find(
-                                    ({ iso_639_1 }) =>
-                                        iso_639_1 === original_language
-                                ).english_name
-                            }
-                            budget={budget}
-                            revenue={revenue}
+                            items={sideDataItems}
                             keywords={keywords}
-                        /> */}
+                        />
                     </VStack>
                 </Stack>
             </Box>

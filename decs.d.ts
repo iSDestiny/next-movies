@@ -157,6 +157,7 @@ interface GenresEntityOrKeywordsEntity {
     id: number;
     name: string;
 }
+
 interface ProductionCompaniesEntity {
     id: number;
     logo_path?: string | null;
@@ -270,6 +271,7 @@ interface CrewEntity {
 }
 interface Keywords {
     keywords?: GenresEntityOrKeywordsEntity[] | null;
+    results?: GenresEntityOrKeywordsEntity[] | null;
 }
 
 interface Credits {
