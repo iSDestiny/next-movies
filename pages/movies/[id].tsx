@@ -32,8 +32,7 @@ import ShowSideData from 'components/ShowSideData';
 import Footer from 'components/Footer';
 import GeneralLayout from 'layouts/GeneralLayout';
 import MediaCarousel from 'components/MediaCarousel';
-import MediaGroupItem from 'components/MediaGroup';
-import MediaGroup from 'components/MediaGroup';
+import MediaGroup, { MediaGroupItem } from 'components/MediaGroup';
 
 interface MovieProps {
     movieData: MovieDetails;
@@ -103,7 +102,7 @@ const Movie = ({ movieData, config, languages }: MovieProps) => {
               }))
             : [];
 
-    const media = [
+    const media: MediaGroupItem[] = [
         {
             type: 'backdrop',
             items: backdrops,

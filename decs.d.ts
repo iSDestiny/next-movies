@@ -370,11 +370,11 @@ interface TVShowDetails {
     vote_count: number;
     content_ratings: ContentRatings;
     reviews: Reviews;
-    similar: Similar;
+    similar: SimilarOrRecommendations;
     images: Images;
     credits: Credits;
     videos: Videos;
-    recommendations: Recommendations;
+    recommendations: SimilarOrRecommendations;
     keywords: Keywords;
 }
 interface CreatedByEntity {

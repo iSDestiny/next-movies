@@ -12,7 +12,7 @@ import { useState } from 'react';
 import MediaCarousel from './MediaCarousel';
 import VideoCarousel from './VideoCarousel';
 
-interface MediaGroupItem {
+export interface MediaGroupItem {
     type: 'poster' | 'backdrop' | 'video';
     items: Media[] | VideoResultsEntity[];
     width: number;

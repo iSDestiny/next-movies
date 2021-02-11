@@ -53,7 +53,6 @@ const ShowSideData = ({
     headingSize
 }: ShowSideDataProps) => {
     return (
-        // <VStack spacing="1rem">
         <>
             <SideDataItem
                 heading="Status"
@@ -92,7 +91,6 @@ const ShowSideData = ({
                 </Wrap>
             </Box>
         </>
-        // {/* </VStack> */}
     );
 };
 

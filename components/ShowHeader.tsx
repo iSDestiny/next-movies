@@ -25,7 +25,6 @@ interface ShowHeaderProps {
     title: string;
     release_date: string;
     certification: string;
-    runtime: number;
     overview: string;
     videos: VideoResultsEntity[];
     genres: GenresEntityOrKeywordsEntity[];
@@ -34,6 +33,7 @@ interface ShowHeaderProps {
     vote_average: number;
     vote_count: number;
     tagline: string;
+    runtime?: number;
 }
 
 const ShowHeader = ({
@@ -144,26 +144,29 @@ const ShowHeader = ({
                                 </Text>
                                 <Text>{release_date}</Text>
                                 <DotDivider size="5px" color="white" />
-                                <Wrap
-                                    spacing="0.3rem"
-                                    // justify="center"
-                                    // align="center"
-                                >
+                                <Wrap spacing="0.3rem">
                                     {genres.map(({ id, name }, index) => (
                                         <WrapItem key={id}>
                                             <Tag size="sm">{name}</Tag>
                                         </WrapItem>
                                     ))}
                                 </Wrap>
-                                <DotDivider size="5px" color="white" />
-                                <Text>
-                                    {runtime > 60
-                                        ? `${Math.floor(runtime / 60)}H ${
-                                              runtime -
-                                              Math.floor(runtime / 60) * 60
-                                          }M`
-                                        : `${runtime}M`}
-                                </Text>
+                                {runtime && (
+                                    <>
+                                        <DotDivider size="5px" color="white" />
+                                        <Text>
+                                            {runtime > 60
+                                                ? `${Math.floor(
+                                                      runtime / 60
+                                                  )}H ${
+                                                      runtime -
+                                                      Math.floor(runtime / 60) *
+                                                          60
+                                                  }M`
+                                                : `${runtime}M`}
+                                        </Text>
+                                    </>
+                                )}
                             </HStack>
                         </Box>
                         <HStack spacing="1rem" align="center">
@@ -244,9 +247,6 @@ const ShowHeader = ({
                 color="white"
                 p="1rem"
             >
-                {/* <Heading color="white" as="h1" size="md" alignSelf="center">
-                    {title}
-                </Heading> */}
                 <Box>
                     <Heading as="h1" size="sm" mb="3px" textAlign="center">
                         {`${title} `}
@@ -285,14 +285,19 @@ const ShowHeader = ({
                         {certification}
                     </Text>
                     <Text>{release_date}</Text>
-                    <DotDivider size="5px" color="white" />
-                    <Text>
-                        {runtime > 60
-                            ? `${Math.floor(runtime / 60)}H ${
-                                  runtime - Math.floor(runtime / 60) * 60
-                              }M`
-                            : `${runtime}M`}
-                    </Text>
+                    {runtime && (
+                        <>
+                            <DotDivider size="5px" color="white" />
+                            <Text>
+                                {runtime > 60
+                                    ? `${Math.floor(runtime / 60)}H ${
+                                          runtime -
+                                          Math.floor(runtime / 60) * 60
+                                      }M`
+                                    : `${runtime}M`}
+                            </Text>
+                        </>
+                    )}
                 </HStack>
                 <Wrap
                     spacing="0.3rem"

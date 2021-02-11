@@ -1,12 +1,11 @@
-import { Box, Icon, Link } from '@chakra-ui/react';
+import { Box, Icon } from '@chakra-ui/react';
+import Image from 'next/image';
 import { Slide } from 'pure-react-carousel';
+import { useState } from 'react';
+import { FaPlay } from 'react-icons/fa';
 import Carousel from './Carousel';
 import MotionBox from './MotionBox';
-import NextLink from 'next/link';
-import Image from 'next/image';
-import { useState } from 'react';
 import VideoModal from './VideoModal';
-import { FaPlay } from 'react-icons/fa';
 
 interface VideoCarouselProps {
     naturalHeight: number;
