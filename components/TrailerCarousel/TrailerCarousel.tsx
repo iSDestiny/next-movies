@@ -125,7 +125,7 @@ const TrailerCarousel = ({
                     top="45%"
                     left="1rem"
                     color="white"
-                    zIndex="4"
+                    zIndex="2"
                     bgColor="rgba(0,0,0,0.7)"
                     borderRadius="20%"
                 >
@@ -142,7 +142,7 @@ const TrailerCarousel = ({
                     top="45%"
                     right="1rem"
                     color="white"
-                    zIndex="4"
+                    zIndex="2"
                     bgColor="rgba(0,0,0,0.7)"
                     borderRadius="20%"
                 >

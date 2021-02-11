@@ -21,10 +21,6 @@ interface SideDataItem {
     isDollar?: boolean;
 }
 interface ShowSideDataProps {
-    // status: string;
-    // origLanguage: string;
-    // budget: number;
-    // revenue: number;
     items: SideDataItem[];
     keywords: GenresEntityOrKeywordsEntity[];
     headingSize: string;
@@ -54,39 +50,9 @@ const SideDataItem = ({
     );
 };
 
-const ShowSideData = ({
-    // status,
-    // origLanguage,
-    // budget,
-    // revenue,
-    items,
-    keywords,
-    headingSize
-}: ShowSideDataProps) => {
+const ShowSideData = ({ items, keywords, headingSize }: ShowSideDataProps) => {
     return (
         <>
-            {/* <SideDataItem
-                heading="Status"
-                data={status}
-                headingSize={headingSize}
-            />
-            <SideDataItem
-                heading="Original Language"
-                data={origLanguage}
-                headingSize={headingSize}
-            />
-            <SideDataItem
-                heading="Budget"
-                data={budget}
-                isDollar
-                headingSize={headingSize}
-            />
-            <SideDataItem
-                heading="Revenue"
-                data={revenue}
-                isDollar
-                headingSize={headingSize}
-            /> */}
             {items.map(({ heading, data, isDollar }, index) => (
                 <SideDataItem
                     key={index}

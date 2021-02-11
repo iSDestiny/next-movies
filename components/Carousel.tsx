@@ -42,7 +42,7 @@ const Carousel: FunctionComponent<CarouselProps> = ({
             >
                 <Box position="relative">
                     <Slider>{children}</Slider>
-                    {noOfSlides <= totalSlides && (
+                    {noOfSlides < totalSlides && (
                         <>
                             <Box
                                 p="4px"

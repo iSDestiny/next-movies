@@ -6,17 +6,18 @@ import {
     IconButton,
     Link,
     Tooltip,
+    useBreakpointValue,
     useColorMode
 } from '@chakra-ui/react';
 import { AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
 import NextLink from 'next/link';
 import { useRouter } from 'next/router';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import FocusLock from 'react-focus-lock';
 import { FaMoon, FaSun, FaSearch } from 'react-icons/fa';
 import MenuToggle from './MenuToggle';
-// import MobileNav from './MobileNav';
+import MobileNav from './MobileNav';
 import MotionBox from './MotionBox';
 
 const Navbar = () => {
@@ -24,9 +25,13 @@ const Navbar = () => {
     const { colorMode, toggleColorMode } = useColorMode();
     const router = useRouter();
 
+    useEffect(() => {
+        document.body.style.overflowY = isMenuOpen ? 'hidden' : 'auto';
+    }, [isMenuOpen]);
+
     return (
         <FocusLock disabled={!isMenuOpen}>
-            {/* <AnimatePresence>
+            <AnimatePresence>
                 {isMenuOpen && (
                     <>
                         <MobileNav
@@ -36,7 +41,7 @@ const Navbar = () => {
                         />
                     </>
                 )}
-            </AnimatePresence> */}
+            </AnimatePresence>
             <DarkMode>
                 <Box as="header" bgColor="gray.900">
                     <Flex
@@ -50,15 +55,27 @@ const Navbar = () => {
                     >
                         <HStack
                             as="ul"
-                            spacing="1.5rem"
+                            spacing={{ base: '0.5rem', md: '1.5rem' }}
                             listStyleType="none"
                             align="center"
                             justify="center"
                         >
-                            <Box
+                            <MotionBox
+                                pl="1rem"
                                 as="li"
-                                display={{ base: 'none', md: 'block' }}
+                                zIndex="4"
+                                exit="closed"
+                                initial={false}
+                                animate={isMenuOpen ? 'open' : 'closed'}
+                                display={{ base: 'block', md: 'none' }}
                             >
+                                <MenuToggle
+                                    toggle={() =>
+                                        setIsMenuOpen((prev) => !prev)
+                                    }
+                                />
+                            </MotionBox>
+                            <Box as="li" zIndex="4">
                                 <NextLink href="/" passHref>
                                     <Link
                                         zIndex="4"
@@ -127,7 +144,7 @@ const Navbar = () => {
                             <HStack as="li" position="relative">
                                 <Tooltip label="Toggle light/dark mode">
                                     <IconButton
-                                        size="lg"
+                                        size="md"
                                         zIndex="4"
                                         aria-label="dark light switch"
                                         variant="ghost"
@@ -135,39 +152,24 @@ const Navbar = () => {
                                         onClick={toggleColorMode}
                                         icon={
                                             colorMode === 'light' ? (
-                                                <FaMoon fontSize="1.5rem" />
+                                                <FaMoon fontSize="1.2rem" />
                                             ) : (
-                                                <FaSun fontSize="1.5rem" />
+                                                <FaSun fontSize="1.2rem" />
                                             )
                                         }
                                     />
                                 </Tooltip>
                                 <Tooltip label="Search">
                                     <IconButton
-                                        size="lg"
+                                        size="md"
                                         zIndex="4"
                                         aria-label="search"
                                         variant="ghost"
                                         borderRadius="50%"
-                                        // onClick={toggleColorMode}
-                                        icon={<FaSearch fontSize="1.5rem" />}
+                                        icon={<FaSearch fontSize="1.2rem" />}
                                     />
                                 </Tooltip>
                             </HStack>
-                            <MotionBox
-                                as="li"
-                                zIndex="4"
-                                exit="closed"
-                                initial={false}
-                                animate={isMenuOpen ? 'open' : 'closed'}
-                                display={{ base: 'block', md: 'none' }}
-                            >
-                                <MenuToggle
-                                    toggle={() =>
-                                        setIsMenuOpen((prev) => !prev)
-                                    }
-                                />
-                            </MotionBox>
                         </HStack>
                     </Flex>
                 </Box>

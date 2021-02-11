@@ -2,6 +2,7 @@ import {
     Box,
     Heading,
     Stack,
+    Tooltip,
     useBreakpointValue,
     VStack
 } from '@chakra-ui/react';
@@ -120,12 +121,20 @@ const TVShow = ({ tvShowData, config, languages }: TVShowProps) => {
         {
             heading: 'Network',
             data: (
-                <Image
-                    alt={`${networks[0].name}`}
-                    src={`${secure_base_url}${logo_sizes[1]}${networks[0].logo_path}`}
-                    width={55}
-                    height={30}
-                />
+                <>
+                    {networks?.length > 0 && (
+                        <Tooltip label={networks[0].name}>
+                            <button>
+                                <Image
+                                    alt={`${networks[0].name}`}
+                                    src={`${secure_base_url}${logo_sizes[2]}${networks[0].logo_path}`}
+                                    width={55}
+                                    height={30}
+                                />
+                            </button>
+                        </Tooltip>
+                    )}
+                </>
             )
         },
         { heading: 'Type', data: type },
