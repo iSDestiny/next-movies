@@ -4,11 +4,11 @@ import tmdbFetch from 'utils/tmdbFetch';
 const fetchSearch = async (url: string, query: string, page?: number) => {
     const { data } = await tmdbFetch.get(url, {
         params: {
-            query,
-            page
+            query: query,
+            page: page
         }
     });
-    return data;
+    return data as SearchResults;
 };
 
 const useSearch = (query: string, shouldFetch: boolean, page?: number) => {
@@ -18,7 +18,7 @@ const useSearch = (query: string, shouldFetch: boolean, page?: number) => {
     );
 
     return {
-        results: data,
+        data,
         isLoading: !data && !error,
         isError: error
     };

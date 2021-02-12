@@ -459,3 +459,51 @@ interface Logo {
     path: string;
     aspect_ratio: number;
 }
+
+interface SearchResults {
+    page: number;
+    results?: SearchResult[] | null;
+    total_pages: number;
+    total_results: number;
+}
+interface SearchResult {
+    adult?: boolean | null;
+    backdrop_path?: string | null;
+    genre_ids?: (number | null)[] | null;
+    id: number;
+    media_type: string;
+    original_language?: string | null;
+    original_title?: string | null;
+    overview?: string | null;
+    popularity: number;
+    poster_path?: string | null;
+    release_date?: string | null;
+    title?: string | null;
+    video?: boolean | null;
+    vote_average?: number | null;
+    vote_count?: number | null;
+    first_air_date?: string | null;
+    name?: string | null;
+    origin_country?: string[] | null;
+    original_name?: string | null;
+    gender?: number | null;
+    known_for?: KnownForEntity[] | null;
+    known_for_department?: string | null;
+    profile_path?: null;
+}
+interface KnownForEntity {
+    adult: boolean;
+    backdrop_path?: string | null;
+    genre_ids?: number[] | null;
+    id: number;
+    media_type: string;
+    original_language: string;
+    original_title: string;
+    overview: string;
+    poster_path: string;
+    release_date: string;
+    title: string;
+    video: boolean;
+    vote_average: number;
+    vote_count: number;
+}
