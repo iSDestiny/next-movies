@@ -15,10 +15,17 @@ import {
     ListItem
 } from '@chakra-ui/react';
 import useSearch from 'hooks/useSearch';
-import { Component, FormEvent, useEffect, useState } from 'react';
+import {
+    Component,
+    FormEvent,
+    KeyboardEvent,
+    useEffect,
+    useState
+} from 'react';
 import { FaFilm, FaSearch, FaTv, FaUser } from 'react-icons/fa';
 import { useRouter } from 'next/router';
 import MotionBox from './MotionBox';
+import mod from 'utils/mod';
 
 interface SearchBarProps {
     isOpen: boolean;
@@ -59,9 +66,27 @@ const SearchBar = ({ isOpen, onClose }: SearchBarProps) => {
 
     const handleSubmit = (e: FormEvent<HTMLDivElement>) => {
         e.preventDefault();
-        if (query.trim().length > 0) router.push(`/search?query=${query}`);
-        onClose();
-        setQuery('');
+        if (currSelection > 0) {
+            const { id, media_type } = data.results[currSelection - 1];
+            goToEntity(media_type, id);
+        } else if (query.trim().length > 0) {
+            router.push(`/search?query=${query}`);
+            onClose();
+            setQuery('');
+        }
+    };
+
+    const handleKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
+        if (event.key === 'Escape') {
+            onClose();
+            setQuery('');
+        } else if (event.key === 'ArrowDown') {
+            event.preventDefault();
+            setCurrSelection((prev) => mod(prev + 1, 11));
+        } else if (event.key === 'ArrowUp') {
+            event.preventDefault();
+            setCurrSelection((prev) => mod(prev - 1, 11));
+        }
     };
 
     useEffect(() => {
@@ -95,6 +120,7 @@ const SearchBar = ({ isOpen, onClose }: SearchBarProps) => {
                         />
                         <Input
                             onChange={(e) => setQuery(e.target.value)}
+                            onKeyDown={handleKeyDown}
                             value={query}
                             maxWidth="1400px"
                             focusBorderColor="rgba(0,0,0,0)"
@@ -118,7 +144,7 @@ const SearchBar = ({ isOpen, onClose }: SearchBarProps) => {
                 {data && data.results.length > 0 ? (
                     data.results
                         .slice(0, 10)
-                        .map(({ media_type, name, title, id }) => {
+                        .map(({ media_type, name, title, id }, index) => {
                             let film: any;
                             if (media_type === 'movie') film = FaFilm;
                             else if (media_type === 'tv') film = FaTv;
@@ -131,6 +157,11 @@ const SearchBar = ({ isOpen, onClose }: SearchBarProps) => {
                                     _hover={{
                                         bgColor: 'gray.100'
                                     }}
+                                    bgColor={
+                                        currSelection - 1 === index
+                                            ? 'gray.100'
+                                            : 'white'
+                                    }
                                     cursor="pointer"
                                     onClick={() => goToEntity(media_type, id)}
                                     width="100%"
