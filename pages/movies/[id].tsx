@@ -1,39 +1,22 @@
 import {
     Box,
-    Text,
-    Flex,
     Heading,
-    VStack,
-    HStack,
-    Tag,
-    Divider,
-    Icon,
-    Button,
-    DarkMode,
     Stack,
     useBreakpointValue,
-    ButtonGroup
+    VStack
 } from '@chakra-ui/react';
-import Navbar from 'components/Navbar';
+import CastCarousel from 'components/CastCarousel';
+import MediaGroup, { MediaGroupItem } from 'components/MediaGroup';
+import ShowCarousel from 'components/ShowCarousel';
+import ShowHeader from 'components/ShowHeader';
+import ShowSideData from 'components/ShowSideData';
+import GeneralLayout from 'layouts/GeneralLayout';
 import { GetStaticPaths, GetStaticProps } from 'next';
-import React, { useEffect, useState } from 'react';
+import { ungzip } from 'node-gzip';
+import React, { useEffect } from 'react';
+import addLeadingZeroToDate from 'utils/addLeadingZeroToDate';
 import tmdbFetch from 'utils/tmdbFetch';
 import tmdbFetchGzip from 'utils/tmdbFetchGzip';
-import addLeadingZeroToDate from 'utils/addLeadingZeroToDate';
-import { ungzip } from 'node-gzip';
-import Image from 'next/image';
-import DotDivider from 'components/DotDivider';
-import { FaPlay, FaRegStar, FaStar } from 'react-icons/fa';
-import VideoModal from 'components/VideoModal';
-import ShowHeader from 'components/ShowHeader';
-import CastCarousel from 'components/CastCarousel';
-import ShowCarousel from 'components/ShowCarousel';
-import ShowSideData from 'components/ShowSideData';
-import Footer from 'components/Footer';
-import GeneralLayout from 'layouts/GeneralLayout';
-import MediaCarousel from 'components/MediaCarousel';
-import MediaGroup, { MediaGroupItem } from 'components/MediaGroup';
-
 interface MovieProps {
     movieData: MovieDetails;
     config: TMDBConfig;
@@ -327,7 +310,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
 
     return {
         paths,
-        fallback: false
+        fallback: true
     };
 };
 

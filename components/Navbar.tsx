@@ -15,12 +15,14 @@ import NextLink from 'next/link';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import FocusLock from 'react-focus-lock';
-import { FaMoon, FaSun, FaSearch } from 'react-icons/fa';
+import { FaMoon, FaSun, FaSearch, FaTimes } from 'react-icons/fa';
 import MenuToggle from './MenuToggle';
 import MobileNav from './MobileNav';
 import MotionBox from './MotionBox';
+import SearchBar from './SearchBar';
 
 const Navbar = () => {
+    const [isSearchOpen, setIsSearchOpen] = useState(false);
     const [isNavHidden, setIsNavHidden] = useState(false);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const { colorMode, toggleColorMode } = useColorMode();
@@ -200,19 +202,33 @@ const Navbar = () => {
                                         }
                                     />
                                 </Tooltip>
-                                <Tooltip label="Search">
+                                <Tooltip
+                                    label={
+                                        isSearchOpen ? 'Close Search' : 'Search'
+                                    }
+                                >
                                     <IconButton
+                                        onClick={() =>
+                                            setIsSearchOpen((prev) => !prev)
+                                        }
                                         size="md"
                                         zIndex="4"
                                         aria-label="search"
                                         variant="ghost"
                                         borderRadius="50%"
-                                        icon={<FaSearch fontSize="1.2rem" />}
+                                        icon={
+                                            isSearchOpen ? (
+                                                <FaTimes fontSize="1.2rem" />
+                                            ) : (
+                                                <FaSearch fontSize="1.2rem" />
+                                            )
+                                        }
                                     />
                                 </Tooltip>
                             </HStack>
                         </HStack>
                     </Flex>
+                    <SearchBar isOpen={isSearchOpen} />
                 </MotionBox>
             </DarkMode>
         </FocusLock>

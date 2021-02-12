@@ -1,5 +1,5 @@
+import { Box, Link, VStack } from '@chakra-ui/react';
 import NextLink from 'next/link';
-import { Box, Link, useColorMode, VStack } from '@chakra-ui/react';
 import { useRouter } from 'next/router';
 import { Dispatch, SetStateAction, useEffect } from 'react';
 import MotionBox from './MotionBox';
@@ -11,7 +11,6 @@ interface MobileNavProps {
 
 const MobileNav = ({ isOpen, setIsOpen }: MobileNavProps) => {
     const router = useRouter();
-    const { colorMode } = useColorMode();
 
     const menuVariants = {
         open: {

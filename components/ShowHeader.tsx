@@ -80,7 +80,6 @@ const ShowHeader = ({
                     layout="fill"
                     objectFit="cover"
                     objectPosition={`${posterWidth} 0`}
-                    priority
                 />
                 <Box
                     position="absolute"
@@ -114,7 +113,6 @@ const ShowHeader = ({
                             alt={`${title} poster`}
                             layout="fill"
                             objectFit="cover"
-                            priority
                         />
                     </Box>
                     <VStack
