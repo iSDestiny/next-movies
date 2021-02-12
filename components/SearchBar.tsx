@@ -16,10 +16,12 @@ import {
 } from '@chakra-ui/react';
 import useSearch from 'hooks/useSearch';
 import {
+    ChangeEvent,
     Component,
     FormEvent,
     KeyboardEvent,
     useEffect,
+    useRef,
     useState
 } from 'react';
 import { FaFilm, FaSearch, FaTv, FaUser } from 'react-icons/fa';
@@ -34,6 +36,7 @@ interface SearchBarProps {
 
 const SearchBar = ({ isOpen, onClose }: SearchBarProps) => {
     const [currSelection, setCurrSelection] = useState(0);
+    const ref = useRef<HTMLInputElement>();
     const [query, setQuery] = useState('');
     const { data, isLoading } = useSearch(query, query.trim().length > 0);
     const router = useRouter();
@@ -62,17 +65,19 @@ const SearchBar = ({ isOpen, onClose }: SearchBarProps) => {
         else router.push(`/person/${id}`);
         onClose();
         setQuery('');
+        setCurrSelection(0);
     };
 
-    const handleSubmit = (e: FormEvent<HTMLDivElement>) => {
+    const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        if (currSelection > 0) {
+        if (currSelection > 0 && currSelection <= data.results.length) {
             const { id, media_type } = data.results[currSelection - 1];
             goToEntity(media_type, id);
         } else if (query.trim().length > 0) {
-            router.push(`/search?query=${query}`);
+            router.push({ pathname: '/search', query: { query } });
             onClose();
             setQuery('');
+            setCurrSelection(0);
         }
     };
 
@@ -89,9 +94,19 @@ const SearchBar = ({ isOpen, onClose }: SearchBarProps) => {
         }
     };
 
+    const handleOnChange = (event: ChangeEvent<HTMLInputElement>) => {
+        setQuery(event.target.value);
+        setCurrSelection(0);
+    };
+
     useEffect(() => {
         console.log(data);
     }, [data]);
+
+    useEffect(() => {
+        const { current } = ref;
+        if (current && isOpen) current.focus();
+    }, [isOpen]);
 
     return (
         <MotionBox
@@ -119,7 +134,8 @@ const SearchBar = ({ isOpen, onClose }: SearchBarProps) => {
                             children={<FaSearch />}
                         />
                         <Input
-                            onChange={(e) => setQuery(e.target.value)}
+                            ref={ref}
+                            onChange={handleOnChange}
                             onKeyDown={handleKeyDown}
                             value={query}
                             maxWidth="1400px"

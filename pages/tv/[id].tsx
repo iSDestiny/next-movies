@@ -147,7 +147,7 @@ const TVShow = ({ tvShowData, config, languages }: TVShowProps) => {
     }, []);
 
     return (
-        <GeneralLayout title="title">
+        <GeneralLayout title={title}>
             <Box as="main">
                 <ShowHeader
                     {...{

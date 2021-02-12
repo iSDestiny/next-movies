@@ -13,7 +13,7 @@ import { AnimatePresence, useViewportScroll } from 'framer-motion';
 import Image from 'next/image';
 import NextLink from 'next/link';
 import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
+import { KeyboardEvent, useEffect, useState } from 'react';
 import FocusLock from 'react-focus-lock';
 import { FaMoon, FaSun, FaSearch, FaTimes } from 'react-icons/fa';
 import MenuToggle from './MenuToggle';
