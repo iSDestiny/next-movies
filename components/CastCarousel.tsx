@@ -41,7 +41,7 @@ const CastCarousel = ({
     ]);
 
     return (
-        <Box width="100%">
+        <Box width="100%" mb="1rem">
             <Heading as="h2" size={headingSize} mb="1rem">
                 {`Cast (${cast.length})`}
             </Heading>
@@ -83,7 +83,7 @@ const CastCarousel = ({
                 </Carousel>
             ) : (
                 <Box>
-                    <Text size="md">
+                    <Text size="md" mb="1rem">
                         We dont have any cast added to this movie.
                     </Text>
                 </Box>

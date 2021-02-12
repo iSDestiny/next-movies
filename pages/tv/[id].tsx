@@ -1,4 +1,5 @@
 import {
+    Text,
     Box,
     Heading,
     Stack,
@@ -187,16 +188,17 @@ const TVShow = ({ tvShowData, config, languages }: TVShowProps) => {
                             media={media}
                             title={title}
                         />
-                        {recommendations.length > 0 && (
-                            <VStack
-                                spacing="1rem"
-                                width="100%"
-                                align="flex-start"
-                                mb="1rem"
-                            >
-                                <Heading size={headingSize}>
-                                    Recommendations
-                                </Heading>
+                        <VStack
+                            spacing="1rem"
+                            width="100%"
+                            align="flex-start"
+                            mb="1rem"
+                        >
+                            <Heading size={headingSize}>
+                                Recommendations
+                            </Heading>
+
+                            {recommendations.length > 0 ? (
                                 <ShowCarousel
                                     name="Recommendations"
                                     items={recommendations}
@@ -209,18 +211,21 @@ const TVShow = ({ tvShowData, config, languages }: TVShowProps) => {
                                     headingSize={carouselHeadingSize}
                                     ratingSize={ratingSize}
                                 />
-                            </VStack>
-                        )}
-                        {similar.length > 0 && (
-                            <VStack
-                                spacing="1rem"
-                                width="100%"
-                                align="flex-start"
-                                pb="1rem"
-                            >
-                                <Heading size={headingSize}>Similar</Heading>
+                            ) : (
+                                <Text size="lg">No recommendations found</Text>
+                            )}
+                        </VStack>
+                        <VStack
+                            spacing="1rem"
+                            width="100%"
+                            align="flex-start"
+                            pb="1rem"
+                        >
+                            <Heading size={headingSize}>Similar</Heading>
+
+                            {similar.length > 0 ? (
                                 <ShowCarousel
-                                    name="Recommendations"
+                                    name="Similar"
                                     items={similar}
                                     base_url={secure_base_url}
                                     poster_sizes={poster_sizes}
@@ -231,8 +236,10 @@ const TVShow = ({ tvShowData, config, languages }: TVShowProps) => {
                                     headingSize={carouselHeadingSize}
                                     ratingSize={ratingSize}
                                 />
-                            </VStack>
-                        )}
+                            ) : (
+                                <Text size="lg">No similar tv shows found</Text>
+                            )}
+                        </VStack>
                     </VStack>
                     <VStack
                         width={{ base: '100%', lg: '20%' }}

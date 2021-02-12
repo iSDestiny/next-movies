@@ -228,7 +228,10 @@ const Navbar = () => {
                             </HStack>
                         </HStack>
                     </Flex>
-                    <SearchBar isOpen={isSearchOpen} />
+                    <SearchBar
+                        isOpen={isSearchOpen}
+                        onClose={() => setIsSearchOpen(false)}
+                    />
                 </MotionBox>
             </DarkMode>
         </FocusLock>

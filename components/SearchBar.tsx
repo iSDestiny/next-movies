@@ -10,24 +10,26 @@ import {
     useColorMode,
     Text,
     VStack,
-    Skeleton
+    Skeleton,
+    UnorderedList,
+    ListItem
 } from '@chakra-ui/react';
 import useSearch from 'hooks/useSearch';
-import { Component, useEffect, useState } from 'react';
+import { Component, FormEvent, useEffect, useState } from 'react';
 import { FaFilm, FaSearch, FaTv, FaUser } from 'react-icons/fa';
+import { useRouter } from 'next/router';
 import MotionBox from './MotionBox';
 
 interface SearchBarProps {
     isOpen: boolean;
+    onClose: () => void;
 }
 
-const SearchBar = ({ isOpen }: SearchBarProps) => {
+const SearchBar = ({ isOpen, onClose }: SearchBarProps) => {
+    const [currSelection, setCurrSelection] = useState(0);
     const [query, setQuery] = useState('');
     const { data, isLoading } = useSearch(query, query.trim().length > 0);
-
-    useEffect(() => {
-        console.log(data);
-    }, [data]);
+    const router = useRouter();
 
     const searchVariants = {
         open: {
@@ -47,6 +49,24 @@ const SearchBar = ({ isOpen }: SearchBarProps) => {
             }
         }
     };
+    const goToEntity = (mediaType: string, id: number) => {
+        if (mediaType === 'movie') router.push(`/movies/${id}`);
+        else if (mediaType === 'tv') router.push(`/tv/${id}`);
+        else router.push(`/person/${id}`);
+        onClose();
+        setQuery('');
+    };
+
+    const handleSubmit = (e: FormEvent<HTMLDivElement>) => {
+        e.preventDefault();
+        if (query.trim().length > 0) router.push(`/search?query=${query}`);
+        onClose();
+        setQuery('');
+    };
+
+    useEffect(() => {
+        console.log(data);
+    }, [data]);
 
     return (
         <MotionBox
@@ -59,6 +79,8 @@ const SearchBar = ({ isOpen }: SearchBarProps) => {
         >
             <Box width="100%" border="1px solid #BDC6C7">
                 <Flex
+                    as="form"
+                    onSubmit={handleSubmit}
                     align="center"
                     height="40px"
                     maxWidth="1400px"
@@ -85,6 +107,8 @@ const SearchBar = ({ isOpen }: SearchBarProps) => {
                 </Flex>
             </Box>
             <VStack
+                as="ul"
+                listStyleType="none"
                 align="center"
                 width="100%"
                 spacing="0px"
@@ -102,6 +126,13 @@ const SearchBar = ({ isOpen }: SearchBarProps) => {
 
                             return (
                                 <Box
+                                    key={id}
+                                    as="li"
+                                    _hover={{
+                                        bgColor: 'gray.100'
+                                    }}
+                                    cursor="pointer"
+                                    onClick={() => goToEntity(media_type, id)}
                                     width="100%"
                                     borderBottom="1px solid #BDC6C7"
                                 >
@@ -125,30 +156,32 @@ const SearchBar = ({ isOpen }: SearchBarProps) => {
                         })
                 ) : (
                     <VStack
+                        as="ul"
+                        listStyleType="none"
                         spacing="0.3rem"
                         width="100%"
                         display={query.trim().length > 0 ? 'flex' : 'none'}
                         align="center"
                         justify="center"
-                        maxWidth="1400px"
-                        p="0.5rem 1rem"
-                        m="auto"
+                        borderBottom="1px solid #BDC6C7"
                     >
-                        {!isLoading ? (
-                            <Text size="lg" p="1rem" fontWeight="bold">
-                                No results
-                            </Text>
-                        ) : (
-                            [...Array(10).keys()].map((num) => (
-                                <Skeleton
-                                    height="16px"
-                                    width="100%"
-                                    key={num}
-                                    startColor="gray.200"
-                                    endColor="gray.400"
-                                />
-                            ))
-                        )}
+                        <Box as="li" maxWidth="1400px" m="auto" p="0.5rem 1rem">
+                            {!isLoading ? (
+                                <Text size="lg" p="1rem" fontWeight="bold">
+                                    No results
+                                </Text>
+                            ) : (
+                                [...Array(10).keys()].map((num) => (
+                                    <Skeleton
+                                        height="16px"
+                                        width="100%"
+                                        key={num}
+                                        startColor="gray.200"
+                                        endColor="gray.400"
+                                    />
+                                ))
+                            )}
+                        </Box>
                     </VStack>
                 )}
             </VStack>

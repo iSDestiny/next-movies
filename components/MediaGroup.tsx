@@ -38,7 +38,7 @@ const MediaGroup = ({ headingSize, media, title }: MediaGroupProps) => {
             spacing="1rem"
             width="100%"
             align="flex-start"
-            mb={{ base: '2rem', md: '3rem', xl: '5rem' }}
+            mb={{ base: '1rem', md: '3rem', xl: '4rem' }}
         >
             <HStack justify="flex-start" spacing="1.5rem">
                 <Heading size={headingSize}>Media</Heading>
@@ -84,14 +84,10 @@ const MediaGroup = ({ headingSize, media, title }: MediaGroupProps) => {
                                 />
                             );
                     return (
-                        <Flex
-                            justify="center"
-                            align="center"
-                            width="100%"
+                        <Text
+                            size="sm"
                             key={index}
-                        >
-                            <Text size="sm">{`No ${type}s to display`}</Text>
-                        </Flex>
+                        >{`No ${type}s to display`}</Text>
                     );
                 }
             })}

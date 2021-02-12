@@ -73,14 +73,16 @@ const ShowHeader = ({
     const { colorMode } = useColorMode();
     return (
         <Box as="header" width="100%">
-            <Box position="relative">
-                <Image
-                    alt={`${title} backdrop`}
-                    src={`${secure_base_url}${backdrop_sizes[3]}${backdrop_path}`}
-                    layout="fill"
-                    objectFit="cover"
-                    objectPosition={`${posterWidth} 0`}
-                />
+            <Box position="relative" bgColor="black">
+                {backdrop_path && (
+                    <Image
+                        alt={`${title} backdrop`}
+                        src={`${secure_base_url}${backdrop_sizes[3]}${backdrop_path}`}
+                        layout="fill"
+                        objectFit="cover"
+                        objectPosition={`${posterWidth} 0`}
+                    />
+                )}
                 <Box
                     position="absolute"
                     zIndex="0"
@@ -109,7 +111,11 @@ const ShowHeader = ({
                     >
                         <Image
                             className="border-round"
-                            src={`${secure_base_url}${poster_sizes[3]}${poster_path}`}
+                            src={
+                                poster_path
+                                    ? `${secure_base_url}${poster_sizes[3]}${poster_path}`
+                                    : '/images/default-placeholder-image.png'
+                            }
                             alt={`${title} poster`}
                             layout="fill"
                             objectFit="cover"
@@ -126,22 +132,28 @@ const ShowHeader = ({
                         <Box color="white">
                             <Heading as="h1" color="white" size="md" mb="3px">
                                 {`${title} `}
-                                <Text
-                                    as="span"
-                                    fontWeight="400"
-                                    color="gray.300"
-                                >{`(${release_date.slice(0, 4)})`}</Text>
+                                {release_date && (
+                                    <Text
+                                        as="span"
+                                        fontWeight="400"
+                                        color="gray.300"
+                                    >{`(${release_date.slice(0, 4)})`}</Text>
+                                )}
                             </Heading>
                             <HStack spacing="0.5rem" align="center">
-                                <Text
-                                    border="1px solid white"
-                                    px="4px"
-                                    flexShrink={0}
-                                >
-                                    {certification}
-                                </Text>
-                                <Text>{release_date}</Text>
-                                <DotDivider size="5px" color="white" />
+                                {certification && release_date && (
+                                    <>
+                                        <Text
+                                            border="1px solid white"
+                                            px="4px"
+                                            flexShrink={0}
+                                        >
+                                            {certification}
+                                        </Text>
+                                        <Text>{release_date}</Text>
+                                        <DotDivider size="5px" color="white" />
+                                    </>
+                                )}
                                 <Wrap spacing="0.3rem">
                                     {genres.map(({ id, name }, index) => (
                                         <WrapItem key={id}>
@@ -297,12 +309,8 @@ const ShowHeader = ({
                         </>
                     )}
                 </HStack>
-                <Wrap
-                    spacing="0.3rem"
-                    justify="center"
-                    // align="center"
-                >
-                    {genres.map(({ id, name }, index) => (
+                <Wrap spacing="0.3rem" justify="center">
+                    {genres.map(({ id, name }) => (
                         <WrapItem key={id}>
                             <Tag size="sm" bgColor="white" color="black">
                                 {name}
