@@ -7,16 +7,18 @@ import {
     HStack,
     VStack,
     Tag,
-    useToken
+    useToken,
+    useColorMode
 } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
 import useSearch from 'hooks/useSearch';
 import { GetServerSideProps } from 'next';
 
 const Search = ({ query }: { query: string }) => {
+    const { colorMode } = useColorMode();
     const [pages, setPages] = useState({ movie: 1, tv: 1, person: 1 });
     const [selected, setSelected] = useState('movie');
-    const [gray300] = useToken('colors', ['gray.300']);
+    const [gray300, gray700] = useToken('colors', ['gray.300', 'gray.700']);
     const { data: movieData, isLoading: movieLoading } = useSearch(
         'movie',
         query,
@@ -68,6 +70,8 @@ const Search = ({ query }: { query: string }) => {
         });
     }, [personData]);
 
+    const sideBarColor = colorMode === 'light' ? 'gray.100' : 'gray.700';
+
     return (
         <GeneralLayout title={query as string}>
             <HStack
@@ -81,7 +85,9 @@ const Search = ({ query }: { query: string }) => {
                     borderRadius="5px"
                     width="250px"
                     overflow="hidden"
-                    border={`1px solid ${gray300}`}
+                    border={`1px solid ${
+                        colorMode === 'light' ? gray300 : gray700
+                    }`}
                 >
                     <Heading
                         width="100%"
@@ -106,10 +112,17 @@ const Search = ({ query }: { query: string }) => {
                                         width="100%"
                                         as="button"
                                         _focus={{
-                                            bgColor: 'gray.100',
+                                            bgColor: sideBarColor,
                                             outline: 'none'
                                         }}
-                                        _hover={{ bgColor: 'gray.100' }}
+                                        _hover={{
+                                            bgColor: sideBarColor
+                                        }}
+                                        bgColor={
+                                            selected === mediaType
+                                                ? sideBarColor
+                                                : 'inherit'
+                                        }
                                         cursor="pointer"
                                         justify="space-between"
                                         align="center"
