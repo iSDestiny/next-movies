@@ -11,9 +11,22 @@ const fetchSearch = async (url: string, query: string, page?: number) => {
     return data as SearchResults;
 };
 
-const useSearch = (query: string, shouldFetch: boolean, page?: number) => {
+const useSearch = (
+    type: string,
+    query: string,
+    shouldFetch: boolean,
+    page?: number
+) => {
+    const searchTypes = {
+        movie: '/search/movie',
+        tv: '/search/tv',
+        person: '/search/person',
+        keyword: '/search/keyword',
+        multi: '/search/multi'
+    };
+
     const { data, error } = useSWR(
-        shouldFetch ? ['/search/multi', query, page] : null,
+        shouldFetch ? [searchTypes[type], query, page] : null,
         fetchSearch
     );
 

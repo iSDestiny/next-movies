@@ -38,7 +38,11 @@ const SearchBar = ({ isOpen, onClose }: SearchBarProps) => {
     const [currSelection, setCurrSelection] = useState(0);
     const ref = useRef<HTMLInputElement>();
     const [query, setQuery] = useState('');
-    const { data, isLoading } = useSearch(query, query.trim().length > 0);
+    const { data, isLoading } = useSearch(
+        'multi',
+        query,
+        query.trim().length > 0
+    );
     const router = useRouter();
 
     const searchVariants = {
