@@ -11,9 +11,8 @@ const GeneralLayout: FunctionComponent<LayoutProps> = ({ title, children }) => {
     return (
         <>
             <Navbar />
-            <Box pt="65px" pb="150px">
-                {children}
-            </Box>
+            <Box width="100%" height="65px" bgColor="gray.900" />
+            <Box pb="150px">{children}</Box>
             <Footer />
         </>
     );

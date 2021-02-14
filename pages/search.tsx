@@ -14,7 +14,8 @@ import {
     Skeleton,
     SkeletonText,
     Flex,
-    useBreakpointValue
+    useBreakpointValue,
+    Button
 } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
 import useSearch from 'hooks/useSearch';
@@ -178,6 +179,12 @@ const Search = ({ query, config }: SearchProps) => {
                                       />
                                   </Box>
                               );
+                          else if (mediaType === 'keyword')
+                              return (
+                                  <Button colorScheme="teal" key={id} size="lg">
+                                      {name}
+                                  </Button>
+                              );
                           return <Box key={id} w="100%" height="180px"></Box>;
                       }
                   )
@@ -228,6 +235,10 @@ const Search = ({ query, config }: SearchProps) => {
                     width={{ base: '100%', lg: '80%' }}
                 >
                     {query ? validQueryResult : invalidQueryResult}
+                    {query &&
+                        !categories[selected].loading &&
+                        categories[selected].data.results.length === 0 &&
+                        invalidQueryResult}
                 </Grid>
             </Stack>
         </GeneralLayout>
