@@ -13,7 +13,8 @@ import {
     Stack,
     Skeleton,
     SkeletonText,
-    Flex
+    Flex,
+    useBreakpointValue
 } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
 import useSearch from 'hooks/useSearch';
@@ -21,6 +22,7 @@ import { GetServerSideProps } from 'next';
 import ShowCard from 'components/ShowCard';
 import tmdbFetch from 'utils/tmdbFetch';
 import CardSkeleton from 'components/CardSkeleton';
+import CategoryMenu, { MobileCategoryMenu } from 'components/CategoryMenu';
 
 interface SearchProps {
     query: string;
@@ -30,8 +32,8 @@ interface SearchProps {
 const Search = ({ query, config }: SearchProps) => {
     const { colorMode } = useColorMode();
     const [pages, setPages] = useState({ movie: 1, tv: 1, person: 1 });
+    const isMobile = useBreakpointValue({ base: true, lg: false });
     const [selected, setSelected] = useState(0);
-    const [gray300, gray700] = useToken('colors', ['gray.300', 'gray.700']);
     const { data: movieData, isLoading: movieLoading } = useSearch(
         'movie',
         query,
@@ -104,7 +106,7 @@ const Search = ({ query, config }: SearchProps) => {
         });
     }, [personData, personLoading]);
 
-    const sideBarColor = colorMode === 'light' ? 'gray.100' : 'gray.700';
+    const hoverColor = colorMode === 'light' ? 'gray.100' : 'gray.700';
 
     const validQueryResult = (
         <>
@@ -133,7 +135,7 @@ const Search = ({ query, config }: SearchProps) => {
                                           lg: '190px'
                                       }}
                                       borderRadius="8px"
-                                      _hover={{ bgColor: sideBarColor }}
+                                      _hover={{ bgColor: hoverColor }}
                                   >
                                       <ShowCard
                                           href={
@@ -169,82 +171,32 @@ const Search = ({ query, config }: SearchProps) => {
             <Stack
                 direction={{ base: 'column', lg: 'row' }}
                 align="flex-start"
+                justify="flex-start"
                 m="auto"
                 width="100%"
                 maxWidth="1400px"
-                p="1.5rem 1rem"
-                spacing="2rem"
+                spacing={{ base: '1.5rem', lg: '1rem', xl: '1.5rem' }}
+                p={{ lg: '1.5rem 1rem' }}
             >
-                <VStack
-                    display={{ base: 'none', lg: 'flex' }}
-                    width="20%"
-                    as="aside"
-                    borderRadius="8px"
-                    overflow="hidden"
-                    border={`1px solid ${
-                        colorMode === 'light' ? gray300 : gray700
-                    }`}
-                >
-                    <Heading
-                        width="100%"
-                        as="h3"
-                        size="md"
-                        color="white"
-                        bgColor="teal.500"
-                        p="1.2rem"
-                    >
-                        {`"${query}"`}
-                    </Heading>
-                    <VStack
-                        as="ul"
-                        listStyleType="none"
-                        width="100%"
-                        my="1rem"
-                        spacing={0}
-                    >
-                        {categories.map(({ heading, data }, index) => (
-                            <Box as="li" width="100%" key={index} m="0px">
-                                <HStack
-                                    width="100%"
-                                    as="button"
-                                    _focus={{
-                                        bgColor: sideBarColor,
-                                        outline: 'none'
-                                    }}
-                                    _hover={{
-                                        bgColor: sideBarColor
-                                    }}
-                                    bgColor={
-                                        selected === index
-                                            ? sideBarColor
-                                            : 'inherit'
-                                    }
-                                    cursor="pointer"
-                                    justify="space-between"
-                                    align="center"
-                                    p="0.5rem 1.5rem"
-                                    onClick={() => setSelected(index)}
-                                >
-                                    <Text
-                                        fontWeight={
-                                            selected === index
-                                                ? 'bold'
-                                                : 'normal'
-                                        }
-                                    >
-                                        {heading}
-                                    </Text>
-                                    <Tag colorScheme="teal">
-                                        {query ? data?.total_results : 0}
-                                    </Tag>
-                                </HStack>
-                            </Box>
-                        ))}
-                    </VStack>
-                </VStack>
+                {!isMobile ? (
+                    <CategoryMenu
+                        query={query}
+                        categories={categories}
+                        selected={selected}
+                        setSelected={setSelected}
+                    />
+                ) : (
+                    <MobileCategoryMenu
+                        query={query}
+                        categories={categories}
+                        selected={selected}
+                        setSelected={setSelected}
+                    />
+                )}
                 <Grid
                     templateColumns={{ base: '1fr', xl: '1fr 1fr' }}
                     gap={3}
+                    px={{ base: '1rem', lg: 0 }}
                     width={{ base: '100%', lg: '80%' }}
                 >
                     {query ? validQueryResult : invalidQueryResult}
