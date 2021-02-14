@@ -56,7 +56,12 @@ export const MobileCategoryMenu = ({
                 }`}
             >
                 {categories.map(({ heading, data }, index) => (
-                    <Box as="li" width="100%" key={index} m="0px">
+                    <Box
+                        as="li"
+                        width="100%"
+                        key={index}
+                        minWidth={{ base: '120px', sm: '130px' }}
+                    >
                         <HStack
                             width="100%"
                             as="button"
@@ -80,7 +85,7 @@ export const MobileCategoryMenu = ({
                                 fontWeight={
                                     selected === index ? 'bold' : 'normal'
                                 }
-                                fontSize={{ base: '0.8rem', sm: '1rem' }}
+                                fontSize={{ base: '0.75rem', sm: '1rem' }}
                             >
                                 {heading}
                             </Text>

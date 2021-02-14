@@ -31,7 +31,12 @@ interface SearchProps {
 
 const Search = ({ query, config }: SearchProps) => {
     const { colorMode } = useColorMode();
-    const [pages, setPages] = useState({ movie: 1, tv: 1, person: 1 });
+    const [pages, setPages] = useState({
+        movie: 1,
+        tv: 1,
+        person: 1,
+        keyword: 1
+    });
     const isMobile = useBreakpointValue({ base: true, lg: false });
     const [selected, setSelected] = useState(0);
     const { data: movieData, isLoading: movieLoading } = useSearch(
@@ -52,6 +57,12 @@ const Search = ({ query, config }: SearchProps) => {
         query.trim().length > 0,
         pages.person
     );
+    const { data: keywordData, isLoading: keywordLoading } = useSearch(
+        'keyword',
+        query,
+        query.trim().length > 0,
+        pages.keyword
+    );
 
     const [categories, setCategories] = useState([
         {
@@ -70,6 +81,12 @@ const Search = ({ query, config }: SearchProps) => {
             heading: 'People',
             mediaType: 'person',
             data: personData,
+            loading: true
+        },
+        {
+            heading: 'Keywords',
+            mediaType: 'keyword',
+            data: keywordData,
             loading: true
         }
     ]);
@@ -105,6 +122,16 @@ const Search = ({ query, config }: SearchProps) => {
             return newCategories;
         });
     }, [personData, personLoading]);
+
+    useEffect(() => {
+        setCategories((prev) => {
+            const newCategories = [...prev];
+            newCategories[3].data = keywordData;
+            newCategories[3].loading = keywordLoading;
+            console.log(keywordData);
+            return newCategories;
+        });
+    }, [keywordData, keywordLoading]);
 
     const hoverColor = colorMode === 'light' ? 'gray.100' : 'gray.700';
 
@@ -197,6 +224,7 @@ const Search = ({ query, config }: SearchProps) => {
                     templateColumns={{ base: '1fr', xl: '1fr 1fr' }}
                     gap={3}
                     px={{ base: '1rem', lg: 0 }}
+                    pb={{ base: '1.5rem', lg: 0 }}
                     width={{ base: '100%', lg: '80%' }}
                 >
                     {query ? validQueryResult : invalidQueryResult}
