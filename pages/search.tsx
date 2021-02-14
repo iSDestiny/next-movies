@@ -12,7 +12,8 @@ import {
     Grid,
     Stack,
     Skeleton,
-    SkeletonText
+    SkeletonText,
+    Flex
 } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
 import useSearch from 'hooks/useSearch';
@@ -105,8 +106,66 @@ const Search = ({ query, config }: SearchProps) => {
 
     const sideBarColor = colorMode === 'light' ? 'gray.100' : 'gray.700';
 
+    const validQueryResult = (
+        <>
+            {!categories[selected].loading
+                ? categories[selected]?.data?.results.map(
+                      ({
+                          title,
+                          name,
+                          id,
+                          first_air_date,
+                          release_date,
+                          poster_path,
+                          overview,
+                          known_for_department,
+                          known_for
+                      }) => {
+                          const { mediaType } = categories[selected];
+
+                          if (mediaType === 'movie' || mediaType === 'tv')
+                              return (
+                                  <Box
+                                      key={id}
+                                      w="100%"
+                                      height={{
+                                          base: '150px',
+                                          lg: '190px'
+                                      }}
+                                      borderRadius="8px"
+                                      _hover={{ bgColor: sideBarColor }}
+                                  >
+                                      <ShowCard
+                                          href={
+                                              mediaType === 'movie'
+                                                  ? `/movies/${id}`
+                                                  : `/tv/${id}`
+                                          }
+                                          config={config}
+                                          title={title || name}
+                                          date={release_date || first_air_date}
+                                          posterPath={poster_path}
+                                          overview={overview}
+                                      />
+                                  </Box>
+                              );
+                          return <Box key={id} w="100%" height="180px"></Box>;
+                      }
+                  )
+                : [...Array(20).keys()].map((num) => (
+                      <CardSkeleton key={num} />
+                  ))}
+        </>
+    );
+
+    const invalidQueryResult = (
+        <Text>{`There are no ${categories[
+            selected
+        ].heading.toLowerCase()} that matched`}</Text>
+    );
+
     return (
-        <GeneralLayout title={query as string}>
+        <GeneralLayout title={query}>
             <Stack
                 direction={{ base: 'column', lg: 'row' }}
                 align="flex-start"
@@ -132,9 +191,10 @@ const Search = ({ query, config }: SearchProps) => {
                         size="md"
                         color="white"
                         bgColor="teal.500"
-                        isTruncated
                         p="1.2rem"
-                    >{`Search: ${query}`}</Heading>
+                    >
+                        {`"${query}"`}
+                    </Heading>
                     <VStack
                         as="ul"
                         listStyleType="none"
@@ -175,7 +235,7 @@ const Search = ({ query, config }: SearchProps) => {
                                         {heading}
                                     </Text>
                                     <Tag colorScheme="teal">
-                                        {data?.total_results}
+                                        {query ? data?.total_results : 0}
                                     </Tag>
                                 </HStack>
                             </Box>
@@ -187,65 +247,7 @@ const Search = ({ query, config }: SearchProps) => {
                     gap={3}
                     width={{ base: '100%', lg: '80%' }}
                 >
-                    {!categories[selected].loading
-                        ? categories[selected]?.data?.results.map(
-                              ({
-                                  title,
-                                  name,
-                                  id,
-                                  first_air_date,
-                                  release_date,
-                                  poster_path,
-                                  overview,
-                                  known_for_department,
-                                  known_for
-                              }) => {
-                                  const { mediaType } = categories[selected];
-
-                                  if (
-                                      mediaType === 'movie' ||
-                                      mediaType === 'tv'
-                                  )
-                                      return (
-                                          <Box
-                                              key={id}
-                                              w="100%"
-                                              height={{
-                                                  base: '150px',
-                                                  lg: '190px'
-                                              }}
-                                              borderRadius="8px"
-                                              _hover={{ bgColor: sideBarColor }}
-                                          >
-                                              <ShowCard
-                                                  href={
-                                                      mediaType === 'movie'
-                                                          ? `/movies/${id}`
-                                                          : `/tv/${id}`
-                                                  }
-                                                  config={config}
-                                                  title={title || name}
-                                                  date={
-                                                      release_date ||
-                                                      first_air_date
-                                                  }
-                                                  posterPath={poster_path}
-                                                  overview={overview}
-                                              />
-                                          </Box>
-                                      );
-                                  return (
-                                      <Box
-                                          key={id}
-                                          w="100%"
-                                          height="180px"
-                                      ></Box>
-                                  );
-                              }
-                          )
-                        : [...Array(20).keys()].map((num) => (
-                              <CardSkeleton key={num} />
-                          ))}
+                    {query ? validQueryResult : invalidQueryResult}
                 </Grid>
             </Stack>
         </GeneralLayout>
@@ -257,7 +259,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 
     return {
         props: {
-            query: ctx.query.query as string,
+            query: (ctx?.query?.query as string) || '',
             config: configData
         }
     };

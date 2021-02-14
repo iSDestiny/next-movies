@@ -11,6 +11,7 @@ import {
 } from '@chakra-ui/react';
 import NextLink from 'next/link';
 import Image from 'next/image';
+import { useState } from 'react';
 
 interface ShowCardProps {
     config: TMDBConfig;
@@ -31,18 +32,26 @@ const ShowCard = ({
 }: ShowCardProps) => {
     const { colorMode } = useColorMode();
     const { secure_base_url, poster_sizes } = config.images;
+    const [isFocused, setIsFocused] = useState(false);
     const size = useBreakpointValue({ base: 'xs', lg: 'sm' });
     const [gray300, gray700] = useToken('colors', ['gray.300', 'gray.700']);
     const cardAccentColor = colorMode === 'light' ? 'gray.600' : 'gray.400';
     const cardBorderColor = colorMode === 'light' ? gray300 : gray700;
+    const focusColor = colorMode === 'light' ? 'gray.100' : 'gray.700';
     const posterSrc = posterPath
         ? `${secure_base_url}${poster_sizes[1]}${posterPath}`
         : '/images/default-placeholder-image.png';
 
     return (
         <NextLink href={href} passHref>
-            <Link _hover={{ textDecor: 'none' }}>
+            <Link
+                _hover={{ textDecor: 'none' }}
+                _focus={{ outline: 'none' }}
+                onFocus={() => setIsFocused(true)}
+                onBlur={() => setIsFocused(false)}
+            >
                 <Flex
+                    bgColor={isFocused ? focusColor : 'transparent'}
                     border={`1px solid ${cardBorderColor}`}
                     width="100%"
                     height="100%"
