@@ -118,7 +118,8 @@ const SearchBar = ({ isOpen, onClose }: SearchBarProps) => {
             bgColor="white"
             variants={searchVariants}
             animate={isOpen ? 'open' : 'closed'}
-            initial="closed"
+            initial={false}
+            transform="translateX(-100%)"
             position="absolute"
         >
             <Box width="100%" border="1px solid #BDC6C7">

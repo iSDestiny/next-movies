@@ -8,16 +8,28 @@ import {
     VStack,
     Tag,
     useToken,
-    useColorMode
+    useColorMode,
+    Grid,
+    Stack,
+    Skeleton,
+    SkeletonText
 } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
 import useSearch from 'hooks/useSearch';
 import { GetServerSideProps } from 'next';
+import ShowCard from 'components/ShowCard';
+import tmdbFetch from 'utils/tmdbFetch';
+import CardSkeleton from 'components/CardSkeleton';
 
-const Search = ({ query }: { query: string }) => {
+interface SearchProps {
+    query: string;
+    config: TMDBConfig;
+}
+
+const Search = ({ query, config }: SearchProps) => {
     const { colorMode } = useColorMode();
     const [pages, setPages] = useState({ movie: 1, tv: 1, person: 1 });
-    const [selected, setSelected] = useState('movie');
+    const [selected, setSelected] = useState(0);
     const [gray300, gray700] = useToken('colors', ['gray.300', 'gray.700']);
     const { data: movieData, isLoading: movieLoading } = useSearch(
         'movie',
@@ -39,9 +51,24 @@ const Search = ({ query }: { query: string }) => {
     );
 
     const [categories, setCategories] = useState([
-        { heading: 'Movies', mediaType: 'movie', data: movieData },
-        { heading: 'TV Shows', mediaType: 'tv', data: tvShowData },
-        { heading: 'People', mediaType: 'person', data: personData }
+        {
+            heading: 'Movies',
+            mediaType: 'movie',
+            data: movieData,
+            loading: true
+        },
+        {
+            heading: 'TV Shows',
+            mediaType: 'tv',
+            data: tvShowData,
+            loading: true
+        },
+        {
+            heading: 'People',
+            mediaType: 'person',
+            data: personData,
+            loading: true
+        }
     ]);
 
     const { movie: moviePage, tv: tvPage, person: personPage } = pages;
@@ -50,40 +77,50 @@ const Search = ({ query }: { query: string }) => {
         setCategories((prev) => {
             const newCategories = [...prev];
             newCategories[0].data = movieData;
+            newCategories[0].loading = movieLoading;
+            console.log(movieData);
             return newCategories;
         });
-    }, [movieData]);
+    }, [movieData, movieLoading]);
 
     useEffect(() => {
         setCategories((prev) => {
             const newCategories = [...prev];
             newCategories[1].data = tvShowData;
+            newCategories[1].loading = showLoading;
+            console.log(tvShowData);
             return newCategories;
         });
-    }, [tvShowData]);
+    }, [tvShowData, showLoading]);
 
     useEffect(() => {
         setCategories((prev) => {
             const newCategories = [...prev];
             newCategories[2].data = personData;
+            newCategories[2].loading = personLoading;
+            console.log(personData);
             return newCategories;
         });
-    }, [personData]);
+    }, [personData, personLoading]);
 
     const sideBarColor = colorMode === 'light' ? 'gray.100' : 'gray.700';
 
     return (
         <GeneralLayout title={query as string}>
-            <HStack
-                align="center"
+            <Stack
+                direction={{ base: 'column', lg: 'row' }}
+                align="flex-start"
                 m="auto"
                 width="100%"
                 maxWidth="1400px"
-                p="1.5rem"
+                p="1.5rem 1rem"
+                spacing="2rem"
             >
                 <VStack
-                    borderRadius="5px"
-                    width="250px"
+                    display={{ base: 'none', lg: 'flex' }}
+                    width="20%"
+                    as="aside"
+                    borderRadius="8px"
                     overflow="hidden"
                     border={`1px solid ${
                         colorMode === 'light' ? gray300 : gray700
@@ -105,57 +142,123 @@ const Search = ({ query }: { query: string }) => {
                         my="1rem"
                         spacing={0}
                     >
-                        {categories.map(
-                            ({ heading, mediaType, data }, index) => (
-                                <Box as="li" width="100%" key={index} m="0px">
-                                    <HStack
-                                        width="100%"
-                                        as="button"
-                                        _focus={{
-                                            bgColor: sideBarColor,
-                                            outline: 'none'
-                                        }}
-                                        _hover={{
-                                            bgColor: sideBarColor
-                                        }}
-                                        bgColor={
-                                            selected === mediaType
-                                                ? sideBarColor
-                                                : 'inherit'
+                        {categories.map(({ heading, data }, index) => (
+                            <Box as="li" width="100%" key={index} m="0px">
+                                <HStack
+                                    width="100%"
+                                    as="button"
+                                    _focus={{
+                                        bgColor: sideBarColor,
+                                        outline: 'none'
+                                    }}
+                                    _hover={{
+                                        bgColor: sideBarColor
+                                    }}
+                                    bgColor={
+                                        selected === index
+                                            ? sideBarColor
+                                            : 'inherit'
+                                    }
+                                    cursor="pointer"
+                                    justify="space-between"
+                                    align="center"
+                                    p="0.5rem 1.5rem"
+                                    onClick={() => setSelected(index)}
+                                >
+                                    <Text
+                                        fontWeight={
+                                            selected === index
+                                                ? 'bold'
+                                                : 'normal'
                                         }
-                                        cursor="pointer"
-                                        justify="space-between"
-                                        align="center"
-                                        p="0.5rem 1.5rem"
-                                        onClick={() => setSelected(mediaType)}
                                     >
-                                        <Text
-                                            fontWeight={
-                                                selected === mediaType
-                                                    ? 'bold'
-                                                    : 'normal'
-                                            }
-                                        >
-                                            {heading}
-                                        </Text>
-                                        <Tag colorScheme="teal">
-                                            {data?.total_results}
-                                        </Tag>
-                                    </HStack>
-                                </Box>
-                            )
-                        )}
+                                        {heading}
+                                    </Text>
+                                    <Tag colorScheme="teal">
+                                        {data?.total_results}
+                                    </Tag>
+                                </HStack>
+                            </Box>
+                        ))}
                     </VStack>
                 </VStack>
-            </HStack>
+                <Grid
+                    templateColumns={{ base: '1fr', xl: '1fr 1fr' }}
+                    gap={3}
+                    width={{ base: '100%', lg: '80%' }}
+                >
+                    {!categories[selected].loading
+                        ? categories[selected]?.data?.results.map(
+                              ({
+                                  title,
+                                  name,
+                                  id,
+                                  first_air_date,
+                                  release_date,
+                                  poster_path,
+                                  overview,
+                                  known_for_department,
+                                  known_for
+                              }) => {
+                                  const { mediaType } = categories[selected];
+
+                                  if (
+                                      mediaType === 'movie' ||
+                                      mediaType === 'tv'
+                                  )
+                                      return (
+                                          <Box
+                                              key={id}
+                                              w="100%"
+                                              height={{
+                                                  base: '150px',
+                                                  lg: '190px'
+                                              }}
+                                              borderRadius="8px"
+                                              _hover={{ bgColor: sideBarColor }}
+                                          >
+                                              <ShowCard
+                                                  href={
+                                                      mediaType === 'movie'
+                                                          ? `/movies/${id}`
+                                                          : `/tv/${id}`
+                                                  }
+                                                  config={config}
+                                                  title={title || name}
+                                                  date={
+                                                      release_date ||
+                                                      first_air_date
+                                                  }
+                                                  posterPath={poster_path}
+                                                  overview={overview}
+                                              />
+                                          </Box>
+                                      );
+                                  return (
+                                      <Box
+                                          key={id}
+                                          w="100%"
+                                          height="180px"
+                                      ></Box>
+                                  );
+                              }
+                          )
+                        : [...Array(20).keys()].map((num) => (
+                              <CardSkeleton key={num} />
+                          ))}
+                </Grid>
+            </Stack>
         </GeneralLayout>
     );
 };
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
+    const { data: configData } = await tmdbFetch.get('/configuration');
+
     return {
         props: {
-            query: ctx.query.query as string
+            query: ctx.query.query as string,
+            config: configData
         }
     };
 };
