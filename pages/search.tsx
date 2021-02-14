@@ -24,6 +24,7 @@ import ShowCard from 'components/ShowCard';
 import tmdbFetch from 'utils/tmdbFetch';
 import CardSkeleton from 'components/CardSkeleton';
 import CategoryMenu, { MobileCategoryMenu } from 'components/CategoryMenu';
+import PersonCard from 'components/PersonCard';
 
 interface SearchProps {
     query: string;
@@ -148,6 +149,7 @@ const Search = ({ query, config }: SearchProps) => {
                           release_date,
                           poster_path,
                           overview,
+                          profile_path,
                           known_for_department,
                           known_for
                       }) => {
@@ -181,11 +183,35 @@ const Search = ({ query, config }: SearchProps) => {
                               );
                           else if (mediaType === 'keyword')
                               return (
-                                  <Button colorScheme="teal" key={id} size="lg">
+                                  <Button
+                                      as="a"
+                                      href={`/keyword/${id}`}
+                                      colorScheme="teal"
+                                      key={id}
+                                      size="lg"
+                                  >
                                       {name}
                                   </Button>
                               );
-                          return <Box key={id} w="100%" height="180px"></Box>;
+                          return (
+                              <Box
+                                  key={id}
+                                  w="100%"
+                                  height={{
+                                      base: '150px',
+                                      lg: '190px'
+                                  }}
+                              >
+                                  <PersonCard
+                                      href={`/person/${id}`}
+                                      config={config}
+                                      name={name}
+                                      profilePath={profile_path}
+                                      knownFor={known_for}
+                                      department={known_for_department}
+                                  />
+                              </Box>
+                          );
                       }
                   )
                 : [...Array(20).keys()].map((num) => (

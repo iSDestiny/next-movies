@@ -72,7 +72,7 @@ const SearchBar = ({ isOpen, onClose }: SearchBarProps) => {
         setCurrSelection(0);
     };
 
-    const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+    const handleSubmit = (e: FormEvent<HTMLDivElement>) => {
         e.preventDefault();
         if (currSelection > 0 && currSelection <= data.results.length) {
             const { id, media_type } = data.results[currSelection - 1];

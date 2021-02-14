@@ -2,44 +2,47 @@ import {
     Box,
     Flex,
     Heading,
+    Link,
+    Tag,
     Text,
+    useBreakpointValue,
     useColorMode,
     useToken,
-    VStack,
-    Link,
-    useBreakpointValue
+    Wrap,
+    WrapItem
 } from '@chakra-ui/react';
 import NextLink from 'next/link';
 import Image from 'next/image';
 import { useState } from 'react';
 
-interface ShowCardProps {
-    config: TMDBConfig;
-    posterPath: string;
-    title: string;
-    date: string;
-    overview: string;
+interface PersonCardProps {
     href: string;
+    config: TMDBConfig;
+    name: string;
+    profilePath: string;
+    knownFor: KnownForEntity[];
+    department: string;
 }
 
-const ShowCard = ({
+const PersonCard = ({
+    href,
     config,
-    posterPath,
-    title,
-    date,
-    overview,
-    href
-}: ShowCardProps) => {
-    const { colorMode } = useColorMode();
-    const { secure_base_url, poster_sizes } = config.images;
+    name,
+    profilePath,
+    knownFor,
+    department
+}: PersonCardProps) => {
     const [isFocused, setIsFocused] = useState(false);
-    const size = useBreakpointValue({ base: 'xs', lg: 'sm' });
+    const headingSize = useBreakpointValue({ base: 'xs', lg: 'sm' });
+    const tagSize = useBreakpointValue({ base: 'sm', md: 'md' });
+    const { secure_base_url, profile_sizes } = config.images;
+    const { colorMode } = useColorMode();
     const [gray300, gray700] = useToken('colors', ['gray.300', 'gray.700']);
     const cardBorderColor = colorMode === 'light' ? gray300 : gray700;
     const cardAccentColor = colorMode === 'light' ? 'gray.600' : 'gray.400';
     const focusColor = colorMode === 'light' ? 'gray.100' : 'gray.700';
-    const posterSrc = posterPath
-        ? `${secure_base_url}${poster_sizes[1]}${posterPath}`
+    const profileSrc = profilePath
+        ? `${secure_base_url}${profile_sizes[1]}${profilePath}`
         : '/images/default-placeholder-image.png';
 
     return (
@@ -56,6 +59,7 @@ const ShowCard = ({
                     height="100%"
                     overflow="hidden"
                     borderRadius="8px"
+                    _hover={{ bgColor: focusColor }}
                     boxShadow={`2px 3px 6px rgba(0,0,0,${
                         colorMode === 'light' ? 0.2 : 0.8
                     })}`}
@@ -66,43 +70,42 @@ const ShowCard = ({
                         position="relative"
                     >
                         <Image
-                            src={posterSrc}
+                            src={profileSrc}
                             layout="fill"
-                            alt={`${title} poster`}
+                            alt={`${name} profile`}
                         />
                     </Box>
-                    <VStack
+                    <Flex
+                        direction="column"
                         width={{
                             base: 'calc(100% - 90px)',
                             lg: 'calc(100% - 110px)'
                         }}
-                        spacing="1rem"
-                        align="flex-start"
                         p={{ base: '0.5rem', lg: '1rem' }}
                     >
-                        <Box as="header">
-                            <Heading as="h3" size={size} noOfLines={2}>
-                                {title}
+                        <Box as="header" mb="1rem">
+                            <Heading as="h3" size={headingSize} noOfLines={2}>
+                                {name}
                             </Heading>
                             <Text
                                 fontSize={{ base: '0.8rem', lg: '1rem' }}
                                 color={cardAccentColor}
                             >
-                                {date}
+                                {department}
                             </Text>
                         </Box>
-                        <Text
-                            fontSize={{ base: '0.8rem', lg: '1rem' }}
-                            as="main"
-                            noOfLines={3}
-                        >
-                            {overview}
-                        </Text>
-                    </VStack>
+                        <Wrap>
+                            {knownFor.map(({ id, media_type, title, name }) => (
+                                <WrapItem key={id}>
+                                    <Tag size={tagSize}>{title || name}</Tag>
+                                </WrapItem>
+                            ))}
+                        </Wrap>
+                    </Flex>
                 </Flex>
             </Link>
         </NextLink>
     );
 };
 
-export default ShowCard;
+export default PersonCard;

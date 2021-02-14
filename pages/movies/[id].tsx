@@ -188,7 +188,6 @@ const Movie = ({ movieData, config, languages }: MovieProps) => {
                                 <Text size="lg">No recommendations found</Text>
                             )}
                         </VStack>
-
                         <VStack
                             spacing="1rem"
                             width="100%"

@@ -1,11 +1,10 @@
-import Navbar from '../../components/Navbar';
+import GeneralLayout from 'layouts/GeneralLayout';
 
 const TV = () => {
     return (
-        <>
-            <Navbar />
-            <div></div>
-        </>
+        <GeneralLayout title="TV Shows">
+            <></>
+        </GeneralLayout>
     );
 };
 
