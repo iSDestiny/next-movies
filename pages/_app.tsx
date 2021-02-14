@@ -4,6 +4,7 @@ import { AnimatePresence } from 'framer-motion';
 import Head from 'next/head';
 import '../styles/globals.scss';
 import 'pure-react-carousel/dist/react-carousel.es.css';
+import theme from 'theme';
 
 function MyApp({ Component, pageProps, router }: AppProps) {
     return (
@@ -15,7 +16,7 @@ function MyApp({ Component, pageProps, router }: AppProps) {
                 />
             </Head>
             {/* <DefaultSeo {...SEO} /> */}
-            <ChakraProvider>
+            <ChakraProvider theme={theme}>
                 <AnimatePresence exitBeforeEnter>
                     <Component {...pageProps} key={router.route} />
                 </AnimatePresence>

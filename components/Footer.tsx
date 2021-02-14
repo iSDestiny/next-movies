@@ -3,9 +3,12 @@ import { Flex, Link, Text } from '@chakra-ui/react';
 const Footer = () => {
     return (
         <Flex
+            height="150px"
             width="100%"
             justify="center"
             align="center"
+            position="absolute"
+            bottom="0"
             direction="column"
             bgColor="gray.900"
             color="white"

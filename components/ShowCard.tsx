@@ -45,7 +45,6 @@ const ShowCard = ({
     return (
         <NextLink href={href} passHref>
             <Link
-                _hover={{ textDecor: 'none' }}
                 _focus={{ outline: 'none' }}
                 onFocus={() => setIsFocused(true)}
                 onBlur={() => setIsFocused(false)}
