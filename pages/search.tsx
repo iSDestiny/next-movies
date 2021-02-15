@@ -1,31 +1,22 @@
-import { useRouter } from 'next/router';
-import GeneralLayout from 'layouts/GeneralLayout';
 import {
     Box,
-    Text,
-    Heading,
-    HStack,
-    VStack,
-    Tag,
-    useToken,
-    useColorMode,
+    Button,
     Grid,
     Stack,
-    Skeleton,
-    SkeletonText,
-    Flex,
+    Text,
     useBreakpointValue,
-    Button
+    useColorMode
 } from '@chakra-ui/react';
-import { useEffect, useState } from 'react';
-import useSearch from 'hooks/useSearch';
-import { GetServerSideProps } from 'next';
-import ShowCard from 'components/ShowCard';
-import tmdbFetch from 'utils/tmdbFetch';
 import CardSkeleton from 'components/CardSkeleton';
 import CategoryMenu, { MobileCategoryMenu } from 'components/CategoryMenu';
-import PersonCard from 'components/PersonCard';
 import Pagination from 'components/Pagination';
+import PersonCard from 'components/PersonCard';
+import ShowCard from 'components/ShowCard';
+import useSearch from 'hooks/useSearch';
+import GeneralLayout from 'layouts/GeneralLayout';
+import { GetServerSideProps } from 'next';
+import { useEffect, useState } from 'react';
+import tmdbFetch from 'utils/tmdbFetch';
 
 interface SearchProps {
     query: string;
@@ -175,7 +166,7 @@ const Search = ({ query, config }: SearchProps) => {
     );
 
     return (
-        <GeneralLayout title={query}>
+        <GeneralLayout title={query} key={query}>
             <Stack
                 direction={{ base: 'column', lg: 'row' }}
                 align="flex-start"
@@ -216,9 +207,9 @@ const Search = ({ query, config }: SearchProps) => {
                         {categories[selected].data?.results?.length <= 0 &&
                             invalidQueryResult}
                     </Grid>
-                    {categories.map(({ data }, index) => (
+                    {categories.map(({ data, mediaType }, index) => (
                         <Box
-                            key={index}
+                            key={`${query}-${index}`}
                             display={
                                 data?.results.length > 0 && selected === index
                                     ? 'block'
@@ -226,6 +217,7 @@ const Search = ({ query, config }: SearchProps) => {
                             }
                         >
                             <Pagination
+                                key={`${query}-${mediaType}-${index}`}
                                 quantity={data?.total_pages}
                                 pageChangeHandler={pageChangeHandler}
                             />

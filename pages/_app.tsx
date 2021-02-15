@@ -18,7 +18,7 @@ function MyApp({ Component, pageProps, router }: AppProps) {
             {/* <DefaultSeo {...SEO} /> */}
             <ChakraProvider theme={theme}>
                 <AnimatePresence exitBeforeEnter>
-                    <Component {...pageProps} key={router.route} />
+                    <Component {...pageProps} key={router.asPath} />
                 </AnimatePresence>
             </ChakraProvider>
         </>
