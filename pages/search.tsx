@@ -32,62 +32,42 @@ interface SearchProps {
     config: TMDBConfig;
 }
 
+const useCategory = (type: string, query: string, page: number) => {
+    const { data, isLoading, isError } = useSearch(type, query, true, page);
+
+    const headings = {
+        movie: 'Movies',
+        tv: 'TV Shows',
+        person: 'People',
+        keyword: 'Keywords',
+        network: 'Networks',
+        company: 'Companies'
+    };
+
+    return {
+        heading: headings[type],
+        mediaType: type,
+        data,
+        loading: isLoading,
+        error: isError
+    };
+};
+
+const useCategories = (query: string, pages: number[]) => {
+    const movieCategory = useCategory('movie', query, pages[0]);
+    const tvCategory = useCategory('tv', query, pages[1]);
+    const personCategory = useCategory('person', query, pages[2]);
+    const keywordCategory = useCategory('keyword', query, pages[3]);
+
+    return [movieCategory, tvCategory, personCategory, keywordCategory];
+};
+
 const Search = ({ query, config }: SearchProps) => {
     const { colorMode } = useColorMode();
     const [pages, setPages] = useState([1, 1, 1, 1]);
     const isMobile = useBreakpointValue({ base: true, lg: false });
     const [selected, setSelected] = useState(0);
-    const { data: movieData, isLoading: movieLoading } = useSearch(
-        'movie',
-        query,
-        query.trim().length > 0,
-        pages[0]
-    );
-    const { data: tvShowData, isLoading: showLoading } = useSearch(
-        'tv',
-        query,
-        query.trim().length > 0,
-        pages[1]
-    );
-    const { data: personData, isLoading: personLoading } = useSearch(
-        'person',
-        query,
-        query.trim().length > 0,
-        pages[2]
-    );
-    const { data: keywordData, isLoading: keywordLoading } = useSearch(
-        'keyword',
-        query,
-        query.trim().length > 0,
-        pages[3]
-    );
-
-    const [categories, setCategories] = useState([
-        {
-            heading: 'Movies',
-            mediaType: 'movie',
-            data: movieData,
-            loading: true
-        },
-        {
-            heading: 'TV Shows',
-            mediaType: 'tv',
-            data: tvShowData,
-            loading: true
-        },
-        {
-            heading: 'People',
-            mediaType: 'person',
-            data: personData,
-            loading: true
-        },
-        {
-            heading: 'Keywords',
-            mediaType: 'keyword',
-            data: keywordData,
-            loading: true
-        }
-    ]);
+    const categories = useCategories(query, pages);
 
     const pageChangeHandler = (currentPage: number) => {
         setPages((prev) => {
@@ -97,46 +77,6 @@ const Search = ({ query, config }: SearchProps) => {
             return newPages;
         });
     };
-
-    useEffect(() => {
-        setCategories((prev) => {
-            const newCategories = [...prev];
-            newCategories[0].data = movieData;
-            newCategories[0].loading = movieLoading;
-            console.log(movieData);
-            return newCategories;
-        });
-    }, [movieData, movieLoading]);
-
-    useEffect(() => {
-        setCategories((prev) => {
-            const newCategories = [...prev];
-            newCategories[1].data = tvShowData;
-            newCategories[1].loading = showLoading;
-            console.log(tvShowData);
-            return newCategories;
-        });
-    }, [tvShowData, showLoading]);
-
-    useEffect(() => {
-        setCategories((prev) => {
-            const newCategories = [...prev];
-            newCategories[2].data = personData;
-            newCategories[2].loading = personLoading;
-            console.log(personData);
-            return newCategories;
-        });
-    }, [personData, personLoading]);
-
-    useEffect(() => {
-        setCategories((prev) => {
-            const newCategories = [...prev];
-            newCategories[3].data = keywordData;
-            newCategories[3].loading = keywordLoading;
-            console.log(keywordData);
-            return newCategories;
-        });
-    }, [keywordData, keywordLoading]);
 
     useEffect(() => {
         console.log(pages);
@@ -273,9 +213,7 @@ const Search = ({ query, config }: SearchProps) => {
                         mb="1.5rem"
                     >
                         {query ? validQueryResult : invalidQueryResult}
-                        {query &&
-                            !categories[selected].loading &&
-                            categories[selected]?.data?.results.length === 0 &&
+                        {categories[selected].data?.results?.length <= 0 &&
                             invalidQueryResult}
                     </Grid>
                     {categories.map(({ data }, index) => (
