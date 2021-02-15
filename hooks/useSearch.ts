@@ -17,16 +17,8 @@ const useSearch = (
     shouldFetch: boolean,
     page?: number
 ) => {
-    const searchTypes = {
-        movie: '/search/movie',
-        tv: '/search/tv',
-        person: '/search/person',
-        keyword: '/search/keyword',
-        multi: '/search/multi'
-    };
-
     const { data, error } = useSWR(
-        shouldFetch ? [searchTypes[type], query, page] : null,
+        shouldFetch ? [`/search/${type}`, query, page] : null,
         fetchSearch
     );
 
