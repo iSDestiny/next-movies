@@ -43,7 +43,7 @@ const PersonCard = ({
     const focusColor = colorMode === 'light' ? 'gray.100' : 'gray.700';
     const profileSrc = profilePath
         ? `${secure_base_url}${profile_sizes[1]}${profilePath}`
-        : '/images/default-placeholder-image.png';
+        : '/images/profile-placeholder.png';
 
     return (
         <NextLink href={href} passHref>

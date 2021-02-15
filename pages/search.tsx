@@ -25,6 +25,7 @@ import tmdbFetch from 'utils/tmdbFetch';
 import CardSkeleton from 'components/CardSkeleton';
 import CategoryMenu, { MobileCategoryMenu } from 'components/CategoryMenu';
 import PersonCard from 'components/PersonCard';
+import Pagination from 'components/Pagination';
 
 interface SearchProps {
     query: string;
@@ -33,37 +34,32 @@ interface SearchProps {
 
 const Search = ({ query, config }: SearchProps) => {
     const { colorMode } = useColorMode();
-    const [pages, setPages] = useState({
-        movie: 1,
-        tv: 1,
-        person: 1,
-        keyword: 1
-    });
+    const [pages, setPages] = useState([1, 1, 1, 1]);
     const isMobile = useBreakpointValue({ base: true, lg: false });
     const [selected, setSelected] = useState(0);
     const { data: movieData, isLoading: movieLoading } = useSearch(
         'movie',
         query,
         query.trim().length > 0,
-        pages.movie
+        pages[0]
     );
     const { data: tvShowData, isLoading: showLoading } = useSearch(
         'tv',
         query,
         query.trim().length > 0,
-        pages.tv
+        pages[1]
     );
     const { data: personData, isLoading: personLoading } = useSearch(
         'person',
         query,
         query.trim().length > 0,
-        pages.person
+        pages[2]
     );
     const { data: keywordData, isLoading: keywordLoading } = useSearch(
         'keyword',
         query,
         query.trim().length > 0,
-        pages.keyword
+        pages[3]
     );
 
     const [categories, setCategories] = useState([
@@ -93,7 +89,14 @@ const Search = ({ query, config }: SearchProps) => {
         }
     ]);
 
-    const { movie: moviePage, tv: tvPage, person: personPage } = pages;
+    const pageChangeHandler = (currentPage: number) => {
+        setPages((prev) => {
+            const newPages = [...prev];
+            newPages[selected] = currentPage;
+            console.log('selected ' + selected);
+            return newPages;
+        });
+    };
 
     useEffect(() => {
         setCategories((prev) => {
@@ -134,6 +137,11 @@ const Search = ({ query, config }: SearchProps) => {
             return newCategories;
         });
     }, [keywordData, keywordLoading]);
+
+    useEffect(() => {
+        console.log(pages);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }, [pages]);
 
     const hoverColor = colorMode === 'light' ? 'gray.100' : 'gray.700';
 
@@ -253,19 +261,39 @@ const Search = ({ query, config }: SearchProps) => {
                         setSelected={setSelected}
                     />
                 )}
-                <Grid
-                    templateColumns={{ base: '1fr', xl: '1fr 1fr' }}
-                    gap={3}
+                <Box
                     px={{ base: '1rem', lg: 0 }}
                     pb={{ base: '1.5rem', lg: 0 }}
                     width={{ base: '100%', lg: '80%' }}
                 >
-                    {query ? validQueryResult : invalidQueryResult}
-                    {query &&
-                        !categories[selected].loading &&
-                        categories[selected].data.results.length === 0 &&
-                        invalidQueryResult}
-                </Grid>
+                    <Grid
+                        templateColumns={{ base: '1fr', xl: '1fr 1fr' }}
+                        width="100%"
+                        gap={3}
+                        mb="1.5rem"
+                    >
+                        {query ? validQueryResult : invalidQueryResult}
+                        {query &&
+                            !categories[selected].loading &&
+                            categories[selected]?.data?.results.length === 0 &&
+                            invalidQueryResult}
+                    </Grid>
+                    {categories.map(({ data }, index) => (
+                        <Box
+                            key={index}
+                            display={
+                                data?.results.length > 0 && selected === index
+                                    ? 'block'
+                                    : 'none'
+                            }
+                        >
+                            <Pagination
+                                quantity={data?.total_pages}
+                                pageChangeHandler={pageChangeHandler}
+                            />
+                        </Box>
+                    ))}
+                </Box>
             </Stack>
         </GeneralLayout>
     );
