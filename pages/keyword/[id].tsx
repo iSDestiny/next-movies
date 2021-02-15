@@ -1,4 +1,4 @@
-import useDiscover from 'hooks/useDiscover';
+import useDiscover, { Filters } from 'hooks/useDiscover';
 import GeneralLayout from 'layouts/GeneralLayout';
 import { GetStaticPaths, GetStaticProps } from 'next';
 import { ungzip } from 'node-gzip';
@@ -18,21 +18,34 @@ interface KeywordProps {
     config: TMDBConfig;
 }
 
+// const useMediaType = (type: string, initialData: PopularMovies | PopularTVShows, sort: string, filters ?: Filters) => {
+//     const [page, setPage] = useState(1);
+//     const {
+//         data ,
+//         isLoading ,
+//         isError
+//     } = useDiscover('movie', initialData, page, sort, {
+//         ...filters
+//     });
+
+// }
+
 const Keyword = ({ keyword, movies, tvShows, config }: KeywordProps) => {
+    const [selected, setSelected] = useState(0);
     const [pages, setPages] = useState([1, 1]);
     const [sorts, setSorts] = useState(['popularity.desc', 'popularity.desc']);
     const {
         data: movieData,
         isLoading: isMovieLoading,
         isError: isMovieError
-    } = useDiscover('movie', movies, pages[0], sorts[0], {
+    } = useDiscover('movie', movies, sorts[0], {
         includeKeywords: keyword.id + ''
     });
     const {
         data: tvShowData,
         isLoading: isTVShowLoading,
         isError: isTVShowError
-    } = useDiscover('movie', movies, pages[0], sorts[0], {
+    } = useDiscover('movie', movies, sorts[0], {
         includeKeywords: keyword.id + ''
     });
 

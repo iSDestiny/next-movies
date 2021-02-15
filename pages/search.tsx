@@ -15,7 +15,7 @@ import ShowCard from 'components/ShowCard';
 import useSearch from 'hooks/useSearch';
 import GeneralLayout from 'layouts/GeneralLayout';
 import { GetServerSideProps } from 'next';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import tmdbFetch from 'utils/tmdbFetch';
 
 interface SearchProps {
@@ -23,8 +23,12 @@ interface SearchProps {
     config: TMDBConfig;
 }
 
-const useCategory = (type: string, query: string, page: number) => {
-    const { data, isLoading, isError } = useSearch(type, query, true, page);
+const useCategory = (type: string, query: string) => {
+    const { data, isLoading, isError, page, setPage } = useSearch(
+        type,
+        query,
+        true
+    );
 
     const headings = {
         movie: 'Movies',
@@ -36,43 +40,41 @@ const useCategory = (type: string, query: string, page: number) => {
     };
 
     return {
-        heading: headings[type],
+        heading: headings[type] as string,
         mediaType: type,
+        page,
+        setPage,
         data,
         loading: isLoading,
         error: isError
     };
 };
 
-const useCategories = (query: string, pages: number[]) => {
-    const movieCategory = useCategory('movie', query, pages[0]);
-    const tvCategory = useCategory('tv', query, pages[1]);
-    const personCategory = useCategory('person', query, pages[2]);
-    const keywordCategory = useCategory('keyword', query, pages[3]);
+const useCategories = (query: string) => {
+    const movieCategory = useCategory('movie', query);
+    const tvCategory = useCategory('tv', query);
+    const personCategory = useCategory('person', query);
+    const keywordCategory = useCategory('keyword', query);
 
-    return [movieCategory, tvCategory, personCategory, keywordCategory];
+    const categories = [
+        movieCategory,
+        tvCategory,
+        personCategory,
+        keywordCategory
+    ];
+
+    return categories;
 };
 
 const Search = ({ query, config }: SearchProps) => {
     const { colorMode } = useColorMode();
-    const [pages, setPages] = useState([1, 1, 1, 1]);
     const isMobile = useBreakpointValue({ base: true, lg: false });
     const [selected, setSelected] = useState(0);
-    const categories = useCategories(query, pages);
-
-    const pageChangeHandler = (currentPage: number) => {
-        setPages((prev) => {
-            const newPages = [...prev];
-            newPages[selected] = currentPage;
-            console.log('selected ' + selected);
-            return newPages;
-        });
-    };
+    const categories = useCategories(query);
 
     useEffect(() => {
-        console.log(pages);
         window.scrollTo({ top: 0, behavior: 'smooth' });
-    }, [pages]);
+    }, [categories[selected].page]);
 
     const hoverColor = colorMode === 'light' ? 'gray.100' : 'gray.700';
 
@@ -182,14 +184,14 @@ const Search = ({ query, config }: SearchProps) => {
                         query={query}
                         categories={categories}
                         selected={selected}
-                        setSelected={setSelected}
+                        setSelected={(index: number) => setSelected(index)}
                     />
                 ) : (
                     <MobileCategoryMenu
                         query={query}
                         categories={categories}
                         selected={selected}
-                        setSelected={setSelected}
+                        setSelected={(index: number) => setSelected(index)}
                     />
                 )}
                 <Box
@@ -219,7 +221,7 @@ const Search = ({ query, config }: SearchProps) => {
                             <Pagination
                                 key={`${query}-${mediaType}-${index}`}
                                 quantity={data?.total_pages}
-                                pageChangeHandler={pageChangeHandler}
+                                pageChangeHandler={categories[index].setPage}
                             />
                         </Box>
                     ))}

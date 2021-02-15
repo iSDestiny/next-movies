@@ -1,7 +1,8 @@
+import { useState } from 'react';
 import useSWR from 'swr';
 import tmdbFetch from 'utils/tmdbFetch';
 
-interface Filters {
+export interface Filters {
     certification?: string;
     releaseYear?: number;
     releaseYearGreater?: Date;
@@ -67,17 +68,23 @@ const fetchDiscover = async (
 const useDiscover = (
     type: string,
     initialData?: PopularMovies | PopularTVShows,
-    page?: number,
     sort?: string,
     filters?: Filters
 ) => {
+    const [page, setPage] = useState(1);
     const { data, error } = useSWR<PopularMovies | PopularTVShows>(
         [`/discover/${type}`, page, sort, filters],
         fetchDiscover,
         { initialData }
     );
 
-    return { data, isLoading: !data && !error, isError: error };
+    return {
+        data,
+        page,
+        setPage: (newPage: number) => setPage(newPage),
+        isLoading: !data && !error,
+        isError: error
+    };
 };
 
 export default useDiscover;

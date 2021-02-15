@@ -23,7 +23,7 @@ interface CategoryMenuProps {
     query: string;
     categories: Category[];
     selected: number;
-    setSelected: Dispatch<SetStateAction<number>>;
+    setSelected: (index: number) => void;
 }
 
 export const MobileCategoryMenu = ({
