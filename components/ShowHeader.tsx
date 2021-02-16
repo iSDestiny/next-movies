@@ -12,13 +12,16 @@ import {
     Wrap,
     WrapItem,
     useColorMode,
-    useBreakpointValue
+    useBreakpointValue,
+    Link
 } from '@chakra-ui/react';
+import NextLink from 'next/link';
 import Image from 'next/image';
 import { useState } from 'react';
 import { FaPlay, FaRegStar, FaStar } from 'react-icons/fa';
 import DotDivider from './DotDivider';
 import VideoModal from './VideoModal';
+import replaceSpacesWithDashes from 'utils/replaceSpacesWithDashes';
 
 interface ShowHeaderProps {
     config: TMDBConfig;
@@ -157,7 +160,16 @@ const ShowHeader = ({
                                 <Wrap spacing="0.3rem">
                                     {genres.map(({ id, name }, index) => (
                                         <WrapItem key={id}>
-                                            <Tag size="sm">{name}</Tag>
+                                            <NextLink
+                                                href={`/genre/${id}-${replaceSpacesWithDashes(
+                                                    name
+                                                )}`}
+                                                passHref
+                                            >
+                                                <Link>
+                                                    <Tag size="sm">{name}</Tag>
+                                                </Link>
+                                            </NextLink>
                                         </WrapItem>
                                     ))}
                                 </Wrap>
@@ -312,9 +324,22 @@ const ShowHeader = ({
                 <Wrap spacing="0.3rem" justify="center">
                     {genres.map(({ id, name }) => (
                         <WrapItem key={id}>
-                            <Tag size="sm" bgColor="white" color="black">
-                                {name}
-                            </Tag>
+                            <NextLink
+                                href={`/genre/${id}-${replaceSpacesWithDashes(
+                                    name
+                                )}`}
+                                passHref
+                            >
+                                <Link>
+                                    <Tag
+                                        size="sm"
+                                        bgColor="white"
+                                        color="black"
+                                    >
+                                        {name}
+                                    </Tag>
+                                </Link>
+                            </NextLink>
                         </WrapItem>
                     ))}
                 </Wrap>

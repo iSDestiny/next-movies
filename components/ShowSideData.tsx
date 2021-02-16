@@ -2,11 +2,13 @@ import {
     Box,
     Text,
     Heading,
-    VStack,
     Wrap,
+    Link,
     WrapItem,
     Tag
 } from '@chakra-ui/react';
+
+import NextLink from 'next/link';
 
 interface SideDataItemProps {
     heading: string;
@@ -70,7 +72,11 @@ const ShowSideData = ({ items, keywords, headingSize }: ShowSideDataProps) => {
                     {keywords.length > 0
                         ? keywords.map(({ name, id }) => (
                               <WrapItem key={id}>
-                                  <Tag size="md">{name}</Tag>
+                                  <NextLink href={`/keyword/${id}`} passHref>
+                                      <Link>
+                                          <Tag size="md">{name}</Tag>
+                                      </Link>
+                                  </NextLink>
                               </WrapItem>
                           ))
                         : '-'}

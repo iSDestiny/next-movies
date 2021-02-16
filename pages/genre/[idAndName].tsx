@@ -5,6 +5,7 @@ import { GetStaticPaths, GetStaticProps } from 'next';
 import { ungzip } from 'node-gzip';
 import React, { useEffect, useState } from 'react';
 import addLeadingZeroToDate from 'utils/addLeadingZeroToDate';
+import replaceSpacesWithDashes from 'utils/replaceSpacesWithDashes';
 import tmdbFetch from 'utils/tmdbFetch';
 import tmdbFetchGzip from 'utils/tmdbFetchGzip';
 
@@ -90,7 +91,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
     ];
 
     const paths = genres.map(({ name, id }) => ({
-        params: { idAndName: `${id}-${name.toLowerCase()}` }
+        params: { idAndName: `${id}-${replaceSpacesWithDashes(name)}` }
     }));
 
     return {
