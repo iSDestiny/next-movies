@@ -1,8 +1,9 @@
 import { Box, Grid, Heading, HStack, Text, VStack } from '@chakra-ui/react';
 import CardSkeleton from 'components/CardSkeleton';
+import Pagination from 'components/Pagination';
 import ShowCard from 'components/ShowCard';
 import { Filters } from 'hooks/useDiscover';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 interface Category {
     data: PopularMoviesAndPopularTVShows;
@@ -57,6 +58,10 @@ const LayoutHeader = ({
 
 const SpecficFilterLayout = ({ categories, keyword, config }: LayoutProps) => {
     const [selected, setSelected] = useState(0);
+    useEffect(() => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }, [categories[selected].page]);
+
     return (
         <Box as="main" width="100%">
             <LayoutHeader
@@ -65,13 +70,12 @@ const SpecficFilterLayout = ({ categories, keyword, config }: LayoutProps) => {
                 selected={selected}
                 setSelected={setSelected}
             />
-            <Box width="100%" maxWidth="1400px" m="auto">
+            <Box width="100%" maxWidth="1400px" m="auto" p="1rem">
                 <Grid
                     templateColumns={{ base: '1fr', xl: '1fr 1fr' }}
                     width="100%"
                     gap={3}
                     mb="1.5rem"
-                    p="1rem"
                 >
                     {!categories[selected]?.isLoading
                         ? categories[selected]?.data?.results?.map(
@@ -90,7 +94,7 @@ const SpecficFilterLayout = ({ categories, keyword, config }: LayoutProps) => {
                                   <Box key={id} width="100%">
                                       <ShowCard
                                           href={
-                                              index === 0
+                                              selected === 0
                                                   ? `/movies/${id}`
                                                   : `/tv/${id}`
                                           }
@@ -107,6 +111,32 @@ const SpecficFilterLayout = ({ categories, keyword, config }: LayoutProps) => {
                               <CardSkeleton key={num} />
                           ))}
                 </Grid>
+                <Box
+                    display={
+                        categories[0]?.data?.results?.length > 0 &&
+                        selected === 0
+                            ? 'block'
+                            : 'none'
+                    }
+                >
+                    <Pagination
+                        quantity={categories[0]?.data?.total_pages}
+                        pageChangeHandler={categories[0].setPage}
+                    />
+                </Box>
+                <Box
+                    display={
+                        categories[1]?.data?.results?.length > 0 &&
+                        selected === 1
+                            ? 'block'
+                            : 'none'
+                    }
+                >
+                    <Pagination
+                        quantity={categories[1]?.data?.total_pages}
+                        pageChangeHandler={categories[1].setPage}
+                    />
+                </Box>
             </Box>
         </Box>
     );

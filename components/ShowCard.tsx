@@ -52,6 +52,7 @@ const ShowCard = ({
                 <Flex
                     bgColor={isFocused ? focusColor : 'transparent'}
                     border={`1px solid ${cardBorderColor}`}
+                    _hover={{ bgColor: focusColor }}
                     width="100%"
                     height="100%"
                     overflow="hidden"

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import useSWR from 'swr';
 import tmdbFetch from 'utils/tmdbFetch';
 
@@ -45,8 +45,8 @@ const fetchDiscover = async (
     }: { data: PopularMoviesAndPopularTVShows } = await tmdbFetch.get(url, {
         params: {
             sort_by: sort,
-            page,
-            certification,
+            page: page,
+            certification: certification,
             primary_release_year: releaseYear,
             'primary_release_date.gte': releaseYearGreater,
             'primary_release_date.lte': releaseYearLess,
@@ -73,11 +73,25 @@ const useDiscover = (
     const [page, setPage] = useState(1);
     const [filters, setFilters] = useState<Filters>(initialFilters);
     const [sort, setSort] = useState('popularity.desc');
+
+    const initialKey = [
+        `/discover/${type}`,
+        1,
+        'popularity.desc',
+        initialFilters
+    ];
+    const key = [`/discover/${type}`, page, sort, filters];
+
     const { data, error } = useSWR<PopularMoviesAndPopularTVShows>(
-        [`/discover/${type}`, page, sort, filters],
+        key,
         fetchDiscover,
-        { initialData }
+        { initialData: key === initialKey ? initialData : undefined }
     );
+
+    useEffect(() => {
+        console.log(page);
+        console.log(data);
+    }, [page, data]);
 
     return {
         data,

@@ -106,7 +106,6 @@ const Search = ({ query, config }: SearchProps) => {
                                           lg: '190px'
                                       }}
                                       borderRadius="8px"
-                                      _hover={{ bgColor: hoverColor }}
                                   >
                                       <ShowCard
                                           href={
