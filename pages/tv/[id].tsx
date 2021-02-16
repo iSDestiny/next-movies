@@ -122,20 +122,17 @@ const TVShow = ({ tvShowData, config, languages }: TVShowProps) => {
         {
             heading: 'Network',
             data: (
-                <>
-                    {networks?.length > 0 && (
-                        <Tooltip label={networks[0].name}>
-                            <button>
-                                <Image
-                                    alt={`${networks[0].name}`}
-                                    src={`${secure_base_url}${logo_sizes[2]}${networks[0].logo_path}`}
-                                    width={55}
-                                    height={30}
+                <VStack spacing="0.5rem" mt="0.5rem">
+                    {networks?.length > 0 &&
+                        networks.map(({ name, logo_path }) => (
+                            <Tooltip label={name}>
+                                <img
+                                    alt={`${name}`}
+                                    src={`${secure_base_url}${logo_sizes[1]}${logo_path}`}
                                 />
-                            </button>
-                        </Tooltip>
-                    )}
-                </>
+                            </Tooltip>
+                        ))}
+                </VStack>
             )
         },
         { heading: 'Type', data: type },
