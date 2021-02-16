@@ -96,6 +96,8 @@ const useDiscover = (
     return {
         data,
         page,
+        sort,
+        filters,
         setSort: (newSort: string) => setSort(newSort),
         setFilters: (newFilters: Filters) => setFilters(newFilters),
         setPage: (newPage: number) => setPage(newPage),
