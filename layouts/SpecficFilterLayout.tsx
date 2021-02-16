@@ -12,6 +12,7 @@ import {
     MenuList,
     MenuOptionGroup,
     Portal,
+    Skeleton,
     Text,
     useColorMode,
     useToken,
@@ -58,6 +59,10 @@ const LayoutHeader = ({
     const [gray300, gray700] = useToken('colors', ['gray.300', 'gray.700']);
     const sideBarColor = colorMode === 'light' ? 'gray.100' : 'gray.700';
     const borderColor = colorMode === 'light' ? gray300 : gray700;
+    const amounts = [
+        categories[0]?.data?.total_results,
+        categories[1]?.data?.total_results
+    ];
 
     return (
         <VStack
@@ -76,13 +81,17 @@ const LayoutHeader = ({
                     <Heading as="h1" size="lg" textTransform="capitalize">
                         {heading}
                     </Heading>
-                    <Heading size="md">
-                        {`${categories[
-                            selected
-                        ]?.data?.total_results.toLocaleString()} ${
-                            selected === 0 ? 'Movies' : 'TV Shows'
-                        }`}
-                    </Heading>
+                    <Skeleton
+                        isLoaded={!categories[selected].isLoading}
+                        startColor="white"
+                        endColor="white"
+                    >
+                        <Heading size="md">
+                            {`${amounts[selected]?.toLocaleString()} ${
+                                selected === 0 ? 'Movies' : 'TV Shows'
+                            }`}
+                        </Heading>
+                    </Skeleton>
                 </HStack>
             </Box>
             <HStack
