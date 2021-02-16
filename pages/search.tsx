@@ -91,6 +91,7 @@ const Search = ({ query, config }: SearchProps) => {
                           poster_path,
                           overview,
                           profile_path,
+                          vote_average,
                           known_for_department,
                           known_for
                       }) => {
@@ -118,6 +119,7 @@ const Search = ({ query, config }: SearchProps) => {
                                           date={release_date || first_air_date}
                                           posterPath={poster_path}
                                           overview={overview}
+                                          rating={vote_average}
                                       />
                                   </Box>
                               );

@@ -7,11 +7,16 @@ import {
     useToken,
     VStack,
     Link,
-    useBreakpointValue
+    useBreakpointValue,
+    HStack,
+    Icon,
+    Divider
 } from '@chakra-ui/react';
 import NextLink from 'next/link';
 import Image from 'next/image';
 import { useState } from 'react';
+import { FaRegStar, FaStar } from 'react-icons/fa';
+import DotDivider from './DotDivider';
 
 interface ShowCardProps {
     config: TMDBConfig;
@@ -19,6 +24,7 @@ interface ShowCardProps {
     title: string;
     date: string;
     overview: string;
+    rating: number;
     href: string;
 }
 
@@ -27,6 +33,7 @@ const ShowCard = ({
     posterPath,
     title,
     date,
+    rating,
     overview,
     href
 }: ShowCardProps) => {
@@ -85,12 +92,45 @@ const ShowCard = ({
                             <Heading as="h3" size={size} noOfLines={2}>
                                 {title}
                             </Heading>
-                            <Text
-                                fontSize={{ base: '0.8rem', lg: '1rem' }}
-                                color={cardAccentColor}
-                            >
-                                {date}
-                            </Text>
+                            <HStack spacing="0.5rem" align="center">
+                                <HStack
+                                    display="inline-flex"
+                                    align="center"
+                                    spacing="0.2rem"
+                                >
+                                    <Icon
+                                        as={rating > 0 ? FaStar : FaRegStar}
+                                        color="yellow.400"
+                                    />
+                                    <Text
+                                        as="span"
+                                        fontSize={{
+                                            base: '0.8rem',
+                                            lg: '1rem'
+                                        }}
+                                        color={cardAccentColor}
+                                    >
+                                        {rating > 0 ? rating : 'NR'}
+                                    </Text>
+                                </HStack>
+                                {date && (
+                                    <>
+                                        <Divider
+                                            width="10px"
+                                            borderColor={cardAccentColor}
+                                        />
+                                        <Text
+                                            fontSize={{
+                                                base: '0.8rem',
+                                                lg: '1rem'
+                                            }}
+                                            color={cardAccentColor}
+                                        >
+                                            {date}
+                                        </Text>
+                                    </>
+                                )}
+                            </HStack>
                         </Box>
                         <Text
                             fontSize={{ base: '0.8rem', lg: '1rem' }}

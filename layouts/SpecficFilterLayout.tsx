@@ -219,7 +219,8 @@ const SpecficFilterLayout = ({ categories, heading, config }: LayoutProps) => {
                                       release_date,
                                       first_air_date,
                                       poster_path,
-                                      overview
+                                      overview,
+                                      vote_average
                                   },
                                   index
                               ) => (
@@ -235,6 +236,7 @@ const SpecficFilterLayout = ({ categories, heading, config }: LayoutProps) => {
                                           date={release_date || first_air_date}
                                           posterPath={poster_path}
                                           overview={overview}
+                                          rating={vote_average}
                                       />
                                   </Box>
                               )

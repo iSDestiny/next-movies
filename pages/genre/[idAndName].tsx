@@ -28,7 +28,7 @@ const Genre = ({ genre, movies, tvShows, config }: GenreProps) => {
         'tv',
         tvShows as PopularMoviesAndPopularTVShows,
         {
-            includeKeywords: genre.id + ''
+            includeGenres: genre.id + ''
         }
     );
 
