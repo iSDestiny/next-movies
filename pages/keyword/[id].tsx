@@ -32,27 +32,18 @@ interface KeywordProps {
 
 const Keyword = ({ keyword, movies, tvShows, config }: KeywordProps) => {
     const [selected, setSelected] = useState(0);
-    const [pages, setPages] = useState([1, 1]);
-    const [sorts, setSorts] = useState(['popularity.desc', 'popularity.desc']);
-    const {
-        data: movieData,
-        isLoading: isMovieLoading,
-        isError: isMovieError
-    } = useDiscover('movie', movies, sorts[0], {
+    const movieCategory = useDiscover('movie', movies, {
         includeKeywords: keyword.id + ''
     });
-    const {
-        data: tvShowData,
-        isLoading: isTVShowLoading,
-        isError: isTVShowError
-    } = useDiscover('movie', movies, sorts[0], {
+    const tvShowCategory = useDiscover('tv', tvShows, {
         includeKeywords: keyword.id + ''
     });
 
+    const categories = [movieCategory, tvShowCategory];
+
     useEffect(() => {
         console.log(keyword);
-        console.log(movieData);
-        console.log(tvShowData);
+        console.log(categories);
     }, []);
 
     return (

@@ -68,10 +68,11 @@ const fetchDiscover = async (
 const useDiscover = (
     type: string,
     initialData?: PopularMovies | PopularTVShows,
-    sort?: string,
-    filters?: Filters
+    initialFilters?: Filters
 ) => {
     const [page, setPage] = useState(1);
+    const [filters, setFilters] = useState<Filters>(initialFilters);
+    const [sort, setSort] = useState('popularity.desc');
     const { data, error } = useSWR<PopularMovies | PopularTVShows>(
         [`/discover/${type}`, page, sort, filters],
         fetchDiscover,
@@ -81,6 +82,8 @@ const useDiscover = (
     return {
         data,
         page,
+        setSort: (newSort: string) => setSort(newSort),
+        setFilters: (newFilters: Filters) => setFilters(newFilters),
         setPage: (newPage: number) => setPage(newPage),
         isLoading: !data && !error,
         isError: error
