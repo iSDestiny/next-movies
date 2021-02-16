@@ -8,41 +8,36 @@ import addLeadingZeroToDate from 'utils/addLeadingZeroToDate';
 import tmdbFetch from 'utils/tmdbFetch';
 import tmdbFetchGzip from 'utils/tmdbFetchGzip';
 
-interface KeywordProps {
-    keyword: GenresEntityOrKeywordsEntity;
+interface GenreProps {
+    genre: GenresEntityOrKeywordsEntity;
     movies: PopularMovies;
     tvShows: PopularTVShows;
     config: TMDBConfig;
 }
 
-const Keyword = ({ keyword, movies, tvShows, config }: KeywordProps) => {
+const Genre = ({ genre, movies, tvShows, config }: GenreProps) => {
     const movieCategory = useDiscover(
         'movie',
         movies as PopularMoviesAndPopularTVShows,
         {
-            includeKeywords: keyword.id + ''
+            includeGenres: genre.id + ''
         }
     );
     const tvShowCategory = useDiscover(
         'tv',
         tvShows as PopularMoviesAndPopularTVShows,
         {
-            includeKeywords: keyword.id + ''
+            includeKeywords: genre.id + ''
         }
     );
 
     const categories = [movieCategory, tvShowCategory];
 
-    useEffect(() => {
-        console.log(keyword);
-        console.log(categories);
-    }, []);
-
     return (
-        <GeneralLayout title={`Keyword: "${keyword.name}"`}>
+        <GeneralLayout title={`Genre: ${genre.name}`}>
             <SpecficFilterLayout
                 config={config}
-                heading={keyword.name}
+                heading={genre.name}
                 categories={categories}
             />
         </GeneralLayout>
@@ -50,37 +45,31 @@ const Keyword = ({ keyword, movies, tvShows, config }: KeywordProps) => {
 };
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
-    const { id } = params;
+    const { idAndName } = params;
+    const [id, name] = (idAndName as string).split('-');
     let movies: PopularMovies;
     let tvShows: PopularTVShows;
     let config: TMDBConfig;
-    let keyword: GenresEntityOrKeywordsEntity;
 
     const { data: configData } = await tmdbFetch.get('/configuration');
     const { data: tvData } = await tmdbFetch.get('/discover/tv', {
         params: {
-            with_keywords: id
+            with_genres: id
         }
     });
     const { data: movieData } = await tmdbFetch.get('/discover/movie', {
         params: {
-            with_keywords: id
+            with_genres: id
         }
     });
-    const {
-        data: keywordData
-    }: { data: GenresEntityOrKeywordsEntity } = await tmdbFetch.get(
-        `/keyword/${id}`
-    );
 
     config = configData;
     movies = movieData;
     tvShows = tvData;
-    keyword = keywordData;
 
     return {
         props: {
-            keyword,
+            genre: { id, name },
             movies,
             tvShows,
             config
@@ -89,38 +78,20 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
 };
 
 export const getStaticPaths: GetStaticPaths = async () => {
-    let ids: number[];
-    const date = new Date();
-    const month = date.getMonth() + 1;
-    const day = date.getDate();
-    const year = date.getFullYear();
-    const res = await tmdbFetchGzip.get(
-        `/keyword_ids_${addLeadingZeroToDate(month)}_${addLeadingZeroToDate(
-            day
-        )}_${year}.json.gz`,
-        {
-            responseType: 'arraybuffer',
-            headers: {
-                'Accept-Encoding': 'gzip'
-            }
-        }
-    );
+    const {
+        data: { genres: movieGenres }
+    } = await tmdbFetch.get('/genre/movie/list');
+    const {
+        data: { genres: tvGenres }
+    } = await tmdbFetch.get('/genre/tv/list');
 
-    const uncompressed = await ungzip(res.data);
-    ids = uncompressed
-        .toString()
-        .trim()
-        .split('\n')
-        .map((line) => {
-            const json = JSON.parse(line);
-            return json.id;
-        });
+    const genres: GenresEntityOrKeywordsEntity[] = [
+        ...new Set([...movieGenres, ...tvGenres])
+    ];
 
-    const paths = ids.map((id) => {
-        if (id) return { params: { id: id + '' } };
-        console.log('error' + id);
-        return { params: { id: null } };
-    });
+    const paths = genres.map(({ name, id }) => ({
+        params: { idAndName: `${id}-${name.toLowerCase()}` }
+    }));
 
     return {
         paths,
@@ -128,4 +99,4 @@ export const getStaticPaths: GetStaticPaths = async () => {
     };
 };
 
-export default Keyword;
+export default Genre;

@@ -39,7 +39,7 @@ interface Category {
 
 interface LayoutProps {
     categories: Category[];
-    keyword: string;
+    heading: string;
     config?: TMDBConfig;
 }
 
@@ -49,7 +49,7 @@ interface LayoutHeaderProps extends LayoutProps {
 }
 
 const LayoutHeader = ({
-    keyword,
+    heading,
     categories,
     selected,
     setSelected
@@ -73,11 +73,13 @@ const LayoutHeader = ({
                     maxWidth="1400px"
                     m="auto"
                 >
-                    <Heading as="h1" size="lg">
-                        {keyword}
+                    <Heading as="h1" size="lg" textTransform="capitalize">
+                        {heading}
                     </Heading>
                     <Heading size="md">
-                        {`${categories[selected]?.data?.total_results} ${
+                        {`${categories[
+                            selected
+                        ]?.data?.total_results.toLocaleString()} ${
                             selected === 0 ? 'Movies' : 'TV Shows'
                         }`}
                     </Heading>
@@ -177,7 +179,7 @@ const LayoutHeader = ({
     );
 };
 
-const SpecficFilterLayout = ({ categories, keyword, config }: LayoutProps) => {
+const SpecficFilterLayout = ({ categories, heading, config }: LayoutProps) => {
     const [selected, setSelected] = useState(0);
     useEffect(() => {
         window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -187,7 +189,7 @@ const SpecficFilterLayout = ({ categories, keyword, config }: LayoutProps) => {
         <Box as="main" width="100%">
             <LayoutHeader
                 categories={categories}
-                keyword={keyword}
+                heading={heading}
                 selected={selected}
                 setSelected={setSelected}
             />
