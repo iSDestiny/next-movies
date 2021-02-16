@@ -42,7 +42,7 @@ const fetchDiscover = async (
 
     const {
         data
-    }: { data: PopularMovies | PopularTVShows } = await tmdbFetch.get(url, {
+    }: { data: PopularMoviesAndPopularTVShows } = await tmdbFetch.get(url, {
         params: {
             sort_by: sort,
             page,
@@ -67,13 +67,13 @@ const fetchDiscover = async (
 
 const useDiscover = (
     type: string,
-    initialData?: PopularMovies | PopularTVShows,
+    initialData?: PopularMoviesAndPopularTVShows,
     initialFilters?: Filters
 ) => {
     const [page, setPage] = useState(1);
     const [filters, setFilters] = useState<Filters>(initialFilters);
     const [sort, setSort] = useState('popularity.desc');
-    const { data, error } = useSWR<PopularMovies | PopularTVShows>(
+    const { data, error } = useSWR<PopularMoviesAndPopularTVShows>(
         [`/discover/${type}`, page, sort, filters],
         fetchDiscover,
         { initialData }

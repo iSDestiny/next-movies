@@ -40,6 +40,10 @@ interface PopularTVShows extends QueryList {
     results?: TVShow[] | null;
 }
 
+interface PopularMoviesAndPopularTVShows extends QueryList {
+    results?: MovieAndTVShow[];
+}
+
 interface TMDBConfig {
     images: TMDBImages;
     change_keys?: string[] | null;
@@ -98,8 +102,6 @@ interface Movie {
 
 interface TVShow {
     backdrop_path: string;
-    first_air_date: string;
-    genre_ids?: number[] | null;
     id: number;
     name: string;
     origin_country?: string[] | null;
@@ -110,7 +112,11 @@ interface TVShow {
     poster_path: string;
     vote_average: number;
     vote_count: number;
+    first_air_date?: string;
+    genre_ids?: number[] | null;
 }
+
+interface MovieAndTVShow extends TVShow, Movie {}
 
 interface MovieDetails {
     adult: boolean;

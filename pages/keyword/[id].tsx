@@ -1,5 +1,6 @@
 import useDiscover, { Filters } from 'hooks/useDiscover';
 import GeneralLayout from 'layouts/GeneralLayout';
+import SpecficFilterLayout from 'layouts/SpecficFilterLayout';
 import { GetStaticPaths, GetStaticProps } from 'next';
 import { ungzip } from 'node-gzip';
 import React, { useEffect, useState } from 'react';
@@ -18,26 +19,21 @@ interface KeywordProps {
     config: TMDBConfig;
 }
 
-// const useMediaType = (type: string, initialData: PopularMovies | PopularTVShows, sort: string, filters ?: Filters) => {
-//     const [page, setPage] = useState(1);
-//     const {
-//         data ,
-//         isLoading ,
-//         isError
-//     } = useDiscover('movie', initialData, page, sort, {
-//         ...filters
-//     });
-
-// }
-
 const Keyword = ({ keyword, movies, tvShows, config }: KeywordProps) => {
-    const [selected, setSelected] = useState(0);
-    const movieCategory = useDiscover('movie', movies, {
-        includeKeywords: keyword.id + ''
-    });
-    const tvShowCategory = useDiscover('tv', tvShows, {
-        includeKeywords: keyword.id + ''
-    });
+    const movieCategory = useDiscover(
+        'movie',
+        movies as PopularMoviesAndPopularTVShows,
+        {
+            includeKeywords: keyword.id + ''
+        }
+    );
+    const tvShowCategory = useDiscover(
+        'tv',
+        tvShows as PopularMoviesAndPopularTVShows,
+        {
+            includeKeywords: keyword.id + ''
+        }
+    );
 
     const categories = [movieCategory, tvShowCategory];
 
@@ -48,7 +44,11 @@ const Keyword = ({ keyword, movies, tvShows, config }: KeywordProps) => {
 
     return (
         <GeneralLayout title={`"${keyword}"`}>
-            <></>
+            <SpecficFilterLayout
+                config={config}
+                keyword={keyword.name}
+                categories={categories}
+            />
         </GeneralLayout>
     );
 };
@@ -126,7 +126,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
 
     return {
         paths,
-        fallback: true
+        fallback: false
     };
 };
 
