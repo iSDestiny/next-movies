@@ -47,7 +47,10 @@ const Genre = ({ genre, movies, tvShows, config }: GenreProps) => {
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
     const { idAndName } = params;
-    const [id, name] = (idAndName as string).split('-');
+    const joint = (idAndName as string).split('-');
+    const id = joint[0];
+    const name = joint.splice(1).reduce((accum, curr) => `${accum} ${curr}`);
+
     let movies: PopularMovies;
     let tvShows: PopularTVShows;
     let config: TMDBConfig;
