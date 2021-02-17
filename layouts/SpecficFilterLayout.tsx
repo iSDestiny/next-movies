@@ -1,7 +1,6 @@
 import {
     Box,
     Button,
-    forwardRef,
     Grid,
     Heading,
     HStack,
@@ -128,7 +127,6 @@ const LayoutHeader = ({
 }: LayoutHeaderProps) => {
     const { colorMode } = useColorMode();
     const [gray300, gray700] = useToken('colors', ['gray.300', 'gray.700']);
-    const sideBarColor = colorMode === 'light' ? 'gray.100' : 'gray.700';
     const borderColor = colorMode === 'light' ? gray300 : gray700;
     const amountSize = useBreakpointValue({ base: 'sm', md: 'md' });
     const headingSize = useBreakpointValue({ base: 'md', md: 'lg' });

@@ -1,27 +1,26 @@
 import {
-    Text,
     Box,
     Heading,
+    Link,
     Stack,
+    Text,
     Tooltip,
     useBreakpointValue,
-    VStack,
-    Link
+    VStack
 } from '@chakra-ui/react';
 import CastCarousel from 'components/CastCarousel';
 import MediaGroup, { MediaGroupItem } from 'components/MediaGroup';
 import ShowCarousel from 'components/ShowCarousel';
 import ShowHeader from 'components/ShowHeader';
+import ShowSideData from 'components/ShowSideData';
 import GeneralLayout from 'layouts/GeneralLayout';
 import { GetStaticPaths, GetStaticProps } from 'next';
+import NextLink from 'next/link';
 import { ungzip } from 'node-gzip';
 import React, { useEffect } from 'react';
 import addLeadingZeroToDate from 'utils/addLeadingZeroToDate';
 import tmdbFetch from 'utils/tmdbFetch';
 import tmdbFetchGzip from 'utils/tmdbFetchGzip';
-import Image from 'next/image';
-import NextLink from 'next/link';
-import ShowSideData from 'components/ShowSideData';
 
 interface TVShowProps {
     tvShowData: TVShowDetails;
