@@ -80,25 +80,32 @@ const MetaDataBar = ({ company }: MetaDataBarProps) => {
                         <Icon as={FaBuilding} fontSize="1.1rem" />
                         <Text size="md">{name}</Text>
                     </HStack>
-                    <HStack>
-                        <Icon as={HiLocationMarker} fontSize="1.1rem" />
-                        <Text size="md">{headquarters}</Text>
-                    </HStack>
-                    <HStack>
-                        <Icon as={FaGlobeAmericas} />
-                        <Text size="md">{origin_country}</Text>
-                    </HStack>
-                    <Link
-                        href={homepage}
-                        _hover={{ textDecoration: 'underline' }}
-                        rel="noopener noreferrer"
-                        target="_blank"
-                    >
+
+                    {headquarters && (
                         <HStack>
-                            <Icon as={FaLink} />
-                            <Text size="md">Homepage</Text>
+                            <Icon as={HiLocationMarker} fontSize="1.1rem" />
+                            <Text size="md">{headquarters}</Text>
                         </HStack>
-                    </Link>
+                    )}
+                    {origin_country && (
+                        <HStack>
+                            <Icon as={FaGlobeAmericas} />
+                            <Text size="md">{origin_country}</Text>
+                        </HStack>
+                    )}
+                    {homepage && (
+                        <Link
+                            href={homepage}
+                            _hover={{ textDecoration: 'underline' }}
+                            rel="noopener noreferrer"
+                            target="_blank"
+                        >
+                            <HStack>
+                                <Icon as={FaLink} />
+                                <Text size="md">Homepage</Text>
+                            </HStack>
+                        </Link>
+                    )}
                 </HStack>
             </Box>
         );

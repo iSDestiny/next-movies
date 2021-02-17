@@ -133,6 +133,7 @@ interface MovieDetails {
     popularity: number;
     poster_path: string;
     production_companies?: ProductionCompaniesEntity[] | null;
+    production_countries?: ProductionCountriesEntity[] | null;
     release_date: string;
     revenue: number;
     runtime: number;

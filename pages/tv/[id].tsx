@@ -5,7 +5,8 @@ import {
     Stack,
     Tooltip,
     useBreakpointValue,
-    VStack
+    VStack,
+    Link
 } from '@chakra-ui/react';
 import CastCarousel from 'components/CastCarousel';
 import MediaGroup, { MediaGroupItem } from 'components/MediaGroup';
@@ -19,6 +20,7 @@ import addLeadingZeroToDate from 'utils/addLeadingZeroToDate';
 import tmdbFetch from 'utils/tmdbFetch';
 import tmdbFetchGzip from 'utils/tmdbFetchGzip';
 import Image from 'next/image';
+import NextLink from 'next/link';
 import ShowSideData from 'components/ShowSideData';
 
 interface TVShowProps {
@@ -125,12 +127,16 @@ const TVShow = ({ tvShowData, config, languages }: TVShowProps) => {
                 <VStack spacing="0.5rem" mt="0.5rem">
                     {networks?.length > 0 &&
                         networks.map(({ name, logo_path, id }) => (
-                            <Tooltip label={name} key={id}>
-                                <img
-                                    alt={`${name}`}
-                                    src={`${secure_base_url}${logo_sizes[1]}${logo_path}`}
-                                />
-                            </Tooltip>
+                            <NextLink href={`/network/${id}`} passHref key={id}>
+                                <Link>
+                                    <Tooltip label={name}>
+                                        <img
+                                            alt={`${name}`}
+                                            src={`${secure_base_url}${logo_sizes[1]}${logo_path}`}
+                                        />
+                                    </Tooltip>
+                                </Link>
+                            </NextLink>
                         ))}
                 </VStack>
             )

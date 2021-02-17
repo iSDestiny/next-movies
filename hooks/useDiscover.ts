@@ -16,6 +16,7 @@ export interface Filters {
     includeKeywords?: string;
     watchProviders?: string;
     includeCompanies?: string;
+    includeNetworks?: string;
     language?: string;
 }
 
@@ -39,7 +40,8 @@ const fetchDiscover = async (
         includeKeywords,
         watchProviders,
         includeCompanies,
-        language
+        language,
+        includeNetworks
     } = filters;
 
     const {
@@ -61,7 +63,8 @@ const fetchDiscover = async (
             with_keywords: includeKeywords,
             with_watch_providers: watchProviders,
             with_original_language: language,
-            with_companies: includeCompanies
+            with_companies: includeCompanies,
+            with_networks: includeNetworks
         }
     });
 
