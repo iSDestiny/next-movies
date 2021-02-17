@@ -16,15 +16,22 @@ import {
     Text,
     useColorMode,
     useToken,
-    VStack
+    Link,
+    VStack,
+    Icon
 } from '@chakra-ui/react';
 import CardSkeleton from 'components/CardSkeleton';
 import Pagination from 'components/Pagination';
 import ShowCard from 'components/ShowCard';
 import { Filters } from 'hooks/useDiscover';
 import { useEffect, useState } from 'react';
-import { FaCaretDown } from 'react-icons/fa';
-import { MdSort } from 'react-icons/md';
+import {
+    FaBuilding,
+    FaCaretDown,
+    FaGlobeAmericas,
+    FaLink
+} from 'react-icons/fa';
+import { HiLocationMarker } from 'react-icons/hi';
 
 interface Category {
     data: PopularMoviesAndPopularTVShows;
@@ -41,7 +48,9 @@ interface Category {
 interface LayoutProps {
     categories: Category[];
     heading: string;
+    type?: string;
     config?: TMDBConfig;
+    company?: ProductionCompanyDetails;
 }
 
 interface LayoutHeaderProps extends LayoutProps {
@@ -49,11 +58,61 @@ interface LayoutHeaderProps extends LayoutProps {
     setSelected: (index: number) => void;
 }
 
+interface MetaDataBarProps {
+    company?: ProductionCompanyDetails;
+}
+
+const MetaDataBar = ({ company }: MetaDataBarProps) => {
+    const { colorMode } = useColorMode();
+
+    if (company) {
+        const { name, headquarters, homepage, origin_country } = company;
+        return (
+            <Box width="100%" color="gray.100" bgColor="teal.600">
+                <HStack
+                    align="center"
+                    spacing="1rem"
+                    m="auto"
+                    maxWidth="1400px"
+                    p="0.5rem 1rem"
+                >
+                    <HStack>
+                        <Icon as={FaBuilding} fontSize="1.1rem" />
+                        <Text size="md">{name}</Text>
+                    </HStack>
+                    <HStack>
+                        <Icon as={HiLocationMarker} fontSize="1.1rem" />
+                        <Text size="md">{headquarters}</Text>
+                    </HStack>
+                    <HStack>
+                        <Icon as={FaGlobeAmericas} />
+                        <Text size="md">{origin_country}</Text>
+                    </HStack>
+                    <Link
+                        href={homepage}
+                        _hover={{ textDecoration: 'underline' }}
+                        rel="noopener noreferrer"
+                        target="_blank"
+                    >
+                        <HStack>
+                            <Icon as={FaLink} />
+                            <Text size="md">Homepage</Text>
+                        </HStack>
+                    </Link>
+                </HStack>
+            </Box>
+        );
+    }
+    return null;
+};
+
 const LayoutHeader = ({
     heading,
     categories,
     selected,
-    setSelected
+    setSelected,
+    config,
+    company
 }: LayoutHeaderProps) => {
     const { colorMode } = useColorMode();
     const [gray300, gray700] = useToken('colors', ['gray.300', 'gray.700']);
@@ -64,11 +123,14 @@ const LayoutHeader = ({
         categories[1]?.data?.total_results
     ];
 
+    const { secure_base_url, logo_sizes } = config.images;
+
     return (
         <VStack
             width="100%"
             as="header"
             borderBottom={`1px solid ${borderColor}`}
+            spacing="0px"
         >
             <Box width="100%" color="white" bgColor="teal.500">
                 <HStack
@@ -78,9 +140,16 @@ const LayoutHeader = ({
                     maxWidth="1400px"
                     m="auto"
                 >
-                    <Heading as="h1" size="lg" textTransform="capitalize">
-                        {heading}
-                    </Heading>
+                    {company?.logo_path ? (
+                        <img
+                            src={`${secure_base_url}${logo_sizes[1]}${company.logo_path}`}
+                            alt={`${company.name} logo`}
+                        />
+                    ) : (
+                        <Heading as="h1" size="lg" textTransform="capitalize">
+                            {heading}
+                        </Heading>
+                    )}
                     <Skeleton
                         isLoaded={!categories[selected].isLoading}
                         startColor="white"
@@ -94,8 +163,8 @@ const LayoutHeader = ({
                     </Skeleton>
                 </HStack>
             </Box>
+            <MetaDataBar company={company} />
             <HStack
-                mt="0px !important"
                 width="100%"
                 justify="center"
                 p={{ base: '0.3rem', sm: '0.5rem' }}
@@ -188,7 +257,12 @@ const LayoutHeader = ({
     );
 };
 
-const SpecficFilterLayout = ({ categories, heading, config }: LayoutProps) => {
+const SpecficFilterLayout = ({
+    categories,
+    heading,
+    config,
+    company
+}: LayoutProps) => {
     const [selected, setSelected] = useState(0);
     useEffect(() => {
         window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -197,8 +271,10 @@ const SpecficFilterLayout = ({ categories, heading, config }: LayoutProps) => {
     return (
         <Box as="main" width="100%">
             <LayoutHeader
+                config={config}
                 categories={categories}
                 heading={heading}
+                company={company}
                 selected={selected}
                 setSelected={setSelected}
             />
@@ -211,19 +287,16 @@ const SpecficFilterLayout = ({ categories, heading, config }: LayoutProps) => {
                 >
                     {!categories[selected]?.isLoading
                         ? categories[selected]?.data?.results?.map(
-                              (
-                                  {
-                                      id,
-                                      title,
-                                      name,
-                                      release_date,
-                                      first_air_date,
-                                      poster_path,
-                                      overview,
-                                      vote_average
-                                  },
-                                  index
-                              ) => (
+                              ({
+                                  id,
+                                  title,
+                                  name,
+                                  release_date,
+                                  first_air_date,
+                                  poster_path,
+                                  overview,
+                                  vote_average
+                              }) => (
                                   <Box key={id} width="100%">
                                       <ShowCard
                                           href={

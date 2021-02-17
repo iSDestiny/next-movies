@@ -133,7 +133,6 @@ interface MovieDetails {
     popularity: number;
     poster_path: string;
     production_companies?: ProductionCompaniesEntity[] | null;
-    production_countries?: ProductionCountriesEntity[] | null;
     release_date: string;
     revenue: number;
     runtime: number;
@@ -514,4 +513,15 @@ interface KnownForEntity {
     video: boolean;
     vote_average: number;
     vote_count: number;
+}
+
+interface ProductionCompanyDetails {
+    id: number;
+    name: string;
+    homepage?: string;
+    headquarters?: string;
+    origin_country?: string;
+    parent_company?: string;
+    description?: string;
+    logo_path?: string;
 }
