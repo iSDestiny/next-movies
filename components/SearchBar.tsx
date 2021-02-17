@@ -104,10 +104,6 @@ const SearchBar = ({ isOpen, onClose }: SearchBarProps) => {
     };
 
     useEffect(() => {
-        console.log(data);
-    }, [data]);
-
-    useEffect(() => {
         const { current } = ref;
         if (current && isOpen) current.focus();
     }, [isOpen]);

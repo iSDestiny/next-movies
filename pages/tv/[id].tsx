@@ -120,12 +120,12 @@ const TVShow = ({ tvShowData, config, languages }: TVShowProps) => {
     const sideDataItems = [
         { heading: 'Status', data: status },
         {
-            heading: 'Network',
+            heading: 'Networks',
             data: (
                 <VStack spacing="0.5rem" mt="0.5rem">
                     {networks?.length > 0 &&
-                        networks.map(({ name, logo_path }) => (
-                            <Tooltip label={name}>
+                        networks.map(({ name, logo_path, id }) => (
+                            <Tooltip label={name} key={id}>
                                 <img
                                     alt={`${name}`}
                                     src={`${secure_base_url}${logo_sizes[1]}${logo_path}`}
@@ -179,6 +179,7 @@ const TVShow = ({ tvShowData, config, languages }: TVShowProps) => {
                             cast={credits.cast}
                             config={config}
                             headingSize={headingSize}
+                            type="tv show"
                         />
                         <MediaGroup
                             headingSize={headingSize}
@@ -261,23 +262,20 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
     let config: TMDBConfig;
     let languages: Language[];
 
-    try {
-        const { data: configData } = await tmdbFetch.get('/configuration');
-        const { data: languageData } = await tmdbFetch.get(
-            '/configuration/languages'
-        );
-        const { data } = await tmdbFetch.get(`/tv/${id}`, {
-            params: {
-                append_to_response:
-                    'content_ratings,reviews,similar,images,credits,videos,recommendations,keywords'
-            }
-        });
-        config = configData;
-        tvShowData = data;
-        languages = languageData;
-    } catch (err) {
-        console.log(err);
-    }
+    const { data: configData } = await tmdbFetch.get('/configuration');
+    const { data: languageData } = await tmdbFetch.get(
+        '/configuration/languages'
+    );
+    const { data } = await tmdbFetch.get(`/tv/${id}`, {
+        params: {
+            append_to_response:
+                'content_ratings,reviews,similar,images,credits,videos,recommendations,keywords'
+        }
+    });
+
+    config = configData;
+    tvShowData = data;
+    languages = languageData;
 
     return {
         props: {

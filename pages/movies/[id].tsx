@@ -155,6 +155,7 @@ const Movie = ({ movieData, config, languages }: MovieProps) => {
                             cast={credits.cast}
                             config={config}
                             headingSize={headingSize}
+                            type="movie"
                         />
                         <MediaGroup
                             headingSize={headingSize}
@@ -236,41 +237,21 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
     let movieData: MovieDetails;
     let config: TMDBConfig;
     let languages: Language[];
-    // let videos: VideoResultsEntity[];
-    // let recommendations: Movie[];
-    // let credits: Credits;
-    // let keywords: Keyword[];
-    // let images: Images;
-    try {
-        const { data: configData } = await tmdbFetch.get('/configuration');
-        const { data: languageData } = await tmdbFetch.get(
-            '/configuration/languages'
-        );
-        // const {
-        //     data: { results: videoData }
-        // } = await tmdbFetch.get(`/movie/${id}/videos`);
-        // const {
-        //     data: { results: reccData }
-        // } = await tmdbFetch.get(`movie/${id}/recommendations`);
-        // const { data: creditsData } = await tmdbFetch.get(
-        //     `movie/${id}/credits`
-        // );
-        // const {
-        //     data: { keywords: keywordData }
-        // } = await tmdbFetch.get(`movie/${id}/keywords`);
-        // const { data: imageData } = await tmdbFetch.get(`movie/${id}/images`);
-        const { data } = await tmdbFetch.get(`/movie/${id}`, {
-            params: {
-                append_to_response:
-                    'release_dates,reviews,similar,images,credits,videos,recommendations,keywords'
-            }
-        });
-        config = configData;
-        movieData = data;
-        languages = languageData;
-    } catch (err) {
-        console.log(err);
-    }
+    const { data: configData } = await tmdbFetch.get('/configuration');
+    const { data: languageData } = await tmdbFetch.get(
+        '/configuration/languages'
+    );
+
+    const { data } = await tmdbFetch.get(`/movie/${id}`, {
+        params: {
+            append_to_response:
+                'release_dates,reviews,similar,images,credits,videos,recommendations,keywords'
+        }
+    });
+
+    config = configData;
+    movieData = data;
+    languages = languageData;
 
     return {
         props: {

@@ -43,7 +43,7 @@ const SideDataItem = ({
             <Heading as="h4" size={headingSize}>
                 {heading}
             </Heading>
-            {heading !== 'Network' ? (
+            {heading !== 'Networks' ? (
                 <Text>{data ? displayData() : '-'}</Text>
             ) : (
                 <>{data}</>

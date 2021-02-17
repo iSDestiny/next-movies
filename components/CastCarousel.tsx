@@ -14,13 +14,15 @@ interface CastCarouselProps {
     config: TMDBConfig;
     headingSize: string;
     buttonSize: string | string[];
+    type: string;
 }
 
 const CastCarousel = ({
     cast,
     config,
     headingSize,
-    buttonSize
+    buttonSize,
+    type
 }: CastCarouselProps) => {
     const { secure_base_url, profile_sizes } = config.images;
     const naturalHeight = useBreakpointValue([245, 250]);
@@ -84,7 +86,7 @@ const CastCarousel = ({
             ) : (
                 <Box>
                     <Text size="md" mb="1rem">
-                        We dont have any cast added to this movie.
+                        We dont have any cast added to this {type}.
                     </Text>
                 </Box>
             )}

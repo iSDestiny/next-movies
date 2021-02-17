@@ -40,7 +40,7 @@ const useCategory = (type: string, query: string) => {
     };
 
     return {
-        heading: headings[type] as string,
+        heading: headings[type],
         mediaType: type,
         page,
         setPage,
@@ -55,12 +55,14 @@ const useCategories = (query: string) => {
     const tvCategory = useCategory('tv', query);
     const personCategory = useCategory('person', query);
     const keywordCategory = useCategory('keyword', query);
+    const companyCategory = useCategory('company', query);
 
     const categories = [
         movieCategory,
         tvCategory,
         personCategory,
-        keywordCategory
+        keywordCategory,
+        companyCategory
     ];
 
     return categories;
@@ -123,11 +125,14 @@ const Search = ({ query, config }: SearchProps) => {
                                       />
                                   </Box>
                               );
-                          else if (mediaType === 'keyword')
+                          else if (
+                              mediaType === 'keyword' ||
+                              mediaType === 'company'
+                          )
                               return (
                                   <Button
                                       as="a"
-                                      href={`/keyword/${id}`}
+                                      href={`/${mediaType}/${id}`}
                                       colorScheme="teal"
                                       key={id}
                                       size="lg"
