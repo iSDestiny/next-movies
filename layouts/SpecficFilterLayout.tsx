@@ -18,7 +18,9 @@ import {
     useToken,
     Link,
     VStack,
-    Icon
+    Icon,
+    Stack,
+    useBreakpointValue
 } from '@chakra-ui/react';
 import CardSkeleton from 'components/CardSkeleton';
 import Pagination from 'components/Pagination';
@@ -69,7 +71,8 @@ const MetaDataBar = ({ company }: MetaDataBarProps) => {
         const { name, headquarters, homepage, origin_country } = company;
         return (
             <Box width="100%" color="gray.100" bgColor="teal.600">
-                <HStack
+                <Stack
+                    direction={{ base: 'column', md: 'row' }}
                     align="center"
                     spacing="1rem"
                     m="auto"
@@ -81,18 +84,20 @@ const MetaDataBar = ({ company }: MetaDataBarProps) => {
                         <Text size="md">{name}</Text>
                     </HStack>
 
-                    {headquarters && (
-                        <HStack>
-                            <Icon as={HiLocationMarker} fontSize="1.1rem" />
-                            <Text size="md">{headquarters}</Text>
-                        </HStack>
-                    )}
-                    {origin_country && (
-                        <HStack>
-                            <Icon as={FaGlobeAmericas} />
-                            <Text size="md">{origin_country}</Text>
-                        </HStack>
-                    )}
+                    <HStack spacing="1rem">
+                        {headquarters && (
+                            <HStack>
+                                <Icon as={HiLocationMarker} fontSize="1.1rem" />
+                                <Text size="md">{headquarters}</Text>
+                            </HStack>
+                        )}
+                        {origin_country && (
+                            <HStack>
+                                <Icon as={FaGlobeAmericas} />
+                                <Text size="md">{origin_country}</Text>
+                            </HStack>
+                        )}
+                    </HStack>
                     {homepage && (
                         <Link
                             href={homepage}
@@ -106,7 +111,7 @@ const MetaDataBar = ({ company }: MetaDataBarProps) => {
                             </HStack>
                         </Link>
                     )}
-                </HStack>
+                </Stack>
             </Box>
         );
     }
@@ -125,12 +130,17 @@ const LayoutHeader = ({
     const [gray300, gray700] = useToken('colors', ['gray.300', 'gray.700']);
     const sideBarColor = colorMode === 'light' ? 'gray.100' : 'gray.700';
     const borderColor = colorMode === 'light' ? gray300 : gray700;
+    const amountSize = useBreakpointValue({ base: 'sm', md: 'md' });
+    const headingSize = useBreakpointValue({ base: 'md', md: 'lg' });
+    const { secure_base_url, logo_sizes } = config.images;
+    const logoSize = useBreakpointValue({
+        base: logo_sizes[0],
+        md: logo_sizes[1]
+    });
     const amounts = [
         categories[0]?.data?.total_results,
         categories[1]?.data?.total_results
     ];
-
-    const { secure_base_url, logo_sizes } = config.images;
 
     return (
         <VStack
@@ -149,11 +159,15 @@ const LayoutHeader = ({
                 >
                     {company?.logo_path ? (
                         <img
-                            src={`${secure_base_url}${logo_sizes[1]}${company.logo_path}`}
+                            src={`${secure_base_url}${logoSize}${company.logo_path}`}
                             alt={`${company.name} logo`}
                         />
                     ) : (
-                        <Heading as="h1" size="lg" textTransform="capitalize">
+                        <Heading
+                            as="h1"
+                            size={headingSize}
+                            textTransform="capitalize"
+                        >
                             {heading}
                         </Heading>
                     )}
@@ -162,7 +176,7 @@ const LayoutHeader = ({
                         startColor="white"
                         endColor="white"
                     >
-                        <Heading size="md">
+                        <Heading size={amountSize}>
                             {`${amounts[selected]?.toLocaleString()} ${
                                 selected === 0 ? 'Movies' : 'TV Shows'
                             }`}
