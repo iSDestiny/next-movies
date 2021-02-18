@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react';
 import useSWR from 'swr';
 import tmdbFetch from 'utils/tmdbFetch';
 
+// CONVERT TO LAMBDA TO AVOID EXPOSING API KEY
+
 export interface Filters {
     certification?: string;
     releaseYear?: number;

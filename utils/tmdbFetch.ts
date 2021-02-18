@@ -7,8 +7,7 @@ const tmdbFetch = axios.create({
 tmdbFetch.interceptors.request.use((config) => {
     config.params = {
         ...config.params,
-        api_key:
-            process.env.TMDB_API_KEY || process.env.NEXT_PUBLIC_TMDB_API_KEY
+        api_key: process.env.TMDB_API_KEY
     };
     return config;
 });

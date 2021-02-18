@@ -40,11 +40,18 @@ const VideoModal = ({ url, name, isOpen, onClose }: VideoModalProps) => {
             isCentered
             size="6xl"
             motionPreset="scale"
-            preserveScrollBarGap={false}
+            preserveScrollBarGap
+            blockScrollOnMount
+            allowPinchZoom
         >
             <ModalOverlay>
                 <ModalContent bgColor="black" as={Flex} justify="center" p="0">
-                    <ModalHeader color="white">{name}</ModalHeader>
+                    <ModalHeader
+                        color="white"
+                        fontSize={{ base: '1rem', md: '1.1rem', lg: '1.3rem' }}
+                    >
+                        {name}
+                    </ModalHeader>
                     <ModalCloseButton color="white" />
                     <ModalBody as={Flex} justify="center" p="0px">
                         <ReactPlayer
