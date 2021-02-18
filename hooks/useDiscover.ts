@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import useSWR from 'swr';
-import tmdbFetch from 'utils/tmdbFetch';
+import axios from 'axios';
 
 // CONVERT TO LAMBDA TO AVOID EXPOSING API KEY
 
@@ -46,29 +46,30 @@ const fetchDiscover = async (
         includeNetworks
     } = filters;
 
-    const {
-        data
-    }: { data: PopularMoviesAndPopularTVShows } = await tmdbFetch.get(url, {
-        params: {
-            sort_by: sort,
-            page: page,
-            certification: certification,
-            primary_release_year: releaseYear,
-            'primary_release_date.gte': releaseYearGreater,
-            'primary_release_date.lte': releaseYearLess,
-            'vote_count.gte': voteCountGreater,
-            'vote_count.lte': voteCountLess,
-            'vote_average.gte': ratingGreater,
-            'vote_average.lte': ratingLess,
-            with_genres: includeGenres,
-            without_genres: excludeGenres,
-            with_keywords: includeKeywords,
-            with_watch_providers: watchProviders,
-            with_original_language: language,
-            with_companies: includeCompanies,
-            with_networks: includeNetworks
+    const { data }: { data: PopularMoviesAndPopularTVShows } = await axios.get(
+        url,
+        {
+            params: {
+                sort_by: sort,
+                page: page,
+                certification: certification,
+                primary_release_year: releaseYear,
+                'primary_release_date.gte': releaseYearGreater,
+                'primary_release_date.lte': releaseYearLess,
+                'vote_count.gte': voteCountGreater,
+                'vote_count.lte': voteCountLess,
+                'vote_average.gte': ratingGreater,
+                'vote_average.lte': ratingLess,
+                with_genres: includeGenres,
+                without_genres: excludeGenres,
+                with_keywords: includeKeywords,
+                with_watch_providers: watchProviders,
+                with_original_language: language,
+                with_companies: includeCompanies,
+                with_networks: includeNetworks
+            }
         }
-    });
+    );
 
     return data;
 };
@@ -83,12 +84,12 @@ const useDiscover = (
     const [sort, setSort] = useState('popularity.desc');
 
     const initialKey = [
-        `/discover/${type}`,
+        `/api/discover/${type}`,
         1,
         'popularity.desc',
         initialFilters
     ];
-    const key = [`/discover/${type}`, page, sort, filters];
+    const key = [`/api/discover/${type}`, page, sort, filters];
 
     const { data, error } = useSWR<PopularMoviesAndPopularTVShows>(
         key,
