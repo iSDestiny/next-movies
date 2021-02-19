@@ -526,3 +526,92 @@ interface ProductionCompanyDetails {
     description?: string;
     logo_path?: string;
 }
+
+interface PersonDetails {
+    adult: boolean;
+    also_known_as?: string[] | null;
+    biography: string;
+    birthday: string;
+    deathday?: null;
+    gender: number;
+    homepage?: null;
+    id: number;
+    imdb_id: string;
+    known_for_department: string;
+    name: string;
+    place_of_birth: string;
+    popularity: number;
+    profile_path: string;
+    combined_credits: CombinedCredits;
+    images: PersonImages;
+}
+interface CombinedCredits {
+    cast?: CombinedCastEntity[] | null;
+    crew?: CombinedCrewEntity[] | null;
+}
+interface CombinedCastEntity {
+    id: number;
+    video?: boolean | null;
+    vote_count: number;
+    vote_average: number;
+    title?: string | null;
+    release_date?: string | null;
+    original_language: string;
+    original_title?: string | null;
+    genre_ids?: number[] | null;
+    backdrop_path?: string | null;
+    adult?: boolean | null;
+    overview: string;
+    poster_path?: string | null;
+    popularity: number;
+    character: string;
+    credit_id: string;
+    order?: number | null;
+    media_type: string;
+    first_air_date?: string | null;
+    name?: string | null;
+    origin_country?: (string | null)[] | null;
+    original_name?: string | null;
+    episode_count?: number | null;
+}
+interface CombinedCrewEntity {
+    adult?: boolean | null;
+    backdrop_path?: string | null;
+    genre_ids?: (number | null)[] | null;
+    id: number;
+    original_language: string;
+    original_title?: string | null;
+    overview: string;
+    poster_path?: string | null;
+    release_date?: string | null;
+    title?: string | null;
+    video?: boolean | null;
+    vote_average: number;
+    vote_count: number;
+    popularity: number;
+    credit_id: string;
+    department: string;
+    job: string;
+    media_type: string;
+    first_air_date?: string | null;
+    name?: string | null;
+    original_name?: string | null;
+    origin_country?: string[] | null;
+    episode_count?: number | null;
+}
+
+interface CombinedCrewEntityAndCastEntity
+    extends CombinedCrewEntity,
+        CombinedCastEntity {}
+interface PersonImages {
+    profiles?: ProfilesEntity[] | null;
+}
+interface ProfilesEntity {
+    aspect_ratio: number;
+    file_path: string;
+    height: number;
+    iso_639_1?: null;
+    vote_average: number;
+    vote_count: number;
+    width: number;
+}

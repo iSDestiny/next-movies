@@ -1,6 +1,7 @@
 import {
     Box,
     Heading,
+    Link,
     Text,
     useBreakpointValue,
     VStack
@@ -8,6 +9,7 @@ import {
 import Image from 'next/image';
 import { Slide } from 'pure-react-carousel';
 import Carousel from './Carousel';
+import NextLink from 'next/link';
 
 interface CastCarouselProps {
     cast: CastEntity[];
@@ -60,25 +62,35 @@ const CastCarousel = ({
                     {cast.map(
                         ({ id, character, name, profile_path }, index) => (
                             <Slide key={`${id}-${name}-${index}`} index={index}>
-                                <VStack align="flex-start" overflow="hidden">
-                                    <Image
-                                        src={
-                                            profile_path
-                                                ? `${secure_base_url}${profile_sizes[2]}${profile_path}`
-                                                : '/images/profile-placeholder.png'
-                                        }
-                                        width={138}
-                                        height={178}
-                                    />
-                                    <Box>
-                                        <Heading as="p" fontSize={nameSize}>
-                                            {name}
-                                        </Heading>
-                                        <Text fontSize={characterSize}>
-                                            {character}
-                                        </Text>
-                                    </Box>
-                                </VStack>
+                                <NextLink href={`/person/${id}`} passHref>
+                                    <Link>
+                                        <VStack
+                                            align="flex-start"
+                                            overflow="hidden"
+                                        >
+                                            <Image
+                                                src={
+                                                    profile_path
+                                                        ? `${secure_base_url}${profile_sizes[2]}${profile_path}`
+                                                        : '/images/profile-placeholder.png'
+                                                }
+                                                width={138}
+                                                height={178}
+                                            />
+                                            <Box>
+                                                <Heading
+                                                    as="p"
+                                                    fontSize={nameSize}
+                                                >
+                                                    {name}
+                                                </Heading>
+                                                <Text fontSize={characterSize}>
+                                                    {character}
+                                                </Text>
+                                            </Box>
+                                        </VStack>
+                                    </Link>
+                                </NextLink>
                             </Slide>
                         )
                     )}
