@@ -154,24 +154,50 @@ const CarouselSlide = ({
                                 />
                             </Link>
                         </NextLink>
-                        <VStack
-                            spacing={['0.2rem', '0.3rem', '0.5rem']}
-                            alignItems="flex-start"
-                            ml={['0.5rem', '1rem', '1.5rem', '2rem']}
+                        <NextLink
+                            href={
+                                media_type === 'movie'
+                                    ? `/movies/${id}`
+                                    : `/tv/${id}`
+                            }
+                            passHref
                         >
-                            <Heading
-                                as="h1"
-                                fontSize={['16px', '20px', '24px', '28px']}
+                            <Link
+                                onMouseEnter={() => setIsHover(false)}
+                                onMouseLeave={() => setIsHover(true)}
+                                onClick={(e) => e.stopPropagation()}
+                                _hover={{ textDecoration: 'underline' }}
                             >
-                                {name || title}
-                            </Heading>
-                            <Heading
-                                as="h2"
-                                fontSize={['10px', '14px', '20px', '24px']}
-                            >
-                                {videos[0]?.name}
-                            </Heading>
-                        </VStack>
+                                <VStack
+                                    spacing={['0.2rem', '0.3rem', '0.5rem']}
+                                    alignItems="flex-start"
+                                    ml={['0.5rem', '1rem', '1.5rem', '2rem']}
+                                >
+                                    <Heading
+                                        as="h1"
+                                        fontSize={[
+                                            '16px',
+                                            '20px',
+                                            '24px',
+                                            '28px'
+                                        ]}
+                                    >
+                                        {name || title}
+                                    </Heading>
+                                    <Heading
+                                        as="h2"
+                                        fontSize={[
+                                            '10px',
+                                            '14px',
+                                            '20px',
+                                            '24px'
+                                        ]}
+                                    >
+                                        {videos[0]?.name}
+                                    </Heading>
+                                </VStack>
+                            </Link>
+                        </NextLink>
                     </Flex>
                 </Box>
             </Slide>
