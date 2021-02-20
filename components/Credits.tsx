@@ -1,5 +1,6 @@
 import {
     Box,
+    Divider,
     Heading,
     HStack,
     Link,
@@ -23,13 +24,18 @@ interface CreditsProps {
     credits: CombinedCredits;
 }
 
-interface CreditGroup {
+interface CreditGroupProps {
     credits: CombinedCrewEntityAndCastEntity[];
     isLast: boolean;
     year?: string;
 }
 
-const CreditGroup = ({ year, credits, isLast }: CreditGroup) => {
+interface CrewCreditGroupProps {
+    credits: CombinedCrewEntity[];
+    heading: string;
+}
+
+const CreditGroup = ({ year, credits, isLast }: CreditGroupProps) => {
     const { colorMode } = useColorMode();
     const [gray300, gray700] = useToken('colors', ['gray.300', 'gray.700']);
     const borderColor = colorMode === 'light' ? gray300 : gray700;
@@ -45,10 +51,9 @@ const CreditGroup = ({ year, credits, isLast }: CreditGroup) => {
             spacing="1rem"
         >
             {credits.map(({ name, title, media_type, character, job, id }) => {
-                // if (!job)
                 return (
                     <HStack as="li" width="100%" key={id}>
-                        <Text size="sm">{year}</Text>
+                        <Text size="sm">{isNaN(+year) ? '—' : year}</Text>
                         <HStack as="p" width="100%" spacing="0.3rem">
                             <NextLink
                                 href={
@@ -73,27 +78,14 @@ const CreditGroup = ({ year, credits, isLast }: CreditGroup) => {
                                     as {character}
                                 </Text>
                             )}
+                            {job && (
+                                <Text as="span" size="sm">
+                                    — {job}
+                                </Text>
+                            )}
                         </HStack>
                     </HStack>
                 );
-                // return (
-                //     <HStack as="li">
-                //         <Text size="sm">{year}</Text>
-                //         <Text size="sm">
-                //             <NextLink
-                //                 href={
-                //                     media_type === 'movie'
-                //                         ? `/movie/${id}`
-                //                         : `/tv/${id}`
-                //                 }
-                //                 passHref
-                //             >
-                //                 <Link>{title || name}</Link>
-                //             </NextLink>{' '}
-                //             -- {job}
-                //         </Text>
-                //     </HStack>
-                // );
             })}
         </VStack>
     );
@@ -115,7 +107,6 @@ const CastCredits = ({ cast }: CastCreditsProps) => {
         const year =
             new Date(release_date || first_air_date).getFullYear() + '';
 
-        console.log(year);
         if (castByYear[year]) {
             castByYear[year].push(castItem);
         } else {
@@ -165,12 +156,97 @@ const CastCredits = ({ cast }: CastCreditsProps) => {
     );
 };
 
-const CrewCredits = ({ crew }: CrewCreditsProps) => {};
+const CrewCreditGroup = ({ credits, heading }: CrewCreditGroupProps) => {
+    const { colorMode } = useColorMode();
+    const [gray300, gray700] = useToken('colors', ['gray.300', 'gray.700']);
+    const borderColor = colorMode === 'light' ? gray300 : gray700;
 
-const Credits = ({ credits }: CreditsProps) => {
+    interface CrewByYear {
+        [key: string]: CombinedCrewEntity[];
+    }
+
+    let crewByYear: CrewByYear = {};
+
+    credits.forEach((crewItem) => {
+        const { release_date, first_air_date } = crewItem;
+        const year =
+            new Date(release_date || first_air_date).getFullYear() + '';
+
+        if (crewByYear[year]) crewByYear[year].push(crewItem);
+        else crewByYear[year] = [crewItem];
+    });
+
+    const sortedYearKeys = Object.keys(crewByYear).sort(
+        (a, b) => parseInt(b) - parseInt(a)
+    );
+
     return (
-        <VStack align="flex-start" width="100%">
-            <CastCredits cast={credits.cast} />
+        <Box as="section" width="100%">
+            <Heading size="md" mb="1rem">
+                {heading}
+            </Heading>
+            <VStack
+                boxShadow={`0px 1px 8px rgba(0,0,0,${
+                    colorMode === 'light' ? 0.2 : 0.8
+                })`}
+                width="100%"
+                align="flex-start"
+                spacing="0px"
+                border={`1px solid ${borderColor}`}
+            >
+                {sortedYearKeys.map(
+                    (year, index) =>
+                        year && (
+                            <CreditGroup
+                                key={`acting-${year}`}
+                                isLast={index !== sortedYearKeys.length - 1}
+                                year={year}
+                                credits={
+                                    crewByYear[
+                                        year
+                                    ] as CombinedCrewEntityAndCastEntity[]
+                                }
+                            />
+                        )
+                )}
+            </VStack>
+        </Box>
+    );
+};
+
+const CrewCredits = ({ crew }: CrewCreditsProps) => {
+    interface CrewByDepartment {
+        [key: string]: CombinedCrewEntity[];
+    }
+
+    let crewByDepartment: CrewByDepartment = {};
+
+    crew.forEach((crewItem) => {
+        const { department } = crewItem;
+
+        if (crewByDepartment[department])
+            crewByDepartment[department].push(crewItem);
+        else crewByDepartment[department] = [crewItem];
+    });
+
+    return (
+        <>
+            {Object.keys(crewByDepartment).map((department) => (
+                <CrewCreditGroup
+                    heading={department}
+                    credits={crewByDepartment[department]}
+                    key={department}
+                />
+            ))}
+        </>
+    );
+};
+
+const Credits = ({ credits: { cast, crew } }: CreditsProps) => {
+    return (
+        <VStack align="flex-start" width="100%" spacing="2rem">
+            <CastCredits cast={cast} />
+            <CrewCredits crew={crew} />
         </VStack>
     );
 };
