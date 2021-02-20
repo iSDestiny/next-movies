@@ -5,6 +5,7 @@ import {
     HStack,
     Link,
     Text,
+    useBreakpointValue,
     useColorMode,
     useToken,
     VStack
@@ -39,6 +40,7 @@ const CreditGroup = ({ year, credits, isLast }: CreditGroupProps) => {
     const { colorMode } = useColorMode();
     const [gray300, gray700] = useToken('colors', ['gray.300', 'gray.700']);
     const borderColor = colorMode === 'light' ? gray300 : gray700;
+    const textSize = useBreakpointValue({ base: 'xs', sm: 'sm', md: 'md' });
 
     return (
         <VStack
@@ -52,9 +54,17 @@ const CreditGroup = ({ year, credits, isLast }: CreditGroupProps) => {
         >
             {credits.map(({ name, title, media_type, character, job, id }) => {
                 return (
-                    <HStack as="li" width="100%" key={id}>
-                        <Text size="sm">{isNaN(+year) ? '—' : year}</Text>
-                        <HStack as="p" width="100%" spacing="0.3rem">
+                    <HStack
+                        as="li"
+                        width="100%"
+                        key={id}
+                        align="flex-start"
+                        spacing="1rem"
+                    >
+                        <Text as="span" fontSize={textSize}>
+                            {isNaN(+year) ? '—' : year}
+                        </Text>
+                        <Text fontSize={textSize}>
                             <NextLink
                                 href={
                                     media_type === 'movie'
@@ -64,6 +74,7 @@ const CreditGroup = ({ year, credits, isLast }: CreditGroupProps) => {
                                 passHref
                             >
                                 <Link
+                                    fontSize={textSize}
                                     fontWeight="bold"
                                     _hover={{ textDecoration: 'underline' }}
                                     _focus={{
@@ -74,16 +85,16 @@ const CreditGroup = ({ year, credits, isLast }: CreditGroupProps) => {
                                 </Link>
                             </NextLink>{' '}
                             {character && (
-                                <Text as="span" size="sm">
+                                <Text as="span" fontSize={textSize}>
                                     as {character}
                                 </Text>
                             )}
                             {job && (
-                                <Text as="span" size="sm">
+                                <Text as="span" fontSize={textSize}>
                                     — {job}
                                 </Text>
                             )}
-                        </HStack>
+                        </Text>
                     </HStack>
                 );
             })}
@@ -95,7 +106,6 @@ const CastCredits = ({ cast }: CastCreditsProps) => {
     const { colorMode } = useColorMode();
     const [gray300, gray700] = useToken('colors', ['gray.300', 'gray.700']);
     const borderColor = colorMode === 'light' ? gray300 : gray700;
-
     interface CastByYear {
         [key: string]: CombinedCastEntity[];
     }
@@ -244,7 +254,11 @@ const CrewCredits = ({ crew }: CrewCreditsProps) => {
 
 const Credits = ({ credits: { cast, crew } }: CreditsProps) => {
     return (
-        <VStack align="flex-start" width="100%" spacing="2rem">
+        <VStack
+            align="flex-start"
+            width="100%"
+            spacing={{ base: '1.5rem', lg: '2rem' }}
+        >
             <CastCredits cast={cast} />
             <CrewCredits crew={crew} />
         </VStack>

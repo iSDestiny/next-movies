@@ -1,5 +1,6 @@
 import {
     Box,
+    Flex,
     Grid,
     GridItem,
     Heading,
@@ -62,6 +63,7 @@ const PersonSideData = ({ personData, config }: PersonSideDataProps) => {
 
     const profileSize = useBreakpointValue({ base: 1, md: 2, lg: 3 });
     const isMobile = useBreakpointValue({ base: true, lg: false });
+    const textSize = { base: 'sm', md: 'md' };
     const dimensions = useBreakpointValue([
         [150, 225],
         [200, 300],
@@ -76,7 +78,10 @@ const PersonSideData = ({ personData, config }: PersonSideDataProps) => {
             as="aside"
             align="flex-start"
         >
-            <Box alignSelf={{ base: 'center', lg: 'flex-start' }}>
+            <Flex
+                alignSelf={{ base: 'center', lg: 'flex-start' }}
+                direction="column"
+            >
                 {dimensions && (
                     <Image
                         className="border-round"
@@ -91,7 +96,7 @@ const PersonSideData = ({ personData, config }: PersonSideDataProps) => {
                         {name}
                     </Heading>
                 )}
-            </Box>
+            </Flex>
             <Box width="100%">
                 <Heading size="md">Personal Info</Heading>
                 <Grid
@@ -109,14 +114,14 @@ const PersonSideData = ({ personData, config }: PersonSideDataProps) => {
                                     <Heading as="h3" size="sm">
                                         {heading}
                                     </Heading>
-                                    <Text size="sm">{body}</Text>
+                                    <Text fontSize={textSize}>{body}</Text>
                                 </GridItem>
                             )
                     )}
                     <GridItem
                         as="section"
                         rowStart={{ base: 1, lg: 'auto' }}
-                        rowEnd={{ base: 4, lg: 'auto' }}
+                        rowEnd={{ base: 5, lg: 'auto' }}
                         colStart={{ base: 2, lg: 'auto' }}
                         colEnd={{ base: 2, lg: 'auto' }}
                     >
@@ -132,7 +137,7 @@ const PersonSideData = ({ personData, config }: PersonSideDataProps) => {
                             {also_known_as.map((name, index) => (
                                 <Text
                                     as="li"
-                                    size="sm"
+                                    fontSize={textSize}
                                     key={`${name}-${index}`}
                                 >
                                     {name}

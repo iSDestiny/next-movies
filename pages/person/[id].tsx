@@ -73,7 +73,9 @@ const Person = ({ personData, config, knownFor }: PersonProps) => {
                         <Heading size="md" mb="0.5rem">
                             Biography
                         </Heading>
-                        <Text size="sm">{biography}</Text>
+                        <Text fontSize={{ base: 'sm', md: 'md' }}>
+                            {biography}
+                        </Text>
                     </Box>
                     <Box width="100%">
                         <Heading size="md" mb="0.5rem">
