@@ -84,13 +84,13 @@ const CreditGroup = ({ year, credits }: CreditGroup) => {
 };
 
 const CastCredits = ({ cast }: CastCreditsProps) => {
-    cast.sort((a, b) => {
-        const dateA = new Date(a.release_date || a.first_air_date);
-        const dateB = new Date(b.release_date || b.first_air_date);
-        if (dateA < dateB) return 1;
-        if (dateA > dateB) return -1;
-        return 0;
-    });
+    // cast.sort((a, b) => {
+    //     const dateA = new Date(a.release_date || a.first_air_date);
+    //     const dateB = new Date(b.release_date || b.first_air_date);
+    //     if (dateA < dateB) return 1;
+    //     if (dateA > dateB) return -1;
+    //     return 0;
+    // });
 
     interface CastByYear {
         [key: string]: CombinedCastEntity[];
@@ -111,37 +111,40 @@ const CastCredits = ({ cast }: CastCreditsProps) => {
         }
     });
 
+    const sortedYearKeys = Object.keys(castByYear).sort(
+        (a, b) => parseInt(b) - parseInt(a)
+    );
+
     useEffect(() => {
         console.log(castByYear);
     }, []);
 
     return (
-        <Box as="section">
+        <Box as="section" width="100%">
             <Heading size="md" mb="1rem">
                 Acting
             </Heading>
-            {
-                <VStack
-                    align="flex-start"
-                    spacing="0px"
-                    border="1px solid gray"
-                >
-                    {Object.keys(castByYear).map(
-                        (year, index) =>
-                            year && (
-                                <CreditGroup
-                                    key={year}
-                                    year={year}
-                                    credits={
-                                        castByYear[
-                                            year
-                                        ] as CombinedCrewEntityAndCastEntity[]
-                                    }
-                                />
-                            )
-                    )}
-                </VStack>
-            }
+            <VStack
+                width="100%"
+                align="flex-start"
+                spacing="0px"
+                border="1px solid gray"
+            >
+                {sortedYearKeys.map(
+                    (year) =>
+                        year && (
+                            <CreditGroup
+                                key={`acting-${year}`}
+                                year={year}
+                                credits={
+                                    castByYear[
+                                        year
+                                    ] as CombinedCrewEntityAndCastEntity[]
+                                }
+                            />
+                        )
+                )}
+            </VStack>
         </Box>
     );
 };
@@ -150,7 +153,7 @@ const CrewCredits = ({ crew }: CrewCreditsProps) => {};
 
 const Credits = ({ credits }: CreditsProps) => {
     return (
-        <VStack align="flex-start">
+        <VStack align="flex-start" width="100%">
             <CastCredits cast={credits.cast} />
         </VStack>
     );
