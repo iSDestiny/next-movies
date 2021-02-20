@@ -61,7 +61,7 @@ const PersonSideData = ({ personData, config }: PersonSideDataProps) => {
     const profileSize = useBreakpointValue({ base: 1, md: 2, lg: 3 });
 
     return (
-        <VStack spacing="1rem" width="30%" as="aside" align="flex-start">
+        <VStack spacing="1rem" width="22%" as="aside" align="flex-start">
             <Image
                 className="border-round"
                 src={`${secure_base_url}${profile_sizes[profileSize]}${profile_path}`}
@@ -86,11 +86,18 @@ const PersonSideData = ({ personData, config }: PersonSideDataProps) => {
                     <Heading as="h3" size="sm">
                         Also Known As
                     </Heading>
-                    {also_known_as.map((name, index) => (
-                        <Text size="sm" key={`${name}-${index}`}>
-                            {name}
-                        </Text>
-                    ))}
+                    <VStack
+                        as="ul"
+                        align="flex-start"
+                        listStyleType="none"
+                        spacing="0.2rem"
+                    >
+                        {also_known_as.map((name, index) => (
+                            <Text as="li" size="sm" key={`${name}-${index}`}>
+                                {name}
+                            </Text>
+                        ))}
+                    </VStack>
                 </Box>
             </VStack>
         </VStack>

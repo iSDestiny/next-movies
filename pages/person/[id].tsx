@@ -6,7 +6,9 @@ import { useEffect } from 'react';
 import addLeadingZeroToDate from 'utils/addLeadingZeroToDate';
 import tmdbFetch from 'utils/tmdbFetch';
 import tmdbFetchGzip from 'utils/tmdbFetchGzip';
-import { Box, HStack } from '@chakra-ui/react';
+import { Box, Heading, HStack, Text, VStack } from '@chakra-ui/react';
+import ShowCarousel from 'components/ShowCarousel';
+import Credits from 'components/Credits';
 
 interface PersonProps {
     personData: PersonDetails;
@@ -26,18 +28,56 @@ const Person = ({ personData, config, knownFor }: PersonProps) => {
         images,
         known_for_department,
         place_of_birth,
-        profile_path
+        profile_path,
+        biography
     } = personData;
     useEffect(() => {
         console.log(personData);
         console.log(knownFor);
     }, []);
 
+    const { secure_base_url, poster_sizes } = config.images;
+
     return (
         <GeneralLayout title={name}>
-            <HStack as="main" p="2rem 1rem" maxWidth="1400px" m="auto">
+            <HStack
+                as="main"
+                p="2rem 1rem"
+                maxWidth="1400px"
+                spacing="2rem"
+                m="auto"
+                align="flex-start"
+            >
                 <PersonSideData config={config} personData={personData} />
-                <Box width="70%"></Box>
+                <VStack width="78%" as="main" align="flex-start" spacing="2rem">
+                    <Heading as="h1" size="lg">
+                        {name}
+                    </Heading>
+                    <Box>
+                        <Heading size="md" mb="0.5rem">
+                            Biography
+                        </Heading>
+                        <Text size="sm">{biography}</Text>
+                    </Box>
+                    <Box width="100%">
+                        <Heading size="md" mb="0.5rem">
+                            Known for
+                        </Heading>
+                        <ShowCarousel
+                            name="known for"
+                            items={knownFor}
+                            base_url={secure_base_url}
+                            poster_sizes={poster_sizes}
+                            noOfSlides={6}
+                            naturalHeight={2200}
+                            starSize="1rem"
+                            headingSize="1rem"
+                            ratingSize="1rem"
+                            buttonSize="2rem"
+                        />
+                    </Box>
+                    <Credits credits={combined_credits} />
+                </VStack>
             </HStack>
         </GeneralLayout>
     );
