@@ -102,17 +102,19 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
 
     const { combined_credits, known_for_department } = data;
 
-    const knownForEntries =
-        combined_credits[known_for_department === 'Acting' ? 'cast' : 'crew'];
-    knownForEntries.sort(
-        (
-            first: CombinedCrewEntityAndCastEntity,
-            second: CombinedCrewEntityAndCastEntity
-        ) => {
-            if (first.vote_count < second.vote_count) return 1;
-            if (first.vote_count > second.vote_count) return -1;
-            return 0;
-        }
+    let knownForEntries = combined_credits[
+        known_for_department === 'Acting' ? 'cast' : 'crew'
+    ] as CombinedCrewEntityAndCastEntity[];
+    knownForEntries.sort((first, second) => {
+        if (first.vote_count < second.vote_count) return 1;
+        if (first.vote_count > second.vote_count) return -1;
+        return 0;
+    });
+
+    // Remove duplicates
+    knownForEntries = knownForEntries.filter(
+        ({ id }, index, self) =>
+            index === self.findIndex(({ id: searchId }) => searchId === id)
     );
 
     knownFor = knownForEntries.slice(0, 10) as KnownForEntity[];
