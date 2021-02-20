@@ -1,5 +1,7 @@
 import {
     Box,
+    Grid,
+    GridItem,
     Heading,
     Text,
     useBreakpointValue,
@@ -59,47 +61,87 @@ const PersonSideData = ({ personData, config }: PersonSideDataProps) => {
     ];
 
     const profileSize = useBreakpointValue({ base: 1, md: 2, lg: 3 });
+    const isMobile = useBreakpointValue({ base: true, lg: false });
+    const dimensions = useBreakpointValue([
+        [150, 225],
+        [200, 300],
+        [250, 375],
+        [300, 450]
+    ]);
 
     return (
-        <VStack spacing="1rem" width="22%" as="aside" align="flex-start">
-            <Image
-                className="border-round"
-                src={`${secure_base_url}${profile_sizes[profileSize]}${profile_path}`}
-                alt={`${name} profile`}
-                width={300}
-                height={450}
-            />
-            <VStack spacing="1rem" as="main" align="flex-start">
-                <Heading size="md">Personal Info</Heading>
-                {personalInfo.map(
-                    ({ heading, body }) =>
-                        body && (
-                            <Box as="section" key={heading}>
-                                <Heading as="h3" size="sm">
-                                    {heading}
-                                </Heading>
-                                <Text size="sm">{body}</Text>
-                            </Box>
-                        )
+        <VStack
+            spacing="1rem"
+            width={{ base: '100%', lg: '22%' }}
+            as="aside"
+            align="flex-start"
+        >
+            <Box alignSelf={{ base: 'center', lg: 'flex-start' }}>
+                {dimensions && (
+                    <Image
+                        className="border-round"
+                        src={`${secure_base_url}${profile_sizes[profileSize]}${profile_path}`}
+                        alt={`${name} profile`}
+                        width={dimensions[0]}
+                        height={dimensions[1]}
+                    />
                 )}
-                <Box as="section">
-                    <Heading as="h3" size="sm">
-                        Also Known As
+                {isMobile && (
+                    <Heading textAlign="center" mt="0.5rem" as="h1" size="lg">
+                        {name}
                     </Heading>
-                    <VStack
-                        as="ul"
-                        align="flex-start"
-                        listStyleType="none"
-                        spacing="0.2rem"
+                )}
+            </Box>
+            <Box width="100%">
+                <Heading size="md">Personal Info</Heading>
+                <Grid
+                    gap="1rem"
+                    width="100%"
+                    mt="0.5rem"
+                    as="main"
+                    templateColumns={{ base: 'repeat(2, 1fr)', lg: '1fr' }}
+                    templateRows={{ base: 'repeat(4, 1fr)', lg: null }}
+                >
+                    {personalInfo.map(
+                        ({ heading, body }) =>
+                            body && (
+                                <GridItem as="section" key={heading}>
+                                    <Heading as="h3" size="sm">
+                                        {heading}
+                                    </Heading>
+                                    <Text size="sm">{body}</Text>
+                                </GridItem>
+                            )
+                    )}
+                    <GridItem
+                        as="section"
+                        rowStart={{ base: 1, lg: 'auto' }}
+                        rowEnd={{ base: 4, lg: 'auto' }}
+                        colStart={{ base: 2, lg: 'auto' }}
+                        colEnd={{ base: 2, lg: 'auto' }}
                     >
-                        {also_known_as.map((name, index) => (
-                            <Text as="li" size="sm" key={`${name}-${index}`}>
-                                {name}
-                            </Text>
-                        ))}
-                    </VStack>
-                </Box>
-            </VStack>
+                        <Heading as="h3" size="sm">
+                            Also Known As
+                        </Heading>
+                        <VStack
+                            as="ul"
+                            align="flex-start"
+                            listStyleType="none"
+                            spacing="0.2rem"
+                        >
+                            {also_known_as.map((name, index) => (
+                                <Text
+                                    as="li"
+                                    size="sm"
+                                    key={`${name}-${index}`}
+                                >
+                                    {name}
+                                </Text>
+                            ))}
+                        </VStack>
+                    </GridItem>
+                </Grid>
+            </Box>
         </VStack>
     );
 };

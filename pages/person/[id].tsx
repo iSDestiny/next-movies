@@ -6,7 +6,15 @@ import { useEffect } from 'react';
 import addLeadingZeroToDate from 'utils/addLeadingZeroToDate';
 import tmdbFetch from 'utils/tmdbFetch';
 import tmdbFetchGzip from 'utils/tmdbFetchGzip';
-import { Box, Heading, HStack, Text, VStack } from '@chakra-ui/react';
+import {
+    Box,
+    Heading,
+    HStack,
+    Stack,
+    Text,
+    useBreakpointValue,
+    VStack
+} from '@chakra-ui/react';
 import ShowCarousel from 'components/ShowCarousel';
 import Credits from 'components/Credits';
 
@@ -17,20 +25,20 @@ interface PersonProps {
 }
 
 const Person = ({ personData, config, knownFor }: PersonProps) => {
-    const {
-        name,
-        also_known_as,
-        combined_credits,
-        birthday,
-        deathday,
-        gender,
-        homepage,
-        images,
-        known_for_department,
-        place_of_birth,
-        profile_path,
-        biography
-    } = personData;
+    const { name, combined_credits, biography } = personData;
+    const isMobile = useBreakpointValue({ base: true, lg: false });
+    const noOfSlides = useBreakpointValue([3, 4, 5, 6, 7]);
+    const buttonSize = ['1rem', '1.5rem', '2rem'];
+    const starSize = ['0.8rem', '0.9rem', '1rem', '1rem', '1.1rem'];
+    const ratingSize = ['0.7rem', '0.8rem', '0.9rem', '0.9rem', '1rem'];
+    const carouselHeadingSize = [
+        '0.65rem',
+        '0.75rem',
+        '0.85rem',
+        '0.85rem',
+        '0.9rem'
+    ];
+
     useEffect(() => {
         console.log(personData);
         console.log(knownFor);
@@ -40,7 +48,8 @@ const Person = ({ personData, config, knownFor }: PersonProps) => {
 
     return (
         <GeneralLayout title={name}>
-            <HStack
+            <Stack
+                direction={{ base: 'column', lg: 'row' }}
                 as="main"
                 p="2rem 1rem"
                 maxWidth="1400px"
@@ -49,10 +58,17 @@ const Person = ({ personData, config, knownFor }: PersonProps) => {
                 align="flex-start"
             >
                 <PersonSideData config={config} personData={personData} />
-                <VStack width="78%" as="main" align="flex-start" spacing="2rem">
-                    <Heading as="h1" size="lg">
-                        {name}
-                    </Heading>
+                <VStack
+                    width={{ base: '100%', lg: '78%' }}
+                    as="main"
+                    align="flex-start"
+                    spacing="2rem"
+                >
+                    {!isMobile && (
+                        <Heading as="h1" size="lg">
+                            {name}
+                        </Heading>
+                    )}
                     <Box>
                         <Heading size="md" mb="0.5rem">
                             Biography
@@ -68,17 +84,17 @@ const Person = ({ personData, config, knownFor }: PersonProps) => {
                             items={knownFor}
                             base_url={secure_base_url}
                             poster_sizes={poster_sizes}
-                            noOfSlides={6}
-                            naturalHeight={2200}
-                            starSize="1rem"
-                            headingSize="1rem"
-                            ratingSize="1rem"
-                            buttonSize="2rem"
+                            noOfSlides={noOfSlides}
+                            naturalHeight={2300}
+                            starSize={starSize}
+                            headingSize={carouselHeadingSize}
+                            ratingSize={ratingSize}
+                            buttonSize={buttonSize}
                         />
                     </Box>
                     <Credits credits={combined_credits} />
                 </VStack>
-            </HStack>
+            </Stack>
         </GeneralLayout>
     );
 };
