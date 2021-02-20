@@ -1,4 +1,13 @@
-import { Box, Heading, HStack, Link, Text, VStack } from '@chakra-ui/react';
+import {
+    Box,
+    Heading,
+    HStack,
+    Link,
+    Text,
+    useColorMode,
+    useToken,
+    VStack
+} from '@chakra-ui/react';
 import NextLink from 'next/link';
 import { useEffect } from 'react';
 
@@ -16,18 +25,24 @@ interface CreditsProps {
 
 interface CreditGroup {
     credits: CombinedCrewEntityAndCastEntity[];
+    isLast: boolean;
     year?: string;
 }
 
-const CreditGroup = ({ year, credits }: CreditGroup) => {
+const CreditGroup = ({ year, credits, isLast }: CreditGroup) => {
+    const { colorMode } = useColorMode();
+    const [gray300, gray700] = useToken('colors', ['gray.300', 'gray.700']);
+    const borderColor = colorMode === 'light' ? gray300 : gray700;
+
     return (
         <VStack
             as="ul"
             listStyleType="none"
             align="flex-start"
-            borderBottom="1px solid gray"
+            borderBottom={isLast ? `1px solid ${borderColor}` : null}
             p="1rem"
             width="100%"
+            spacing="1rem"
         >
             {credits.map(({ name, title, media_type, character, job, id }) => {
                 // if (!job)
@@ -38,15 +53,16 @@ const CreditGroup = ({ year, credits }: CreditGroup) => {
                             <NextLink
                                 href={
                                     media_type === 'movie'
-                                        ? `/movie/${id}`
+                                        ? `/movies/${id}`
                                         : `/tv/${id}`
                                 }
                                 passHref
                             >
                                 <Link
                                     fontWeight="bold"
+                                    _hover={{ textDecoration: 'underline' }}
                                     _focus={{
-                                        textDecoration: 'underline!important'
+                                        textDecoration: 'underline'
                                     }}
                                 >
                                     {title || name}
@@ -84,13 +100,9 @@ const CreditGroup = ({ year, credits }: CreditGroup) => {
 };
 
 const CastCredits = ({ cast }: CastCreditsProps) => {
-    // cast.sort((a, b) => {
-    //     const dateA = new Date(a.release_date || a.first_air_date);
-    //     const dateB = new Date(b.release_date || b.first_air_date);
-    //     if (dateA < dateB) return 1;
-    //     if (dateA > dateB) return -1;
-    //     return 0;
-    // });
+    const { colorMode } = useColorMode();
+    const [gray300, gray700] = useToken('colors', ['gray.300', 'gray.700']);
+    const borderColor = colorMode === 'light' ? gray300 : gray700;
 
     interface CastByYear {
         [key: string]: CombinedCastEntity[];
@@ -125,16 +137,20 @@ const CastCredits = ({ cast }: CastCreditsProps) => {
                 Acting
             </Heading>
             <VStack
+                boxShadow={`0px 1px 8px rgba(0,0,0,${
+                    colorMode === 'light' ? 0.2 : 0.8
+                })`}
                 width="100%"
                 align="flex-start"
                 spacing="0px"
-                border="1px solid gray"
+                border={`1px solid ${borderColor}`}
             >
                 {sortedYearKeys.map(
-                    (year) =>
+                    (year, index) =>
                         year && (
                             <CreditGroup
                                 key={`acting-${year}`}
+                                isLast={index !== sortedYearKeys.length - 1}
                                 year={year}
                                 credits={
                                     castByYear[
