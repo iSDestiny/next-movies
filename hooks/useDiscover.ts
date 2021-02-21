@@ -7,8 +7,8 @@ import axios from 'axios';
 export interface Filters {
     certification?: string;
     releaseYear?: number;
-    releaseDateGreater?: Date;
-    releaseDateLess?: Date;
+    releaseDateGreater?: string;
+    releaseDateLess?: string;
     voteCountGreater?: number;
     voteCountLess?: number;
     ratingGreater?: number;

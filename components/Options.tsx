@@ -90,15 +90,44 @@ const FilterOptions = ({
     filters,
     setFilters
 }: FilterProps) => {
-    const [fromDate, setFromDate] = useState<Date>();
-    const [toDate, setToDate] = useState<Date>();
+    const { releaseDateGreater, releaseDateLess } = filters;
+    const [fromDate, setFromDate] = useState<Date>(
+        releaseDateGreater ? new Date(releaseDateGreater) : null
+    );
+    const [toDate, setToDate] = useState<Date>(
+        releaseDateGreater ? new Date(releaseDateLess) : null
+    );
+
+    const convertDateToYYYYMMDD = (date: Date) => {
+        const offset = date.getTimezoneOffset();
+        date = new Date(date.getTime() - offset * 60 * 1000);
+        return date.toISOString().split('T')[0];
+    };
+
+    const changeFromDateHandler = (newDate: Date) => {
+        setFromDate(newDate);
+        setFilters((prev) => {
+            const newFilters = { ...prev };
+            newFilters.releaseDateGreater = convertDateToYYYYMMDD(newDate);
+            return newFilters;
+        });
+    };
+
+    const changeToDateHandler = (newDate: Date) => {
+        setToDate(newDate);
+        setFilters((prev) => {
+            const newFilters = { ...prev };
+            newFilters.releaseDateLess = convertDateToYYYYMMDD(newDate);
+            return newFilters;
+        });
+    };
 
     return (
         <VStack align="flex-start" spacing="0.5rem">
             <FilterOptionsSection heading="Release Dates">
                 <DatePicker
                     selected={fromDate}
-                    onChange={(date) => setFromDate(date as Date)}
+                    onChange={changeFromDateHandler}
                     selectsStart
                     startDate={fromDate}
                     endDate={toDate}
@@ -106,7 +135,7 @@ const FilterOptions = ({
                 />
                 <DatePicker
                     selected={toDate}
-                    onChange={(date) => setToDate(date as Date)}
+                    onChange={changeToDateHandler}
                     selectsEnd
                     startDate={fromDate}
                     endDate={toDate}
