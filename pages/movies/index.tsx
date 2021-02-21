@@ -1,8 +1,9 @@
-import { SimpleGrid, Stack } from '@chakra-ui/react';
+import { Box, SimpleGrid, Stack } from '@chakra-ui/react';
 import Options from 'components/Options';
+import useDiscover, { Filters } from 'hooks/useDiscover';
 import GeneralLayout from 'layouts/GeneralLayout';
 import { GetStaticProps } from 'next';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import tmdbFetch from 'utils/tmdbFetch';
 
 interface MoviesProps {
@@ -14,6 +15,17 @@ interface MoviesProps {
 
 const Movies = ({ config, certifications, genres, languages }: MoviesProps) => {
     const USCerts = certifications['US'];
+
+    const {
+        data,
+        page,
+        sort,
+        filters,
+        setSort,
+        setFilters,
+        setPage,
+        isLoading
+    } = useDiscover('movie');
 
     useEffect(() => {
         console.log(config);
@@ -37,13 +49,11 @@ const Movies = ({ config, certifications, genres, languages }: MoviesProps) => {
                     languages={languages}
                     certifications={USCerts}
                 />
-                <SimpleGrid
-                    columns={{ base: 1, lg: 2 }}
-                    spacing={5}
-                    width={{ base: '100%', lg: '80%' }}
-                >
-                    {}
-                </SimpleGrid>
+                <Box width={{ base: '100%', lg: '80%' }}>
+                    <SimpleGrid columns={{ base: 1, lg: 2 }} spacing={5}>
+                        {}
+                    </SimpleGrid>
+                </Box>
             </Stack>
         </GeneralLayout>
     );
