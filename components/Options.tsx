@@ -5,27 +5,48 @@ import {
     AccordionItem,
     AccordionPanel,
     Box,
+    Button,
     Heading,
     Select,
     useColorMode,
     useToken,
     VStack
 } from '@chakra-ui/react';
+import { Filters } from 'hooks/useDiscover';
+import { useState } from 'react';
 
 interface OptionsProps {
     type: 'movie' | 'tv';
     genres: GenresEntityOrKeywordsEntity[];
     languages: Language[];
     certifications?: CertificationDetails[];
+    setSort: (newSort: string) => void;
+    setFilters: (newFilters: Filters) => void;
 }
 
-const SortOptions = () => {
+interface FilterProps {
+    type: 'movie' | 'tv';
+    genres: GenresEntityOrKeywordsEntity[];
+    languages: Language[];
+    certifications?: CertificationDetails[];
+}
+
+interface SortOptions {
+    sort: string;
+    setSort: (newSort: string) => void;
+}
+
+const SortOptions = ({ sort, setSort }: SortOptions) => {
     return (
         <Box>
             <Heading size="sm" fontWeight="normal" mb="0.5rem">
                 Sort Results By
             </Heading>
-            <Select defaultValue="popularity.desc" variant="filled">
+            <Select
+                defaultValue={sort}
+                variant="filled"
+                onChange={(e) => setSort(e.target.value)}
+            >
                 <option value="popularity.desc">Popularity Descending</option>
                 <option value="popularity.asc">Popularity Ascending</option>
                 <option value="vote_average.desc">Rating Descending</option>
@@ -46,16 +67,29 @@ const FilterOptions = ({
     genres,
     languages,
     certifications
-}: OptionsProps) => {};
+}: FilterProps) => {};
 
 const Options = (props: OptionsProps) => {
+    const { setSort, setFilters } = props;
+
     const { colorMode } = useColorMode();
+    const [newFilters, setNewFilters] = useState<Filters>({});
+    const [newSort, setNewSort] = useState('popularity.desc');
     const [gray300, gray700] = useToken('colors', ['gray.300', 'gray.700']);
     const sideBarColor = colorMode === 'light' ? 'gray.100' : 'gray.700';
     const borderColor = colorMode === 'light' ? gray300 : gray700;
 
+    const submitChanges = () => {
+        setSort(newSort);
+        setFilters(newFilters);
+    };
+
     return (
-        <VStack width={{ base: '100%', lg: '20%' }} align="flex-start">
+        <VStack
+            width={{ base: '100%', lg: '20%' }}
+            align="flex-start"
+            spacing="1rem"
+        >
             <Accordion
                 defaultIndex={[0]}
                 allowMultiple
@@ -80,7 +114,7 @@ const Options = (props: OptionsProps) => {
                         </AccordionButton>
                     </h3>
                     <AccordionPanel>
-                        <SortOptions />
+                        <SortOptions sort={newSort} setSort={setNewSort} />
                     </AccordionPanel>
                 </AccordionItem>
                 <AccordionItem border="none" p="0.5rem 0.2rem">
@@ -94,6 +128,14 @@ const Options = (props: OptionsProps) => {
                     </h3>
                 </AccordionItem>
             </Accordion>
+            <Button
+                colorScheme="teal"
+                w="100%"
+                borderRadius="10px"
+                onClick={submitChanges}
+            >
+                Submit
+            </Button>
         </VStack>
     );
 };

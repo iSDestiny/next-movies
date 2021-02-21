@@ -83,7 +83,9 @@ const useDiscover = (
     initialFilters?: Filters
 ) => {
     const [page, setPage] = useState(1);
-    const [filters, setFilters] = useState<Filters>(initialFilters);
+    const [filters, setFilters] = useState<Filters>(
+        initialFilters ? initialFilters : {}
+    );
     const [sort, setSort] = useState('popularity.desc');
 
     const initialKey = [

@@ -1,5 +1,8 @@
-import { Box, SimpleGrid, Stack } from '@chakra-ui/react';
+import { Box, SimpleGrid, Stack, Text } from '@chakra-ui/react';
+import CardSkeleton from 'components/CardSkeleton';
 import Options from 'components/Options';
+import Pagination from 'components/Pagination';
+import ShowCard from 'components/ShowCard';
 import useDiscover, { Filters } from 'hooks/useDiscover';
 import GeneralLayout from 'layouts/GeneralLayout';
 import { GetStaticProps } from 'next';
@@ -27,12 +30,50 @@ const Movies = ({ config, certifications, genres, languages }: MoviesProps) => {
         isLoading
     } = useDiscover('movie');
 
+    const isNotEmpty = data?.results?.length > 0;
+
     useEffect(() => {
         console.log(config);
         console.log(USCerts);
         console.log(genres);
         console.log(languages);
     }, []);
+
+    useEffect(() => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }, [page]);
+
+    const results = isNotEmpty ? (
+        <>
+            {data?.results?.map(
+                ({
+                    id,
+                    title,
+                    release_date,
+                    poster_path,
+                    overview,
+                    vote_average
+                }) => (
+                    <Box key={id}>
+                        <ShowCard
+                            href={`/movies/${id}`}
+                            config={config}
+                            title={title}
+                            date={release_date}
+                            posterPath={poster_path}
+                            overview={overview}
+                            rating={vote_average}
+                        />
+                    </Box>
+                )
+            )}
+        </>
+    ) : (
+        <Text size="md" w="100%" textAlign="center">
+            No results
+        </Text>
+    );
+
     return (
         <GeneralLayout title="Movies">
             <Stack
@@ -45,14 +86,28 @@ const Movies = ({ config, certifications, genres, languages }: MoviesProps) => {
             >
                 <Options
                     type="movie"
+                    setSort={setSort}
+                    setFilters={setFilters}
                     genres={genres}
                     languages={languages}
                     certifications={USCerts}
                 />
                 <Box width={{ base: '100%', lg: '80%' }}>
-                    <SimpleGrid columns={{ base: 1, lg: 2 }} spacing={5}>
-                        {}
+                    <SimpleGrid
+                        columns={{ base: 1, lg: 2 }}
+                        spacing={5}
+                        mb="1.5rem"
+                    >
+                        {!isLoading
+                            ? results
+                            : [...Array(20).keys()].map((num) => (
+                                  <CardSkeleton key={num} />
+                              ))}
                     </SimpleGrid>
+                    <Pagination
+                        quantity={data?.total_pages}
+                        pageChangeHandler={setPage}
+                    />
                 </Box>
             </Stack>
         </GeneralLayout>
