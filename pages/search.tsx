@@ -2,6 +2,7 @@ import {
     Box,
     Button,
     Grid,
+    GridItem,
     Stack,
     Text,
     useBreakpointValue,
@@ -101,7 +102,7 @@ const Search = ({ query, config }: SearchProps) => {
 
                           if (mediaType === 'movie' || mediaType === 'tv')
                               return (
-                                  <Box
+                                  <GridItem
                                       key={id}
                                       w="100%"
                                       height={{
@@ -123,25 +124,27 @@ const Search = ({ query, config }: SearchProps) => {
                                           overview={overview}
                                           rating={vote_average}
                                       />
-                                  </Box>
+                                  </GridItem>
                               );
                           else if (
                               mediaType === 'keyword' ||
                               mediaType === 'company'
                           )
                               return (
-                                  <Button
-                                      as="a"
-                                      href={`/${mediaType}/${id}`}
-                                      colorScheme="teal"
-                                      key={id}
-                                      size="lg"
-                                  >
-                                      {name}
-                                  </Button>
+                                  <GridItem key={id} w="100%">
+                                      <Button
+                                          w="100%"
+                                          as="a"
+                                          href={`/${mediaType}/${id}`}
+                                          colorScheme="teal"
+                                          size="lg"
+                                      >
+                                          {name}
+                                      </Button>
+                                  </GridItem>
                               );
                           return (
-                              <Box
+                              <GridItem
                                   key={id}
                                   w="100%"
                                   height={{
@@ -157,7 +160,7 @@ const Search = ({ query, config }: SearchProps) => {
                                       knownFor={known_for}
                                       department={known_for_department}
                                   />
-                              </Box>
+                              </GridItem>
                           );
                       }
                   )
@@ -208,7 +211,7 @@ const Search = ({ query, config }: SearchProps) => {
                     <Grid
                         templateColumns={{ base: '1fr', xl: '1fr 1fr' }}
                         width="100%"
-                        gap={3}
+                        gap={5}
                         mb="1.5rem"
                     >
                         {query ? validQueryResult : invalidQueryResult}

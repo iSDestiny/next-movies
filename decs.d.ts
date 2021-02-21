@@ -615,3 +615,36 @@ interface ProfilesEntity {
     vote_count: number;
     width: number;
 }
+
+interface Certifications {
+    US?: CertificationDetails[];
+    CA?: CertificationDetails[];
+    AU?: CertificationDetails[];
+    DE?: CertificationDetails[];
+    FR?: CertificationDetails[];
+    NZ?: CertificationDetails[];
+    IN?: CertificationDetails[];
+    GB?: CertificationDetails[];
+    NL?: CertificationDetails[];
+    BR?: CertificationDetails[];
+    FI?: CertificationDetails[];
+    BG?: CertificationDetails[];
+    ES?: CertificationDetails[];
+    PT?: CertificationDetails[];
+    MY?: CertificationDetails[];
+    'CA-QC'?: CertificationDetails[];
+    SE?: CertificationDetails[];
+    DK?: CertificationDetails[];
+    NO?: CertificationDetails[];
+    HU?: CertificationDetails[];
+    LT?: CertificationDetails[];
+    RU?: CertificationDetails[];
+    PH?: CertificationDetails[];
+    IT?: CertificationDetails[];
+}
+
+interface CertificationDetails {
+    certification: string;
+    meaning?: string;
+    order?: number;
+}

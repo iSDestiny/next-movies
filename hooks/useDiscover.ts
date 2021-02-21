@@ -7,8 +7,8 @@ import axios from 'axios';
 export interface Filters {
     certification?: string;
     releaseYear?: number;
-    releaseYearGreater?: Date;
-    releaseYearLess?: Date;
+    releaseDateGreater?: Date;
+    releaseDateLess?: Date;
     voteCountGreater?: number;
     voteCountLess?: number;
     ratingGreater?: number;
@@ -31,8 +31,8 @@ const fetchDiscover = async (
     const {
         certification,
         releaseYear,
-        releaseYearGreater,
-        releaseYearLess,
+        releaseDateGreater,
+        releaseDateLess,
         voteCountGreater,
         voteCountLess,
         ratingGreater,
@@ -50,12 +50,15 @@ const fetchDiscover = async (
         url,
         {
             params: {
+                page,
                 sort_by: sort,
-                page: page,
                 certification: certification,
+                certification_country: 'US',
                 primary_release_year: releaseYear,
-                'primary_release_date.gte': releaseYearGreater,
-                'primary_release_date.lte': releaseYearLess,
+                'primary_release_date.gte': releaseDateGreater,
+                'primary_release_date.lte': releaseDateLess,
+                'first_air_date.gte': releaseDateGreater,
+                'first_air_date.lte': releaseDateLess,
                 'vote_count.gte': voteCountGreater,
                 'vote_count.lte': voteCountLess,
                 'vote_average.gte': ratingGreater,

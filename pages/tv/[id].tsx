@@ -74,6 +74,7 @@ const TVShow = ({ tvShowData, config, languages }: TVShowProps) => {
         images,
         number_of_episodes,
         number_of_seasons,
+        original_name,
         production_countries,
         episode_run_time: runtime,
         networks
@@ -119,6 +120,7 @@ const TVShow = ({ tvShowData, config, languages }: TVShowProps) => {
         }
     ];
     const sideDataItems = [
+        { heading: 'Original Name', data: original_name },
         { heading: 'Status', data: status },
         {
             heading: 'Networks',

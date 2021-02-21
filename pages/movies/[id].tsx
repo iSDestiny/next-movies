@@ -43,6 +43,7 @@ const Movie = ({ movieData, config, languages }: MovieProps) => {
     const { secure_base_url, poster_sizes, backdrop_sizes } = config.images;
     const {
         title,
+        original_title,
         genres,
         backdrop_path,
         poster_path,
@@ -107,6 +108,7 @@ const Movie = ({ movieData, config, languages }: MovieProps) => {
         ({ iso_639_1 }) => iso_639_1 === original_language
     ).english_name;
     const sideDataItems = [
+        { heading: 'Original Title', data: original_title },
         { heading: 'Status', data: status },
         { heading: 'Original Language', data: origLanguage },
         { heading: 'Budget', data: budget, isDollar: true },
