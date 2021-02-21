@@ -1,4 +1,4 @@
-import { Stack } from '@chakra-ui/react';
+import { SimpleGrid, Stack } from '@chakra-ui/react';
 import Options from 'components/Options';
 import GeneralLayout from 'layouts/GeneralLayout';
 import { GetStaticProps } from 'next';
@@ -24,6 +24,9 @@ const Movies = ({ config, certifications, genres, languages }: MoviesProps) => {
     return (
         <GeneralLayout title="Movies">
             <Stack
+                align="flex-start"
+                p="1.5rem 1rem"
+                spacing={{ base: '1.5rem', lg: '1rem', xl: '1.5rem' }}
                 direction={{ base: 'column', lg: 'row' }}
                 maxWidth="1400px"
                 m="auto"
@@ -34,6 +37,13 @@ const Movies = ({ config, certifications, genres, languages }: MoviesProps) => {
                     languages={languages}
                     certifications={USCerts}
                 />
+                <SimpleGrid
+                    columns={{ base: 1, lg: 2 }}
+                    spacing={5}
+                    width={{ base: '100%', lg: '80%' }}
+                >
+                    {}
+                </SimpleGrid>
             </Stack>
         </GeneralLayout>
     );

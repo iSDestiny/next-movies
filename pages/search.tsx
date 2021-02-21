@@ -70,7 +70,6 @@ const useCategories = (query: string) => {
 };
 
 const Search = ({ query, config }: SearchProps) => {
-    const { colorMode } = useColorMode();
     const isMobile = useBreakpointValue({ base: true, lg: false });
     const [selected, setSelected] = useState(0);
     const categories = useCategories(query);
@@ -78,8 +77,6 @@ const Search = ({ query, config }: SearchProps) => {
     useEffect(() => {
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }, [categories[selected].page]);
-
-    const hoverColor = colorMode === 'light' ? 'gray.100' : 'gray.700';
 
     const validQueryResult = (
         <>
