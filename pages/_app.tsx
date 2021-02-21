@@ -4,6 +4,9 @@ import { AnimatePresence } from 'framer-motion';
 import Head from 'next/head';
 import '../styles/globals.scss';
 import 'pure-react-carousel/dist/react-carousel.es.css';
+import 'react-datepicker/dist/react-datepicker.css';
+import 'styles/datePicker.scss';
+
 import theme from 'theme';
 
 function MyApp({ Component, pageProps, router }: AppProps) {

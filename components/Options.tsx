@@ -10,10 +10,14 @@ import {
     Select,
     useColorMode,
     useToken,
-    VStack
+    VStack,
+    chakra,
+    Wrap,
+    WrapItem
 } from '@chakra-ui/react';
 import { Filters } from 'hooks/useDiscover';
-import { useState } from 'react';
+import { Dispatch, FunctionComponent, SetStateAction, useState } from 'react';
+import DatePicker from 'react-datepicker';
 
 interface OptionsProps {
     type: 'movie' | 'tv';
@@ -29,6 +33,8 @@ interface FilterProps {
     genres: GenresEntityOrKeywordsEntity[];
     languages: Language[];
     certifications?: CertificationDetails[];
+    setFilters: Dispatch<SetStateAction<Filters>>;
+    filters: Filters;
 }
 
 interface SortOptions {
@@ -39,7 +45,7 @@ interface SortOptions {
 const SortOptions = ({ sort, setSort }: SortOptions) => {
     return (
         <Box>
-            <Heading size="sm" fontWeight="normal" mb="0.5rem">
+            <Heading as="h4" size="sm" fontWeight="normal" mb="0.5rem">
                 Sort Results By
             </Heading>
             <Select
@@ -62,12 +68,70 @@ const SortOptions = ({ sort, setSort }: SortOptions) => {
     );
 };
 
+const FilterOptionsSection: FunctionComponent<{ heading: string }> = ({
+    heading,
+    children
+}) => {
+    return (
+        <VStack align="flex-start" spacing="0.5rem">
+            <Heading as="h4" size="sm" fontWeight="normal">
+                {heading}
+            </Heading>
+            {children}
+        </VStack>
+    );
+};
+
 const FilterOptions = ({
     type,
     genres,
     languages,
-    certifications
-}: FilterProps) => {};
+    certifications,
+    filters,
+    setFilters
+}: FilterProps) => {
+    const [fromDate, setFromDate] = useState<Date>();
+    const [toDate, setToDate] = useState<Date>();
+
+    return (
+        <VStack align="flex-start" spacing="0.5rem">
+            <FilterOptionsSection heading="Release Dates">
+                <DatePicker
+                    selected={fromDate}
+                    onChange={(date) => setFromDate(date as Date)}
+                    selectsStart
+                    startDate={fromDate}
+                    endDate={toDate}
+                    placeholderText="From"
+                />
+                <DatePicker
+                    selected={toDate}
+                    onChange={(date) => setToDate(date as Date)}
+                    selectsEnd
+                    startDate={fromDate}
+                    endDate={toDate}
+                    minDate={fromDate}
+                    placeholderText="To"
+                />
+            </FilterOptionsSection>
+            <FilterOptionsSection heading="Genres">
+                <Wrap>
+                    {genres.map(({ id, name }) => (
+                        <WrapItem key={id}>
+                            <Button
+                                variant="outline"
+                                size="sm"
+                                colorScheme="teal"
+                            >
+                                {name}
+                            </Button>
+                        </WrapItem>
+                    ))}
+                </Wrap>
+            </FilterOptionsSection>
+        </VStack>
+    );
+};
 
 const Options = (props: OptionsProps) => {
     const { setSort, setFilters } = props;
@@ -126,6 +190,13 @@ const Options = (props: OptionsProps) => {
                             <AccordionIcon />
                         </AccordionButton>
                     </h3>
+                    <AccordionPanel>
+                        <FilterOptions
+                            {...props}
+                            filters={newFilters}
+                            setFilters={setNewFilters}
+                        />
+                    </AccordionPanel>
                 </AccordionItem>
             </Accordion>
             <Button
