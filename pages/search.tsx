@@ -162,7 +162,9 @@ const Search = ({ query, config }: SearchProps) => {
                       }
                   )
                 : [...Array(20).keys()].map((num) => (
-                      <CardSkeleton key={num} />
+                      <GridItem key={num}>
+                          <CardSkeleton />
+                      </GridItem>
                   ))}
         </>
     );

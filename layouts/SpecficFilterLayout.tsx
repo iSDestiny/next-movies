@@ -19,7 +19,8 @@ import {
     VStack,
     Icon,
     Stack,
-    useBreakpointValue
+    useBreakpointValue,
+    GridItem
 } from '@chakra-ui/react';
 import CardSkeleton from 'components/CardSkeleton';
 import Pagination from 'components/Pagination';
@@ -303,7 +304,7 @@ const SpecficFilterLayout = ({
                     overview,
                     vote_average
                 }) => (
-                    <Box key={id} width="100%">
+                    <GridItem key={id} width="100%">
                         <ShowCard
                             href={
                                 selected === 0 ? `/movies/${id}` : `/tv/${id}`
@@ -315,7 +316,7 @@ const SpecficFilterLayout = ({
                             overview={overview}
                             rating={vote_average}
                         />
-                    </Box>
+                    </GridItem>
                 )
             )}
         </>
@@ -343,13 +344,15 @@ const SpecficFilterLayout = ({
                             : '1fr'
                     }
                     width="100%"
-                    gap={3}
+                    gap={5}
                     mb="1.5rem"
                 >
                     {!isLoading
                         ? results
                         : [...Array(20).keys()].map((num) => (
-                              <CardSkeleton key={num} />
+                              <GridItem key={num}>
+                                  <CardSkeleton />
+                              </GridItem>
                           ))}
                 </Grid>
                 <Box
