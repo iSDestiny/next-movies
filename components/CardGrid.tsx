@@ -18,6 +18,7 @@ const CardGrid = ({ items, isLoading, config }: CardGridProps) => {
                     title,
                     name,
                     release_date,
+                    first_air_date,
                     poster_path,
                     overview,
                     vote_average
@@ -27,7 +28,7 @@ const CardGrid = ({ items, isLoading, config }: CardGridProps) => {
                             href={title ? `/movies/${id}` : `/tv/${id}`}
                             config={config}
                             title={title || name}
-                            date={release_date}
+                            date={release_date || first_air_date}
                             posterPath={poster_path}
                             overview={overview}
                             rating={vote_average}
