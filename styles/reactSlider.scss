@@ -16,6 +16,10 @@ $teal500: #319795;
     outline: none;
     box-sizing: border-box;
     transition: all 0.2s ease-in-out;
+    z-index: 0 !important;
+    * {
+        z-index: 0 !important;
+    }
 }
 .example-thumb.active {
     transform: scale(1.25);
