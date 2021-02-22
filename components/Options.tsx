@@ -73,7 +73,7 @@ const FilterOptionsSection: FunctionComponent<{ heading: string }> = ({
     children
 }) => {
     return (
-        <VStack align="flex-start" spacing="0.5rem">
+        <VStack align="flex-start" spacing="0.5rem" w="100%">
             <Heading as="h4" size="sm" fontWeight="normal">
                 {heading}
             </Heading>
@@ -122,8 +122,10 @@ const FilterOptions = ({
         });
     };
 
+    const genreHandler = (id: number) => {};
+
     return (
-        <VStack align="flex-start" spacing="0.5rem">
+        <VStack align="flex-start" spacing="1rem">
             <FilterOptionsSection heading="Release Dates">
                 <DatePicker
                     selected={fromDate}
@@ -158,6 +160,24 @@ const FilterOptions = ({
                     ))}
                 </Wrap>
             </FilterOptionsSection>
+
+            {type === 'movie' && (
+                <FilterOptionsSection heading="Certifications">
+                    <Wrap>
+                        {certifications.map(({ certification }) => (
+                            <WrapItem key={certification}>
+                                <Button
+                                    variant="outline"
+                                    size="sm"
+                                    colorScheme="teal"
+                                >
+                                    {certification}
+                                </Button>
+                            </WrapItem>
+                        ))}
+                    </Wrap>
+                </FilterOptionsSection>
+            )}
         </VStack>
     );
 };

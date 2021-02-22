@@ -5,7 +5,7 @@ import axios from 'axios';
 // CONVERT TO LAMBDA TO AVOID EXPOSING API KEY
 
 export interface Filters {
-    certification?: string;
+    certifications?: string[] | string;
     releaseYear?: number;
     releaseDateGreater?: string;
     releaseDateLess?: string;
@@ -13,9 +13,9 @@ export interface Filters {
     voteCountLess?: number;
     ratingGreater?: number;
     ratingLess?: number;
-    includeGenres?: string;
-    excludeGenres?: string;
-    includeKeywords?: string;
+    includeGenres?: string[] | string;
+    excludeGenres?: string[] | string;
+    includeKeywords?: string[] | string;
     watchProviders?: string;
     includeCompanies?: string;
     includeNetworks?: string;
@@ -29,7 +29,7 @@ const fetchDiscover = async (
     filters?: Filters
 ) => {
     const {
-        certification,
+        certifications,
         releaseYear,
         releaseDateGreater,
         releaseDateLess,
@@ -46,13 +46,23 @@ const fetchDiscover = async (
         includeNetworks
     } = filters;
 
+    const convertArrayToString = (arr: string[] | string) => {
+        if (Array.isArray(arr)) return arr.join(',');
+        return arr;
+    };
+
+    const stringIncludeGenres = convertArrayToString(includeGenres);
+    const stringExcludeGenres = convertArrayToString(excludeGenres);
+    const stringKeywords = convertArrayToString(includeKeywords);
+    const stringCertifications = convertArrayToString(certifications);
+
     const { data }: { data: PopularMoviesAndPopularTVShows } = await axios.get(
         url,
         {
             params: {
                 page,
                 sort_by: sort,
-                certification: certification,
+                certification: stringCertifications,
                 certification_country: 'US',
                 primary_release_year: releaseYear,
                 'primary_release_date.gte': releaseDateGreater,
@@ -63,9 +73,9 @@ const fetchDiscover = async (
                 'vote_count.lte': voteCountLess,
                 'vote_average.gte': ratingGreater,
                 'vote_average.lte': ratingLess,
-                with_genres: includeGenres,
-                without_genres: excludeGenres,
-                with_keywords: includeKeywords,
+                with_genres: stringIncludeGenres,
+                without_genres: stringExcludeGenres,
+                with_keywords: stringKeywords,
                 with_watch_providers: watchProviders,
                 with_original_language: language,
                 with_companies: includeCompanies,
