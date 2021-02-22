@@ -5,6 +5,7 @@ import {
     Flex,
     HStack,
     IconButton,
+    LightMode,
     Link,
     Menu,
     MenuButton,
@@ -31,6 +32,10 @@ const Navbar = () => {
     const [isNavHidden, setIsNavHidden] = useState(false);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const { colorMode, toggleColorMode } = useColorMode();
+    const textColor = colorMode === 'light' ? 'black' : 'white';
+    const menuBgColor = colorMode === 'light' ? 'white' : 'gray.700';
+    const menuHoverColor = colorMode === 'light' ? 'gray.100' : 'gray.600';
+
     const { scrollY } = useViewportScroll();
     const router = useRouter();
     const hideVariants = {
@@ -123,7 +128,7 @@ const Navbar = () => {
                                     }
                                 />
                             </MotionBox>
-                            <Box as="li" zIndex="4" mr="1.5rem">
+                            <Box as="li" zIndex="4" mr="2rem">
                                 <NextLink href="/" passHref>
                                     <Link
                                         zIndex="4"
@@ -166,31 +171,37 @@ const Navbar = () => {
                                     </Link>
                                 </NextLink> */}
                                 <Menu>
-                                    <DarkMode>
-                                        <MenuButton
-                                            as={Button}
-                                            rightIcon={
-                                                <FaCaretDown fontSize="1rem" />
-                                            }
-                                            variant="ghost"
+                                    <MenuButton
+                                        as={Button}
+                                        rightIcon={
+                                            <FaCaretDown fontSize="1rem" />
+                                        }
+                                        variant="ghost"
+                                    >
+                                        Movies
+                                    </MenuButton>
+
+                                    <MenuList
+                                        border="1px solid transparent"
+                                        bgColor={menuBgColor}
+                                    >
+                                        <MenuItem
+                                            _focus={{ bgColor: menuHoverColor }}
                                         >
-                                            Movies
-                                        </MenuButton>
-                                    </DarkMode>
-                                    <MenuList>
-                                        <MenuItem>
                                             <NextLink href="/movies" passHref>
-                                                <Link color="white">
+                                                <Link color={textColor}>
                                                     Browse
                                                 </Link>
                                             </NextLink>
                                         </MenuItem>
-                                        <MenuItem>
+                                        <MenuItem
+                                            _focus={{ bgColor: menuHoverColor }}
+                                        >
                                             <NextLink
                                                 href="/movies/trending"
                                                 passHref
                                             >
-                                                <Link color="white">
+                                                <Link color={textColor}>
                                                     Trending
                                                 </Link>
                                             </NextLink>
@@ -228,20 +239,27 @@ const Navbar = () => {
                                     >
                                         TV Shows
                                     </MenuButton>
-                                    <MenuList>
-                                        <MenuItem>
+                                    <MenuList
+                                        border="1px solid transparent"
+                                        bgColor={menuBgColor}
+                                    >
+                                        <MenuItem
+                                            _focus={{ bgColor: menuHoverColor }}
+                                        >
                                             <NextLink href="/tv" passHref>
-                                                <Link color="white">
+                                                <Link color={textColor}>
                                                     Browse
                                                 </Link>
                                             </NextLink>
                                         </MenuItem>
-                                        <MenuItem>
+                                        <MenuItem
+                                            _focus={{ bgColor: menuHoverColor }}
+                                        >
                                             <NextLink
                                                 href="/tv/trending"
                                                 passHref
                                             >
-                                                <Link color="white">
+                                                <Link color={textColor}>
                                                     Trending
                                                 </Link>
                                             </NextLink>
