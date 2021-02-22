@@ -122,17 +122,55 @@ const FilterOptions = ({
         });
     };
 
-    const genreHandler = (id: string) => {
+    const includeGenreHandler = (id: string) => {
         setFilters((prev) => {
             const newFilters = { ...prev };
             const includeGenres = newFilters.includeGenres as string[];
+            const excludeGenres = newFilters.excludeGenres as string[];
             if (includeGenres) {
                 if (includeGenres.find((genreId) => genreId === id))
                     newFilters.includeGenres = includeGenres.filter(
                         (genreId) => genreId !== id
                     );
-                else (newFilters.includeGenres as string[]).push(id);
-            } else newFilters.includeGenres = [id];
+                else {
+                    (newFilters.includeGenres as string[]).push(id);
+                    newFilters.excludeGenres = excludeGenres?.filter(
+                        (genreId) => genreId !== id
+                    );
+                }
+            } else {
+                newFilters.includeGenres = [id];
+                newFilters.excludeGenres = excludeGenres?.filter(
+                    (genreId) => genreId !== id
+                );
+            }
+            return newFilters;
+        });
+    };
+
+    const excludeGenreHandler = (id: string) => {
+        setFilters((prev) => {
+            const newFilters = { ...prev };
+            const excludeGenres = newFilters.excludeGenres as string[];
+            const includeGenres = newFilters.includeGenres as string[];
+            if (excludeGenres) {
+                if (excludeGenres.find((genreId) => genreId === id))
+                    newFilters.excludeGenres = excludeGenres.filter(
+                        (genreId) => genreId !== id
+                    );
+                else {
+                    (newFilters.excludeGenres as string[]).push(id);
+                    newFilters.includeGenres = includeGenres?.filter(
+                        (genreId) => genreId !== id
+                    );
+                }
+            } else {
+                newFilters.excludeGenres = [id];
+
+                newFilters.includeGenres = includeGenres?.filter(
+                    (genreId) => genreId !== id
+                );
+            }
             return newFilters;
         });
     };
@@ -174,7 +212,7 @@ const FilterOptions = ({
                     placeholderText="To"
                 />
             </FilterOptionsSection>
-            <FilterOptionsSection heading="Genres">
+            <FilterOptionsSection heading="Include Genres">
                 <Wrap>
                     {genres.map(({ id, name }) => (
                         <WrapItem key={id}>
@@ -188,7 +226,30 @@ const FilterOptions = ({
                                 }
                                 size="sm"
                                 colorScheme="teal"
-                                onClick={() => genreHandler(id + '')}
+                                onClick={() => includeGenreHandler(id + '')}
+                            >
+                                {name}
+                            </Button>
+                        </WrapItem>
+                    ))}
+                </Wrap>
+            </FilterOptionsSection>
+
+            <FilterOptionsSection heading="Exclude Genres">
+                <Wrap>
+                    {genres.map(({ id, name }) => (
+                        <WrapItem key={id}>
+                            <Button
+                                variant={
+                                    (filters.excludeGenres as string[])?.find(
+                                        (genreId) => genreId === id + ''
+                                    )
+                                        ? 'solid'
+                                        : 'outline'
+                                }
+                                size="sm"
+                                colorScheme="teal"
+                                onClick={() => excludeGenreHandler(id + '')}
                             >
                                 {name}
                             </Button>
