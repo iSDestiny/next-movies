@@ -64,7 +64,7 @@ export const getStaticProps: GetStaticProps = async () => {
         data: { genres }
     }: {
         data: { genres: GenresEntityOrKeywordsEntity[] };
-    } = await tmdbFetch.get('/genre/movie/list');
+    } = await tmdbFetch.get('/genre/tv/list');
     const { data: languages }: { data: Language[] } = await tmdbFetch.get(
         '/configuration/languages'
     );
