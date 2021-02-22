@@ -1,131 +1,129 @@
-import { Box, Link, VStack } from '@chakra-ui/react';
+import {
+    Accordion,
+    AccordionButton,
+    AccordionIcon,
+    AccordionItem,
+    AccordionPanel,
+    Box,
+    DarkMode,
+    Drawer,
+    DrawerBody,
+    DrawerContent,
+    DrawerHeader,
+    DrawerOverlay,
+    Heading,
+    Link,
+    VStack
+} from '@chakra-ui/react';
 import NextLink from 'next/link';
-import { useRouter } from 'next/router';
-import { Dispatch, SetStateAction, useEffect } from 'react';
-import MotionBox from './MotionBox';
 
 interface MobileNavProps {
+    onClose: () => void;
     isOpen: boolean;
-    setIsOpen: Dispatch<SetStateAction<boolean>>;
 }
 
-const MobileNav = ({ isOpen, setIsOpen }: MobileNavProps) => {
-    const router = useRouter();
-
-    const menuVariants = {
-        open: {
-            y: 0,
-            transition: {
-                type: 'spring',
-                stiffness: 300,
-                damping: 40
-            }
-        },
-        closed: {
-            y: '-100%',
-            transition: {
-                type: 'spring',
-                stiffness: 300,
-                damping: 40
-            }
-        }
-    };
-
-    const handleKeyDown = (event: KeyboardEvent) => {
-        if (event.key === 'Escape') setIsOpen(false);
-    };
-
-    useEffect(() => {
-        document.body.style.overflowY = isOpen ? 'hidden' : 'auto';
-        document.addEventListener('keydown', handleKeyDown);
-    }, [isOpen]);
-
+const MobileNav = ({ onClose, isOpen }: MobileNavProps) => {
     return (
-        <MotionBox
-            display={{ base: 'block', md: 'none' }}
-            transform="translateY(-100%)"
-            initial="closed"
-            animate="open"
-            as="nav"
-            overflow="hidden"
-            width="100%"
-            variants={menuVariants}
-            exit="closed"
-            height="100vh"
-            bg="gray.900"
-            position="fixed"
-            zIndex="3"
-            top="0"
-        >
-            <VStack
-                listStyleType="none"
-                as="ul"
-                justify="center"
-                align="center"
-                width="100%"
-                height="100%"
-                spacing="1.5rem"
-                color="white"
+        <DarkMode>
+            <Drawer
+                placement="left"
+                onClose={onClose}
+                isOpen={isOpen}
+                motionPreset="slideInRight"
             >
-                <Box as="li">
-                    <NextLink href="/" passHref>
-                        <Link
-                            onClick={() => setIsOpen(false)}
-                            fontSize="2rem"
-                            borderBottom={
-                                router.pathname === '/'
-                                    ? '6px solid teal'
-                                    : 'none'
-                            }
-                            pb="3px"
-                            _hover={{
-                                borderBottom: '6px solid teal'
-                            }}
-                        >
-                            Home
-                        </Link>
-                    </NextLink>
-                </Box>
-                <Box as="li">
-                    <NextLink href="/movies" passHref>
-                        <Link
-                            onClick={() => setIsOpen(false)}
-                            fontSize="2rem"
-                            borderBottom={
-                                router.pathname === '/movies'
-                                    ? '6px solid teal'
-                                    : 'none'
-                            }
-                            pb="3px"
-                            _hover={{
-                                borderBottom: '6px solid teal'
-                            }}
-                        >
-                            Movies
-                        </Link>
-                    </NextLink>
-                </Box>
-                <Box as="li">
-                    <NextLink href="/tv" passHref>
-                        <Link
-                            onClick={() => setIsOpen(false)}
-                            fontSize="2rem"
-                            borderBottom={
-                                router.pathname === '/tv'
-                                    ? '6px solid teal'
-                                    : 'none'
-                            }
-                            pb="3px"
-                            _hover={{
-                                borderBottom: '6px solid teal'
-                            }}
-                        >
-                            TV Shows
-                        </Link>
-                    </NextLink>
-                </Box>
-            </VStack>
-        </MotionBox>
+                <DrawerOverlay>
+                    <DrawerContent color="white" bgColor="gray.800">
+                        <DrawerHeader>Next Movies</DrawerHeader>
+                        <DrawerBody>
+                            <Accordion allowMultiple>
+                                <AccordionItem border="none" mt="0.5rem">
+                                    <h2>
+                                        <AccordionButton
+                                            px="0px 0.5rem"
+                                            _focus={{
+                                                outline: 'none',
+                                                bgColor: 'gray.700'
+                                            }}
+                                        >
+                                            <Heading
+                                                as="span"
+                                                size="md"
+                                                flex="1"
+                                                textAlign="left"
+                                                fontWeight="500"
+                                            >
+                                                Movies
+                                            </Heading>
+                                            <AccordionIcon />
+                                        </AccordionButton>
+                                    </h2>
+                                    <AccordionPanel
+                                        p="0px 0.5rem"
+                                        as="ul"
+                                        listStyleType="none"
+                                    >
+                                        <Box as="li" mb="0.5rem">
+                                            <NextLink href="/movies" passHref>
+                                                <Link>Browse</Link>
+                                            </NextLink>
+                                        </Box>
+                                        <Box as="li" mb="0.5rem">
+                                            <NextLink
+                                                href="/movies/trending"
+                                                passHref
+                                            >
+                                                <Link>Trending</Link>
+                                            </NextLink>
+                                        </Box>
+                                    </AccordionPanel>
+                                </AccordionItem>
+                                <AccordionItem border="none">
+                                    <h2>
+                                        <AccordionButton
+                                            px="0px 0.5rem"
+                                            _focus={{
+                                                outline: 'none',
+                                                bgColor: 'gray.700'
+                                            }}
+                                        >
+                                            <Heading
+                                                as="span"
+                                                size="md"
+                                                flex="1"
+                                                textAlign="left"
+                                                fontWeight="500"
+                                            >
+                                                TV Shows
+                                            </Heading>
+                                            <AccordionIcon />
+                                        </AccordionButton>
+                                    </h2>
+                                    <AccordionPanel
+                                        p="0px 0.5rem"
+                                        as="ul"
+                                        listStyleType="none"
+                                    >
+                                        <Box as="li" mb="0.5rem">
+                                            <NextLink href="/tv" passHref>
+                                                <Link>Browse</Link>
+                                            </NextLink>
+                                        </Box>
+                                        <Box as="li" mb="0.5rem">
+                                            <NextLink
+                                                href="/tv/trending"
+                                                passHref
+                                            >
+                                                <Link>Trending</Link>
+                                            </NextLink>
+                                        </Box>
+                                    </AccordionPanel>
+                                </AccordionItem>
+                            </Accordion>
+                        </DrawerBody>
+                    </DrawerContent>
+                </DrawerOverlay>
+            </Drawer>
+        </DarkMode>
     );
 };
 

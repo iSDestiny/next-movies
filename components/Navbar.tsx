@@ -5,23 +5,19 @@ import {
     Flex,
     HStack,
     IconButton,
-    LightMode,
     Link,
     Menu,
     MenuButton,
     MenuItem,
     MenuList,
     Tooltip,
-    useBreakpointValue,
     useColorMode
 } from '@chakra-ui/react';
-import { AnimatePresence, useViewportScroll } from 'framer-motion';
-import Image from 'next/image';
+import { useViewportScroll } from 'framer-motion';
 import NextLink from 'next/link';
-import { useRouter } from 'next/router';
-import { KeyboardEvent, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import FocusLock from 'react-focus-lock';
-import { FaMoon, FaSun, FaSearch, FaTimes, FaCaretDown } from 'react-icons/fa';
+import { FaCaretDown, FaMoon, FaSearch, FaSun, FaTimes } from 'react-icons/fa';
 import MenuToggle from './MenuToggle';
 import MobileNav from './MobileNav';
 import MotionBox from './MotionBox';
@@ -37,7 +33,6 @@ const Navbar = () => {
     const menuHoverColor = colorMode === 'light' ? 'gray.100' : 'gray.600';
 
     const { scrollY } = useViewportScroll();
-    const router = useRouter();
     const hideVariants = {
         show: {
             y: 0,
@@ -75,17 +70,10 @@ const Navbar = () => {
 
     return (
         <FocusLock disabled={!isMenuOpen}>
-            <AnimatePresence>
-                {isMenuOpen && (
-                    <>
-                        <MobileNav
-                            isOpen={isMenuOpen}
-                            setIsOpen={setIsMenuOpen}
-                            key="mobile-nav"
-                        />
-                    </>
-                )}
-            </AnimatePresence>
+            <MobileNav
+                isOpen={isMenuOpen}
+                onClose={() => setIsMenuOpen(false)}
+            />
             <DarkMode>
                 <MotionBox
                     initial={false}
@@ -95,7 +83,7 @@ const Navbar = () => {
                     bgColor="gray.900"
                     position="fixed"
                     width="100%"
-                    zIndex="5"
+                    zIndex="9999"
                 >
                     <Flex
                         as="nav"
@@ -154,22 +142,6 @@ const Navbar = () => {
                                 as="li"
                                 display={{ base: 'none', md: 'block' }}
                             >
-                                {/* <NextLink href="/movies" passHref>
-                                    <Link
-                                        color="white"
-                                        borderBottom={
-                                            router.pathname === '/movies'
-                                                ? '4px solid teal'
-                                                : 'none'
-                                        }
-                                        pb="3px"
-                                        _hover={{
-                                            borderBottom: '4px solid teal'
-                                        }}
-                                    >
-                                        Movies
-                                    </Link>
-                                </NextLink> */}
                                 <Menu>
                                     <MenuButton
                                         as={Button}
@@ -213,22 +185,6 @@ const Navbar = () => {
                                 as="li"
                                 display={{ base: 'none', md: 'block' }}
                             >
-                                {/* <NextLink href="/tv" passHref>
-                                    <Link
-                                        color="white"
-                                        borderBottom={
-                                            router.pathname === '/tv'
-                                                ? '4px solid teal'
-                                                : 'none'
-                                        }
-                                        pb="3px"
-                                        _hover={{
-                                            borderBottom: '4px solid teal'
-                                        }}
-                                    >
-                                        TV Shows
-                                    </Link>
-                                </NextLink> */}
                                 <Menu>
                                     <MenuButton
                                         as={Button}
