@@ -1,13 +1,11 @@
-import { Box, SimpleGrid, Stack, Text } from '@chakra-ui/react';
+import { Box, Stack } from '@chakra-ui/react';
 import CardGrid from 'components/CardGrid';
-import CardSkeleton from 'components/CardSkeleton';
 import Options from 'components/Options';
 import Pagination from 'components/Pagination';
-import ShowCard from 'components/ShowCard';
-import useDiscover, { Filters } from 'hooks/useDiscover';
+import useDiscover from 'hooks/useDiscover';
 import GeneralLayout from 'layouts/GeneralLayout';
 import { GetStaticProps } from 'next';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import tmdbFetch from 'utils/tmdbFetch';
 
 interface MoviesProps {
