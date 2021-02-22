@@ -16,6 +16,7 @@ const CardGrid = ({ items, isLoading, config }: CardGridProps) => {
                 ({
                     id,
                     title,
+                    name,
                     release_date,
                     poster_path,
                     overview,
@@ -23,9 +24,9 @@ const CardGrid = ({ items, isLoading, config }: CardGridProps) => {
                 }) => (
                     <GridItem key={id}>
                         <ShowCard
-                            href={`/movies/${id}`}
+                            href={title ? `/movies/${id}` : `/tv/${id}`}
                             config={config}
-                            title={title}
+                            title={title || name}
                             date={release_date}
                             posterPath={poster_path}
                             overview={overview}
