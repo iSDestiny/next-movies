@@ -17,10 +17,8 @@ import {
 } from '@chakra-ui/react';
 import { Filters } from 'hooks/useDiscover';
 import { Dispatch, FunctionComponent, SetStateAction, useState } from 'react';
-import dynamic from 'next/dynamic';
 import DatePicker from 'react-datepicker';
 import ReactSlider from 'react-slider';
-// const ReactSlider = dynamic(() => import('react-slider'), { ssr: false });
 
 interface OptionsProps {
     type: 'movie' | 'tv';
@@ -127,6 +125,7 @@ const FilterOptions = ({
     setFilters
 }: FilterProps) => {
     const { releaseDateGreater, releaseDateLess } = filters;
+
     const [fromDate, setFromDate] = useState<Date>(
         releaseDateGreater ? new Date(releaseDateGreater) : null
     );
@@ -207,6 +206,32 @@ const FilterOptions = ({
                     (genreId) => genreId !== id
                 );
             }
+            return newFilters;
+        });
+    };
+
+    const ratingChangeHandler = ([start, end]: number[]) => {
+        setFilters((prev) => {
+            const newFilters = { ...prev };
+            newFilters.ratingGreater = start;
+            newFilters.ratingLess = end;
+            return newFilters;
+        });
+    };
+
+    const minVotesChangeHandler = (minVotes: number) => {
+        setFilters((prev) => {
+            const newFilters = { ...prev };
+            newFilters.voteCountGreater = minVotes;
+            return newFilters;
+        });
+    };
+
+    const runtimeChangeHandler = ([start, end]: number[]) => {
+        setFilters((prev) => {
+            const newFilters = { ...prev };
+            newFilters.runtimeGreater = start;
+            newFilters.runtimeLess = end;
             return newFilters;
         });
     };
@@ -322,6 +347,9 @@ const FilterOptions = ({
                     thumbClassName="example-thumb"
                     trackClassName="example-track"
                     defaultValue={[0, 10]}
+                    onAfterChange={(value) =>
+                        ratingChangeHandler(value as number[])
+                    }
                     min={0}
                     max={10}
                     ariaLabel={['Lower thumb', 'Upper thumb']}
@@ -337,6 +365,9 @@ const FilterOptions = ({
                     className="horizontal-slider"
                     thumbClassName="example-thumb"
                     trackClassName="example-track"
+                    onAfterChange={(value) =>
+                        minVotesChangeHandler(value as number)
+                    }
                     step={50}
                     min={0}
                     max={500}
@@ -353,6 +384,9 @@ const FilterOptions = ({
                     thumbClassName="example-thumb"
                     trackClassName="example-track"
                     defaultValue={[0, 400]}
+                    onAfterChange={(value) =>
+                        runtimeChangeHandler(value as number[])
+                    }
                     step={20}
                     min={0}
                     max={400}

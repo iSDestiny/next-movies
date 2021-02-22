@@ -13,6 +13,8 @@ export interface Filters {
     voteCountLess?: number;
     ratingGreater?: number;
     ratingLess?: number;
+    runtimeLess?: number;
+    runtimeGreater?: number;
     includeGenres?: string[] | string;
     excludeGenres?: string[] | string;
     includeKeywords?: string[] | string;
@@ -37,6 +39,8 @@ const fetchDiscover = async (
         voteCountLess,
         ratingGreater,
         ratingLess,
+        runtimeGreater,
+        runtimeLess,
         includeGenres,
         excludeGenres,
         includeKeywords,
@@ -73,6 +77,8 @@ const fetchDiscover = async (
                 'vote_count.lte': voteCountLess,
                 'vote_average.gte': ratingGreater,
                 'vote_average.lte': ratingLess,
+                'with_runtime.gte': runtimeGreater,
+                'with_runtime.lte': runtimeLess,
                 with_genres: stringIncludeGenres,
                 without_genres: stringExcludeGenres,
                 with_keywords: stringKeywords,
