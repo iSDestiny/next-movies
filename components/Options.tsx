@@ -82,6 +82,39 @@ const FilterOptionsSection: FunctionComponent<{ heading: string }> = ({
     );
 };
 
+const FilterOptionsAccordionSection: FunctionComponent<{ heading: string }> = ({
+    heading,
+    children
+}) => {
+    return (
+        <Accordion
+            allowMultiple
+            p="0px"
+            w="100%"
+            border="0px solid transparent"
+        >
+            <AccordionItem py="0px" w="100%">
+                <Box as="h4" pb="0.5rem">
+                    <AccordionButton p="0px">
+                        <Heading
+                            as="h4"
+                            size="sm"
+                            fontWeight="normal"
+                            textAlign="left"
+                            flex={1}
+                        >
+                            {heading}
+                        </Heading>
+                        <AccordionIcon />
+                    </AccordionButton>
+                </Box>
+
+                <AccordionPanel p="0px">{children}</AccordionPanel>
+            </AccordionItem>
+        </Accordion>
+    );
+};
+
 const FilterOptions = ({
     type,
     genres,
@@ -212,7 +245,7 @@ const FilterOptions = ({
                     placeholderText="To"
                 />
             </FilterOptionsSection>
-            <FilterOptionsSection heading="Include Genres">
+            <FilterOptionsAccordionSection heading="Include Genres">
                 <Wrap>
                     {genres.map(({ id, name }) => (
                         <WrapItem key={id}>
@@ -233,9 +266,9 @@ const FilterOptions = ({
                         </WrapItem>
                     ))}
                 </Wrap>
-            </FilterOptionsSection>
+            </FilterOptionsAccordionSection>
 
-            <FilterOptionsSection heading="Exclude Genres">
+            <FilterOptionsAccordionSection heading="Exclude Genres">
                 <Wrap>
                     {genres.map(({ id, name }) => (
                         <WrapItem key={id}>
@@ -256,7 +289,7 @@ const FilterOptions = ({
                         </WrapItem>
                     ))}
                 </Wrap>
-            </FilterOptionsSection>
+            </FilterOptionsAccordionSection>
 
             {type === 'movie' && (
                 <FilterOptionsSection heading="Certifications">
