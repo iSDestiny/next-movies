@@ -1,10 +1,15 @@
 import {
     Box,
+    Button,
     DarkMode,
     Flex,
     HStack,
     IconButton,
     Link,
+    Menu,
+    MenuButton,
+    MenuItem,
+    MenuList,
     Tooltip,
     useBreakpointValue,
     useColorMode
@@ -15,7 +20,7 @@ import NextLink from 'next/link';
 import { useRouter } from 'next/router';
 import { KeyboardEvent, useEffect, useState } from 'react';
 import FocusLock from 'react-focus-lock';
-import { FaMoon, FaSun, FaSearch, FaTimes } from 'react-icons/fa';
+import { FaMoon, FaSun, FaSearch, FaTimes, FaCaretDown } from 'react-icons/fa';
 import MenuToggle from './MenuToggle';
 import MobileNav from './MobileNav';
 import MotionBox from './MotionBox';
@@ -98,7 +103,7 @@ const Navbar = () => {
                     >
                         <HStack
                             as="ul"
-                            spacing={{ base: '0.5rem', md: '1.5rem' }}
+                            spacing="0.5rem"
                             listStyleType="none"
                             align="center"
                             justify="flex-start"
@@ -118,7 +123,7 @@ const Navbar = () => {
                                     }
                                 />
                             </MotionBox>
-                            <Box as="li" zIndex="4">
+                            <Box as="li" zIndex="4" mr="1.5rem">
                                 <NextLink href="/" passHref>
                                     <Link
                                         zIndex="4"
@@ -144,7 +149,7 @@ const Navbar = () => {
                                 as="li"
                                 display={{ base: 'none', md: 'block' }}
                             >
-                                <NextLink href="/movies" passHref>
+                                {/* <NextLink href="/movies" passHref>
                                     <Link
                                         color="white"
                                         borderBottom={
@@ -159,13 +164,45 @@ const Navbar = () => {
                                     >
                                         Movies
                                     </Link>
-                                </NextLink>
+                                </NextLink> */}
+                                <Menu>
+                                    <DarkMode>
+                                        <MenuButton
+                                            as={Button}
+                                            rightIcon={
+                                                <FaCaretDown fontSize="1rem" />
+                                            }
+                                            variant="ghost"
+                                        >
+                                            Movies
+                                        </MenuButton>
+                                    </DarkMode>
+                                    <MenuList>
+                                        <MenuItem>
+                                            <NextLink href="/movies" passHref>
+                                                <Link color="white">
+                                                    Browse
+                                                </Link>
+                                            </NextLink>
+                                        </MenuItem>
+                                        <MenuItem>
+                                            <NextLink
+                                                href="/movies/trending"
+                                                passHref
+                                            >
+                                                <Link color="white">
+                                                    Trending
+                                                </Link>
+                                            </NextLink>
+                                        </MenuItem>
+                                    </MenuList>
+                                </Menu>
                             </Box>
                             <Box
                                 as="li"
                                 display={{ base: 'none', md: 'block' }}
                             >
-                                <NextLink href="/tv" passHref>
+                                {/* <NextLink href="/tv" passHref>
                                     <Link
                                         color="white"
                                         borderBottom={
@@ -180,7 +217,37 @@ const Navbar = () => {
                                     >
                                         TV Shows
                                     </Link>
-                                </NextLink>
+                                </NextLink> */}
+                                <Menu>
+                                    <MenuButton
+                                        as={Button}
+                                        rightIcon={
+                                            <FaCaretDown fontSize="1rem" />
+                                        }
+                                        variant="ghost"
+                                    >
+                                        TV Shows
+                                    </MenuButton>
+                                    <MenuList>
+                                        <MenuItem>
+                                            <NextLink href="/tv" passHref>
+                                                <Link color="white">
+                                                    Browse
+                                                </Link>
+                                            </NextLink>
+                                        </MenuItem>
+                                        <MenuItem>
+                                            <NextLink
+                                                href="/tv/trending"
+                                                passHref
+                                            >
+                                                <Link color="white">
+                                                    Trending
+                                                </Link>
+                                            </NextLink>
+                                        </MenuItem>
+                                    </MenuList>
+                                </Menu>
                             </Box>
                         </HStack>
                         <HStack as="ul" spacing="1.5rem" listStyleType="none">
