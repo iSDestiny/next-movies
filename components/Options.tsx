@@ -122,7 +122,20 @@ const FilterOptions = ({
         });
     };
 
-    const genreHandler = (id: number) => {};
+    const genreHandler = (id: string) => {
+        setFilters((prev) => {
+            const newFilters = { ...prev };
+            const includeGenres = newFilters.includeGenres as string[];
+            if (includeGenres) {
+                if (includeGenres.find((genreId) => genreId === id))
+                    newFilters.includeGenres = includeGenres.filter(
+                        (genreId) => genreId !== id
+                    );
+                else (newFilters.includeGenres as string[]).push(id);
+            } else newFilters.includeGenres = [id];
+            return newFilters;
+        });
+    };
 
     const certHandler = (certification: string) => {
         setFilters((prev) => {
@@ -166,9 +179,16 @@ const FilterOptions = ({
                     {genres.map(({ id, name }) => (
                         <WrapItem key={id}>
                             <Button
-                                variant="outline"
+                                variant={
+                                    (filters.includeGenres as string[])?.find(
+                                        (genreId) => genreId === id + ''
+                                    )
+                                        ? 'solid'
+                                        : 'outline'
+                                }
                                 size="sm"
                                 colorScheme="teal"
+                                onClick={() => genreHandler(id + '')}
                             >
                                 {name}
                             </Button>
