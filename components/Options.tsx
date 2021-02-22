@@ -124,6 +124,22 @@ const FilterOptions = ({
 
     const genreHandler = (id: number) => {};
 
+    const certHandler = (certification: string) => {
+        setFilters((prev) => {
+            const newFilters = { ...prev };
+            const certifications = newFilters.certifications as string[];
+            if (certifications) {
+                if (certifications.find((cert) => cert === certification))
+                    newFilters.certifications = certifications.filter(
+                        (cert) => cert !== certification
+                    );
+                else
+                    (newFilters.certifications as string[]).push(certification);
+            } else newFilters.certifications = [certification];
+            return newFilters;
+        });
+    };
+
     return (
         <VStack align="flex-start" spacing="1rem">
             <FilterOptionsSection heading="Release Dates">
@@ -167,9 +183,16 @@ const FilterOptions = ({
                         {certifications.map(({ certification }) => (
                             <WrapItem key={certification}>
                                 <Button
-                                    variant="outline"
+                                    variant={
+                                        (filters.certifications as string[])?.find(
+                                            (cert) => cert === certification
+                                        )
+                                            ? 'solid'
+                                            : 'outline'
+                                    }
                                     size="sm"
                                     colorScheme="teal"
+                                    onClick={() => certHandler(certification)}
                                 >
                                     {certification}
                                 </Button>
