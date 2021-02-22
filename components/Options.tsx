@@ -17,7 +17,10 @@ import {
 } from '@chakra-ui/react';
 import { Filters } from 'hooks/useDiscover';
 import { Dispatch, FunctionComponent, SetStateAction, useState } from 'react';
+import dynamic from 'next/dynamic';
 import DatePicker from 'react-datepicker';
+import ReactSlider from 'react-slider';
+// const ReactSlider = dynamic(() => import('react-slider'), { ssr: false });
 
 interface OptionsProps {
     type: 'movie' | 'tv';
@@ -267,7 +270,6 @@ const FilterOptions = ({
                     ))}
                 </Wrap>
             </FilterOptionsAccordionSection>
-
             <FilterOptionsAccordionSection heading="Exclude Genres">
                 <Wrap>
                     {genres.map(({ id, name }) => (
@@ -290,7 +292,6 @@ const FilterOptions = ({
                     ))}
                 </Wrap>
             </FilterOptionsAccordionSection>
-
             {type === 'movie' && (
                 <FilterOptionsSection heading="Certifications">
                     <Wrap>
@@ -315,6 +316,54 @@ const FilterOptions = ({
                     </Wrap>
                 </FilterOptionsSection>
             )}
+            <FilterOptionsSection heading="User Rating">
+                <ReactSlider
+                    className="horizontal-slider"
+                    thumbClassName="example-thumb"
+                    trackClassName="example-track"
+                    defaultValue={[0, 10]}
+                    min={0}
+                    max={10}
+                    ariaLabel={['Lower thumb', 'Upper thumb']}
+                    ariaValuetext={(state) => `Thumb value ${state.valueNow}`}
+                    renderThumb={(props, state) => (
+                        <div {...props}>{state.valueNow}</div>
+                    )}
+                    pearling
+                />
+            </FilterOptionsSection>
+            <FilterOptionsSection heading="Minimum User Votes">
+                <ReactSlider
+                    className="horizontal-slider"
+                    thumbClassName="example-thumb"
+                    trackClassName="example-track"
+                    step={50}
+                    min={0}
+                    max={500}
+                    ariaLabel={['Lower thumb', 'Upper thumb']}
+                    ariaValuetext={(state) => `Thumb value ${state.valueNow}`}
+                    renderThumb={(props, state) => (
+                        <div {...props}>{state.valueNow}</div>
+                    )}
+                />
+            </FilterOptionsSection>
+            <FilterOptionsSection heading="Runtime (in minutes)">
+                <ReactSlider
+                    className="horizontal-slider"
+                    thumbClassName="example-thumb"
+                    trackClassName="example-track"
+                    defaultValue={[0, 400]}
+                    step={20}
+                    min={0}
+                    max={400}
+                    ariaLabel={['Lower thumb', 'Upper thumb']}
+                    ariaValuetext={(state) => `Thumb value ${state.valueNow}`}
+                    renderThumb={(props, state) => (
+                        <div {...props}>{state.valueNow}</div>
+                    )}
+                    pearling
+                />
+            </FilterOptionsSection>
         </VStack>
     );
 };

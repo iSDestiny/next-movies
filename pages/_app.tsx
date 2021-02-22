@@ -6,6 +6,7 @@ import '../styles/globals.scss';
 import 'pure-react-carousel/dist/react-carousel.es.css';
 import 'react-datepicker/dist/react-datepicker.css';
 import 'styles/datePicker.scss';
+import 'styles/reactSlider.scss';
 
 import theme from 'theme';
 
