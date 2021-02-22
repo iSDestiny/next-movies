@@ -409,7 +409,6 @@ const Options = (props: OptionsProps) => {
     const [newFilters, setNewFilters] = useState<Filters>({});
     const [newSort, setNewSort] = useState('popularity.desc');
     const [gray300, gray700] = useToken('colors', ['gray.300', 'gray.700']);
-    const sideBarColor = colorMode === 'light' ? 'gray.100' : 'gray.700';
     const borderColor = colorMode === 'light' ? gray300 : gray700;
 
     const submitChanges = () => {

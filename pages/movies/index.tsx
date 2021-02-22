@@ -1,4 +1,5 @@
 import { Box, SimpleGrid, Stack, Text } from '@chakra-ui/react';
+import CardGrid from 'components/CardGrid';
 import CardSkeleton from 'components/CardSkeleton';
 import Options from 'components/Options';
 import Pagination from 'components/Pagination';
@@ -19,18 +20,9 @@ interface MoviesProps {
 const Movies = ({ config, certifications, genres, languages }: MoviesProps) => {
     const USCerts = certifications['US'];
 
-    const {
-        data,
-        page,
-        sort,
-        filters,
-        setSort,
-        setFilters,
-        setPage,
-        isLoading
-    } = useDiscover('movie');
-
-    const isNotEmpty = data?.results?.length > 0;
+    const { data, page, setSort, setFilters, setPage, isLoading } = useDiscover(
+        'movie'
+    );
 
     useEffect(() => {
         console.log(config);
@@ -42,37 +34,6 @@ const Movies = ({ config, certifications, genres, languages }: MoviesProps) => {
     useEffect(() => {
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }, [page]);
-
-    const results = isNotEmpty ? (
-        <>
-            {data?.results?.map(
-                ({
-                    id,
-                    title,
-                    release_date,
-                    poster_path,
-                    overview,
-                    vote_average
-                }) => (
-                    <Box key={id}>
-                        <ShowCard
-                            href={`/movies/${id}`}
-                            config={config}
-                            title={title}
-                            date={release_date}
-                            posterPath={poster_path}
-                            overview={overview}
-                            rating={vote_average}
-                        />
-                    </Box>
-                )
-            )}
-        </>
-    ) : (
-        <Text size="md" w="100%" textAlign="center">
-            No results
-        </Text>
-    );
 
     return (
         <GeneralLayout title="Movies">
@@ -93,17 +54,11 @@ const Movies = ({ config, certifications, genres, languages }: MoviesProps) => {
                     certifications={USCerts}
                 />
                 <Box width={{ base: '100%', lg: '80%' }}>
-                    <SimpleGrid
-                        columns={{ base: 1, lg: 2 }}
-                        spacing={5}
-                        mb="1.5rem"
-                    >
-                        {!isLoading
-                            ? results
-                            : [...Array(20).keys()].map((num) => (
-                                  <CardSkeleton key={num} />
-                              ))}
-                    </SimpleGrid>
+                    <CardGrid
+                        config={config}
+                        items={data?.results}
+                        isLoading={isLoading}
+                    />
                     <Pagination
                         quantity={data?.total_pages}
                         pageChangeHandler={setPage}

@@ -22,6 +22,7 @@ import {
     useBreakpointValue,
     GridItem
 } from '@chakra-ui/react';
+import CardGrid from 'components/CardGrid';
 import CardSkeleton from 'components/CardSkeleton';
 import Pagination from 'components/Pagination';
 import ShowCard from 'components/ShowCard';
@@ -285,46 +286,10 @@ const SpecficFilterLayout = ({
 }: LayoutProps) => {
     const [selected, setSelected] = useState(0);
     const isLoading = categories[selected]?.isLoading;
-    const isNotEmpty = categories[selected]?.data?.results?.length > 0;
 
     useEffect(() => {
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }, [categories[selected].page]);
-
-    const results = isNotEmpty ? (
-        <>
-            {categories[selected]?.data?.results?.map(
-                ({
-                    id,
-                    title,
-                    name,
-                    release_date,
-                    first_air_date,
-                    poster_path,
-                    overview,
-                    vote_average
-                }) => (
-                    <GridItem key={id} width="100%">
-                        <ShowCard
-                            href={
-                                selected === 0 ? `/movies/${id}` : `/tv/${id}`
-                            }
-                            config={config}
-                            title={title || name}
-                            date={release_date || first_air_date}
-                            posterPath={poster_path}
-                            overview={overview}
-                            rating={vote_average}
-                        />
-                    </GridItem>
-                )
-            )}
-        </>
-    ) : (
-        <Text width="100%" textAlign="center">
-            No Results
-        </Text>
-    );
 
     return (
         <Box as="main" width="100%">
@@ -337,24 +302,11 @@ const SpecficFilterLayout = ({
                 setSelected={setSelected}
             />
             <Box width="100%" maxWidth="1400px" m="auto" p="1rem">
-                <Grid
-                    templateColumns={
-                        !isLoading && isNotEmpty
-                            ? { base: '1fr', xl: '1fr 1fr' }
-                            : '1fr'
-                    }
-                    width="100%"
-                    gap={5}
-                    mb="1.5rem"
-                >
-                    {!isLoading
-                        ? results
-                        : [...Array(20).keys()].map((num) => (
-                              <GridItem key={num}>
-                                  <CardSkeleton />
-                              </GridItem>
-                          ))}
-                </Grid>
+                <CardGrid
+                    config={config}
+                    items={categories[selected]?.data?.results}
+                    isLoading={isLoading}
+                />
                 <Box
                     display={
                         categories[0]?.data?.results?.length > 0 &&
