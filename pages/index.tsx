@@ -45,7 +45,7 @@ const Home = ({
     useEffect(() => {
         console.log(trending);
         console.log(config);
-        console.log(videos);
+        // console.log(videos);
         console.log(popularTVShows);
         console.log(popularMovies);
         console.log(topRatedMovies);
@@ -61,7 +61,7 @@ const Home = ({
                 maxWidth="1400px"
                 margin="auto"
             >
-                <section>
+                {/* <section>
                     <Heading
                         size={headingSize}
                         alignSelf="flex-start"
@@ -74,7 +74,7 @@ const Home = ({
                         config={config}
                         trailers={videos}
                     />
-                </section>
+                </section> */}
                 <HomeSection
                     heading="Popular"
                     config={config}
@@ -112,7 +112,7 @@ const Home = ({
     );
 };
 
-export const getStaticProps: GetStaticProps = async (context) => {
+export const getStaticProps: GetStaticProps = async () => {
     let trending: Trending | null = null;
     let upcomingMovies: Movie[] | null = null;
     let nowPlayingMovies: Movie[] | null = null;
@@ -128,18 +128,18 @@ export const getStaticProps: GetStaticProps = async (context) => {
     const { data: trendingData } = await tmdbFetch.get('/trending/all/day');
     trending = trendingData;
 
-    const videoRes = (await Promise.allSettled(
-        trendingData.results.map(async ({ id, media_type }) => {
-            if (media_type === 'movie')
-                return tmdbFetch.get(`/movie/${id}/videos`);
-            else if (media_type === 'tv')
-                return tmdbFetch.get(`/tv/${id}/videos`);
-        })
-    )) as any;
-    const videoData = videoRes.map(({ status, value }) =>
-        status === 'fulfilled' ? value.data : null
-    );
-    videos = videoData;
+    // const videoRes = (await Promise.allSettled(
+    //     trendingData.results.map(async ({ id, media_type }) => {
+    //         if (media_type === 'movie')
+    //             return tmdbFetch.get(`/movie/${id}/videos`);
+    //         else if (media_type === 'tv')
+    //             return tmdbFetch.get(`/tv/${id}/videos`);
+    //     })
+    // )) as any;
+    // const videoData = videoRes.map(({ status, value }) =>
+    //     status === 'fulfilled' ? value.data : null
+    // );
+    // videos = videoData;
 
     const { data: configData } = await tmdbFetch.get('/configuration');
     config = configData;
