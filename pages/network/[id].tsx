@@ -123,6 +123,33 @@ export const getStaticPaths: GetStaticPaths = async () => {
             return json.id;
         });
 
+    const {
+        data: { results: popularTVShowData }
+    }: { data: { results: TVShow[] } } = await tmdbFetch.get('/tv/popular');
+
+    const {
+        data: { results: topRatedTVShowData }
+    }: { data: { results: TVShow[] } } = await tmdbFetch.get('/tv/top_rated');
+
+    const {
+        data: { results: onTheAirTVShowData }
+    }: { data: { results: TVShow[] } } = await tmdbFetch.get('/tv/on_the_air');
+
+    const {
+        data: { results: airingTodayTVShowData }
+    }: { data: { results: TVShow[] } } = await tmdbFetch.get(
+        '/tv/airing_today'
+    );
+
+    const relevantTVData = [
+        ...popularTVShowData,
+        ...topRatedTVShowData,
+        ...onTheAirTVShowData,
+        ...airingTodayTVShowData
+    ];
+    const relevantTVIds = new Set(relevantTVData.map(({ id }) => id));
+    ids = ids.filter((id) => relevantTVIds.has(id));
+
     const paths = ids.map((id) => {
         if (id) return { params: { id: id + '' } };
         console.log('error' + id);
