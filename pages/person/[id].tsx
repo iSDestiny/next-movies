@@ -152,6 +152,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
 export const getStaticPaths: GetStaticPaths = async () => {
     let ids: number[];
     const date = new Date();
+    date.setDate(date.getDate() - 2);
     const month = date.getMonth() + 1;
     const day = date.getDate();
     const year = date.getFullYear();
