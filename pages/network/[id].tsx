@@ -1,9 +1,9 @@
-import useDiscover, { Filters } from 'hooks/useDiscover';
+import useDiscover from 'hooks/useDiscover';
 import GeneralLayout from 'layouts/GeneralLayout';
 import SpecficFilterLayout from 'layouts/SpecficFilterLayout';
 import { GetStaticPaths, GetStaticProps } from 'next';
 import { ungzip } from 'node-gzip';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import addLeadingZeroToDate from 'utils/addLeadingZeroToDate';
 import tmdbFetch from 'utils/tmdbFetch';
 import tmdbFetchGzip from 'utils/tmdbFetchGzip';
@@ -54,36 +54,44 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
     let config: TMDBConfig;
     let network: ProductionCompanyDetails;
 
-    const { data: configData } = await tmdbFetch.get('/configuration');
-    const { data: tvData } = await tmdbFetch.get('/discover/tv', {
-        params: {
-            with_companies: id
-        }
-    });
-    const { data: movieData } = await tmdbFetch.get('/discover/movie', {
-        params: {
-            with_companies: id
-        }
-    });
-    const {
-        data: companyData
-    }: { data: ProductionCompanyDetails } = await tmdbFetch.get(
-        `/network/${id}`
-    );
+    try {
+        const { data: configData } = await tmdbFetch.get('/configuration');
+        const { data: tvData } = await tmdbFetch.get('/discover/tv', {
+            params: {
+                with_companies: id
+            }
+        });
 
-    config = configData;
-    movies = movieData;
-    tvShows = tvData;
-    network = companyData;
+        const { data: movieData } = await tmdbFetch.get('/discover/movie', {
+            params: {
+                with_companies: id
+            }
+        });
+        const {
+            data: companyData
+        }: { data: ProductionCompanyDetails } = await tmdbFetch.get(
+            `/network/${id}`
+        );
 
-    return {
-        props: {
-            network,
-            movies,
-            tvShows,
-            config
-        }
-    };
+        config = configData;
+        movies = movieData;
+        tvShows = tvData;
+        network = companyData;
+
+        return {
+            props: {
+                network,
+                movies,
+                tvShows,
+                config
+            },
+            revalidate: 3600
+        };
+    } catch (err) {
+        return {
+            notFound: true
+        };
+    }
 };
 
 export const getStaticPaths: GetStaticPaths = async () => {
@@ -122,7 +130,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
 
     return {
         paths,
-        fallback: false
+        fallback: true
     };
 };
 

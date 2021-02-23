@@ -269,28 +269,35 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
     let config: TMDBConfig;
     let languages: Language[];
 
-    const { data: configData } = await tmdbFetch.get('/configuration');
-    const { data: languageData } = await tmdbFetch.get(
-        '/configuration/languages'
-    );
-    const { data } = await tmdbFetch.get(`/tv/${id}`, {
-        params: {
-            append_to_response:
-                'content_ratings,reviews,similar,images,credits,videos,recommendations,keywords'
-        }
-    });
+    try {
+        const { data: configData } = await tmdbFetch.get('/configuration');
+        const { data: languageData } = await tmdbFetch.get(
+            '/configuration/languages'
+        );
+        const { data } = await tmdbFetch.get(`/tv/${id}`, {
+            params: {
+                append_to_response:
+                    'content_ratings,reviews,similar,images,credits,videos,recommendations,keywords'
+            }
+        });
 
-    config = configData;
-    tvShowData = data;
-    languages = languageData;
+        config = configData;
+        tvShowData = data;
+        languages = languageData;
 
-    return {
-        props: {
-            tvShowData,
-            config,
-            languages
-        }
-    };
+        return {
+            props: {
+                tvShowData,
+                config,
+                languages
+            },
+            revalidate: 3600
+        };
+    } catch (err) {
+        return {
+            notFound: true
+        };
+    }
 };
 
 export const getStaticPaths: GetStaticPaths = async () => {
@@ -329,7 +336,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
 
     return {
         paths,
-        fallback: false
+        fallback: true
     };
 };
 

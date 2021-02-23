@@ -2,9 +2,9 @@ import {
     Box,
     Heading,
     Stack,
+    Text,
     useBreakpointValue,
-    VStack,
-    Text
+    VStack
 } from '@chakra-ui/react';
 import CastCarousel from 'components/CastCarousel';
 import MediaGroup, { MediaGroupItem } from 'components/MediaGroup';
@@ -239,29 +239,37 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
     let movieData: MovieDetails;
     let config: TMDBConfig;
     let languages: Language[];
-    const { data: configData } = await tmdbFetch.get('/configuration');
-    const { data: languageData } = await tmdbFetch.get(
-        '/configuration/languages'
-    );
 
-    const { data } = await tmdbFetch.get(`/movie/${id}`, {
-        params: {
-            append_to_response:
-                'release_dates,reviews,similar,images,credits,videos,recommendations,keywords'
-        }
-    });
+    try {
+        const { data: configData } = await tmdbFetch.get('/configuration');
+        const { data: languageData } = await tmdbFetch.get(
+            '/configuration/languages'
+        );
 
-    config = configData;
-    movieData = data;
-    languages = languageData;
+        const { data } = await tmdbFetch.get(`/movie/${id}`, {
+            params: {
+                append_to_response:
+                    'release_dates,reviews,similar,images,credits,videos,recommendations,keywords'
+            }
+        });
 
-    return {
-        props: {
-            movieData,
-            config,
-            languages
-        }
-    };
+        config = configData;
+        movieData = data;
+        languages = languageData;
+
+        return {
+            props: {
+                movieData,
+                config,
+                languages
+            },
+            revalidate: 3600
+        };
+    } catch (err) {
+        return {
+            notFound: true
+        };
+    }
 };
 
 export const getStaticPaths: GetStaticPaths = async () => {
@@ -300,7 +308,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
 
     return {
         paths,
-        fallback: false
+        fallback: true
     };
 };
 

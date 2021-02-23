@@ -55,30 +55,37 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
     let tvShows: PopularTVShows;
     let config: TMDBConfig;
 
-    const { data: configData } = await tmdbFetch.get('/configuration');
-    const { data: tvData } = await tmdbFetch.get('/discover/tv', {
-        params: {
-            with_genres: id
-        }
-    });
-    const { data: movieData } = await tmdbFetch.get('/discover/movie', {
-        params: {
-            with_genres: id
-        }
-    });
+    try {
+        const { data: configData } = await tmdbFetch.get('/configuration');
+        const { data: tvData } = await tmdbFetch.get('/discover/tv', {
+            params: {
+                with_genres: id
+            }
+        });
+        const { data: movieData } = await tmdbFetch.get('/discover/movie', {
+            params: {
+                with_genres: id
+            }
+        });
 
-    config = configData;
-    movies = movieData;
-    tvShows = tvData;
+        config = configData;
+        movies = movieData;
+        tvShows = tvData;
 
-    return {
-        props: {
-            genre: { id, name },
-            movies,
-            tvShows,
-            config
-        }
-    };
+        return {
+            props: {
+                genre: { id, name },
+                movies,
+                tvShows,
+                config
+            },
+            revalidate: 3600
+        };
+    } catch (err) {
+        return {
+            notFound: true
+        };
+    }
 };
 
 export const getStaticPaths: GetStaticPaths = async () => {
@@ -99,7 +106,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
 
     return {
         paths,
-        fallback: false
+        fallback: true
     };
 };
 
