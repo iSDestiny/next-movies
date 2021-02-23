@@ -49,8 +49,8 @@ interface Category {
 }
 
 interface LayoutProps {
-    categories: Category[];
-    heading: string;
+    categories?: Category[];
+    heading?: string;
     type?: string;
     config?: TMDBConfig;
     company?: ProductionCompanyDetails;
@@ -66,8 +66,6 @@ interface MetaDataBarProps {
 }
 
 const MetaDataBar = ({ company }: MetaDataBarProps) => {
-    const { colorMode } = useColorMode();
-
     if (company) {
         const { name, headquarters, homepage, origin_country } = company;
         return (
@@ -132,7 +130,7 @@ const LayoutHeader = ({
     const borderColor = colorMode === 'light' ? gray300 : gray700;
     const amountSize = useBreakpointValue({ base: 'sm', md: 'md' });
     const headingSize = useBreakpointValue({ base: 'md', md: 'lg' });
-    const { secure_base_url, logo_sizes } = config.images;
+    const { secure_base_url, logo_sizes } = config?.images;
     const logoSize = useBreakpointValue({
         base: logo_sizes[0],
         md: logo_sizes[1]
@@ -223,11 +221,11 @@ const LayoutHeader = ({
                                 title="Popularity"
                                 type="radio"
                                 onChange={(value) =>
-                                    categories[selected].setSort(
+                                    categories[selected]?.setSort(
                                         value as string
                                     )
                                 }
-                                value={categories[selected].sort}
+                                value={categories[selected]?.sort}
                             >
                                 <MenuItemOption value="popularity.asc">
                                     Ascending
@@ -240,7 +238,7 @@ const LayoutHeader = ({
                                 title="Rating"
                                 type="radio"
                                 onChange={(value) =>
-                                    categories[selected].setSort(
+                                    categories[selected]?.setSort(
                                         value as string
                                     )
                                 }
@@ -257,11 +255,11 @@ const LayoutHeader = ({
                                 title="Release Date"
                                 type="radio"
                                 onChange={(value) =>
-                                    categories[selected].setSort(
+                                    categories[selected]?.setSort(
                                         value as string
                                     )
                                 }
-                                value={categories[selected].sort}
+                                value={categories[selected]?.sort}
                             >
                                 <MenuItemOption value="primary_release_date.asc">
                                     Ascending
@@ -286,10 +284,11 @@ const SpecficFilterLayout = ({
 }: LayoutProps) => {
     const [selected, setSelected] = useState(0);
     const isLoading = categories[selected]?.isLoading;
+    const page = categories[selected].page;
 
     useEffect(() => {
         window.scrollTo({ top: 0, behavior: 'smooth' });
-    }, [categories[selected].page]);
+    }, [page]);
 
     return (
         <Box as="main" width="100%">
@@ -307,32 +306,44 @@ const SpecficFilterLayout = ({
                     items={categories[selected]?.data?.results}
                     isLoading={isLoading}
                 />
-                <Box
-                    display={
-                        categories[0]?.data?.results?.length > 0 &&
-                        selected === 0
-                            ? 'block'
-                            : 'none'
-                    }
+                <Skeleton
+                    isLoaded={!isLoading}
+                    startColor="white"
+                    endColor="white"
+                    minHeight="50px"
+                    minWidth="100%"
                 >
-                    <Pagination
-                        quantity={categories[0]?.data?.total_pages}
-                        pageChangeHandler={categories[0].setPage}
-                    />
-                </Box>
-                <Box
-                    display={
-                        categories[1]?.data?.results?.length > 0 &&
-                        selected === 1
-                            ? 'block'
-                            : 'none'
-                    }
-                >
-                    <Pagination
-                        quantity={categories[1]?.data?.total_pages}
-                        pageChangeHandler={categories[1].setPage}
-                    />
-                </Box>
+                    {categories && (
+                        <>
+                            <Box
+                                display={
+                                    categories[0]?.data?.results?.length > 0 &&
+                                    selected === 0
+                                        ? 'block'
+                                        : 'none'
+                                }
+                            >
+                                <Pagination
+                                    quantity={categories[0]?.data?.total_pages}
+                                    pageChangeHandler={categories[0]?.setPage}
+                                />
+                            </Box>
+                            <Box
+                                display={
+                                    categories[1]?.data?.results?.length > 0 &&
+                                    selected === 1
+                                        ? 'block'
+                                        : 'none'
+                                }
+                            >
+                                <Pagination
+                                    quantity={categories[1]?.data?.total_pages}
+                                    pageChangeHandler={categories[1]?.setPage}
+                                />
+                            </Box>
+                        </>
+                    )}
+                </Skeleton>
             </Box>
         </Box>
     );

@@ -1,6 +1,7 @@
 import useDiscover from 'hooks/useDiscover';
 import GeneralLayout from 'layouts/GeneralLayout';
 import SpecficFilterLayout from 'layouts/SpecficFilterLayout';
+import SpecificFilterFallbackSkeleton from 'layouts/SpecificFilterLayoutSkeleton';
 import { GetStaticPaths, GetStaticProps } from 'next';
 import { useRouter } from 'next/router';
 import { ungzip } from 'node-gzip';
@@ -19,7 +20,12 @@ interface NetworkProps {
 const Network = ({ network, movies, tvShows, config }: NetworkProps) => {
     const router = useRouter();
 
-    if (router.isFallback) return <div>Loading...</div>;
+    if (router.isFallback)
+        return (
+            <GeneralLayout title={`Loading Network...`}>
+                <SpecificFilterFallbackSkeleton type="company" />
+            </GeneralLayout>
+        );
 
     const movieCategory = useDiscover(
         'movie',
@@ -40,7 +46,7 @@ const Network = ({ network, movies, tvShows, config }: NetworkProps) => {
     }, []);
 
     return (
-        <GeneralLayout title={`Keyword: "${network.name}"`}>
+        <GeneralLayout title={`TV Shows on ${network.name}`}>
             <SpecficFilterLayout
                 type="company"
                 config={config}
