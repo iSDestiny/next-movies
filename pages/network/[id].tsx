@@ -54,36 +54,42 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
     let config: TMDBConfig;
     let network: ProductionCompanyDetails;
 
-    const { data: configData } = await tmdbFetch.get('/configuration');
-    const { data: tvData } = await tmdbFetch.get('/discover/tv', {
-        params: {
-            with_companies: id
-        }
-    });
-    const { data: movieData } = await tmdbFetch.get('/discover/movie', {
-        params: {
-            with_companies: id
-        }
-    });
-    const {
-        data: companyData
-    }: { data: ProductionCompanyDetails } = await tmdbFetch.get(
-        `/network/${id}`
-    );
+    try {
+        const { data: configData } = await tmdbFetch.get('/configuration');
+        const { data: tvData } = await tmdbFetch.get('/discover/tv', {
+            params: {
+                with_companies: id
+            }
+        });
+        const { data: movieData } = await tmdbFetch.get('/discover/movie', {
+            params: {
+                with_companies: id
+            }
+        });
+        const {
+            data: companyData
+        }: { data: ProductionCompanyDetails } = await tmdbFetch.get(
+            `/network/${id}`
+        );
 
-    config = configData;
-    movies = movieData;
-    tvShows = tvData;
-    network = companyData;
+        config = configData;
+        movies = movieData;
+        tvShows = tvData;
+        network = companyData;
 
-    return {
-        props: {
-            network,
-            movies,
-            tvShows,
-            config
-        }
-    };
+        return {
+            props: {
+                network,
+                movies,
+                tvShows,
+                config
+            }
+        };
+    } catch (err) {
+        return {
+            notFound: true
+        };
+    }
 };
 
 export const getStaticPaths: GetStaticPaths = async () => {

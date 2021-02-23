@@ -107,46 +107,52 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
     let config: TMDBConfig;
     let knownFor: KnownForEntity[];
 
-    const { data: configData } = await tmdbFetch.get('/configuration');
+    try {
+        const { data: configData } = await tmdbFetch.get('/configuration');
 
-    const { data }: { data: PersonDetails } = await tmdbFetch.get(
-        `/person/${id}`,
-        {
-            params: {
-                append_to_response: 'combined_credits,images'
+        const { data }: { data: PersonDetails } = await tmdbFetch.get(
+            `/person/${id}`,
+            {
+                params: {
+                    append_to_response: 'combined_credits,images'
+                }
             }
-        }
-    );
+        );
 
-    const { combined_credits, known_for_department } = data;
+        const { combined_credits, known_for_department } = data;
 
-    let knownForEntries = combined_credits[
-        known_for_department === 'Acting' ? 'cast' : 'crew'
-    ] as CombinedCrewEntityAndCastEntity[];
-    knownForEntries.sort((first, second) => {
-        if (first.vote_count < second.vote_count) return 1;
-        if (first.vote_count > second.vote_count) return -1;
-        return 0;
-    });
+        let knownForEntries = combined_credits[
+            known_for_department === 'Acting' ? 'cast' : 'crew'
+        ] as CombinedCrewEntityAndCastEntity[];
+        knownForEntries.sort((first, second) => {
+            if (first.vote_count < second.vote_count) return 1;
+            if (first.vote_count > second.vote_count) return -1;
+            return 0;
+        });
 
-    // Remove duplicates
-    knownForEntries = knownForEntries.filter(
-        ({ id }, index, self) =>
-            index === self.findIndex(({ id: searchId }) => searchId === id)
-    );
+        // Remove duplicates
+        knownForEntries = knownForEntries.filter(
+            ({ id }, index, self) =>
+                index === self.findIndex(({ id: searchId }) => searchId === id)
+        );
 
-    knownFor = knownForEntries.slice(0, 10) as KnownForEntity[];
+        knownFor = knownForEntries.slice(0, 10) as KnownForEntity[];
 
-    config = configData;
-    personData = data;
+        config = configData;
+        personData = data;
 
-    return {
-        props: {
-            personData,
-            knownFor,
-            config
-        }
-    };
+        return {
+            props: {
+                personData,
+                knownFor,
+                config
+            }
+        };
+    } catch (err) {
+        return {
+            notFound: true
+        };
+    }
 };
 
 export const getStaticPaths: GetStaticPaths = async () => {

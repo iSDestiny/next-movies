@@ -56,36 +56,42 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
     let config: TMDBConfig;
     let keyword: GenresEntityOrKeywordsEntity;
 
-    const { data: configData } = await tmdbFetch.get('/configuration');
-    const { data: tvData } = await tmdbFetch.get('/discover/tv', {
-        params: {
-            with_keywords: id
-        }
-    });
-    const { data: movieData } = await tmdbFetch.get('/discover/movie', {
-        params: {
-            with_keywords: id
-        }
-    });
-    const {
-        data: keywordData
-    }: { data: GenresEntityOrKeywordsEntity } = await tmdbFetch.get(
-        `/keyword/${id}`
-    );
+    try {
+        const { data: configData } = await tmdbFetch.get('/configuration');
+        const { data: tvData } = await tmdbFetch.get('/discover/tv', {
+            params: {
+                with_keywords: id
+            }
+        });
+        const { data: movieData } = await tmdbFetch.get('/discover/movie', {
+            params: {
+                with_keywords: id
+            }
+        });
+        const {
+            data: keywordData
+        }: { data: GenresEntityOrKeywordsEntity } = await tmdbFetch.get(
+            `/keyword/${id}`
+        );
 
-    config = configData;
-    movies = movieData;
-    tvShows = tvData;
-    keyword = keywordData;
+        config = configData;
+        movies = movieData;
+        tvShows = tvData;
+        keyword = keywordData;
 
-    return {
-        props: {
-            keyword,
-            movies,
-            tvShows,
-            config
-        }
-    };
+        return {
+            props: {
+                keyword,
+                movies,
+                tvShows,
+                config
+            }
+        };
+    } catch (err) {
+        return {
+            notFound: true
+        };
+    }
 };
 
 export const getStaticPaths: GetStaticPaths = async () => {
