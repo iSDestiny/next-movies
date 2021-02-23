@@ -648,3 +648,13 @@ interface CertificationDetails {
     meaning?: string;
     order?: number;
 }
+
+interface ResponseWithResults<T> {
+    data: {
+        results: T[];
+    };
+}
+
+interface ResponseWithDetails<T> {
+    data: T;
+}

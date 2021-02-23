@@ -2,6 +2,7 @@ import useDiscover from 'hooks/useDiscover';
 import GeneralLayout from 'layouts/GeneralLayout';
 import SpecficFilterLayout from 'layouts/SpecficFilterLayout';
 import { GetStaticPaths, GetStaticProps } from 'next';
+import { useRouter } from 'next/router';
 import { ungzip } from 'node-gzip';
 import React, { useEffect } from 'react';
 import addLeadingZeroToDate from 'utils/addLeadingZeroToDate';
@@ -16,6 +17,10 @@ interface NetworkProps {
 }
 
 const Network = ({ network, movies, tvShows, config }: NetworkProps) => {
+    const router = useRouter();
+
+    if (router.isFallback) return <div>Loading...</div>;
+
     const movieCategory = useDiscover(
         'movie',
         movies as PopularMoviesAndPopularTVShows,
@@ -78,6 +83,8 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
         tvShows = tvData;
         network = companyData;
 
+        if (!network) throw new Error('network is null');
+
         return {
             props: {
                 network,
@@ -125,30 +132,51 @@ export const getStaticPaths: GetStaticPaths = async () => {
 
     const {
         data: { results: popularTVShowData }
-    }: { data: { results: TVShow[] } } = await tmdbFetch.get('/tv/popular');
+    }: ResponseWithResults<TVShow> = await tmdbFetch.get('/tv/popular');
 
     const {
         data: { results: topRatedTVShowData }
-    }: { data: { results: TVShow[] } } = await tmdbFetch.get('/tv/top_rated');
+    }: ResponseWithResults<TVShow> = await tmdbFetch.get('/tv/top_rated');
 
     const {
         data: { results: onTheAirTVShowData }
-    }: { data: { results: TVShow[] } } = await tmdbFetch.get('/tv/on_the_air');
+    }: ResponseWithResults<TVShow> = await tmdbFetch.get('/tv/on_the_air');
 
     const {
         data: { results: airingTodayTVShowData }
-    }: { data: { results: TVShow[] } } = await tmdbFetch.get(
-        '/tv/airing_today'
-    );
+    }: ResponseWithResults<TVShow> = await tmdbFetch.get('/tv/airing_today');
+
+    const {
+        data: { results: trendingData }
+    }: ResponseWithResults<TVShow> = await tmdbFetch.get('/trending/tv/week');
 
     const relevantTVData = [
         ...popularTVShowData,
         ...topRatedTVShowData,
         ...onTheAirTVShowData,
-        ...airingTodayTVShowData
+        ...airingTodayTVShowData,
+        ...trendingData
     ];
-    const relevantTVIds = new Set(relevantTVData.map(({ id }) => id));
-    ids = ids.filter((id) => relevantTVIds.has(id));
+    const relevantTVIds = [...new Set(relevantTVData.map(({ id }) => id))];
+    const relevantTVDetailsRes = (await Promise.allSettled(
+        relevantTVIds.map((id) => {
+            return tmdbFetch.get(`/tv/${id}`);
+        })
+    )) as any;
+
+    const relevantNetworks = relevantTVDetailsRes.map(
+        ({
+            status,
+            value
+        }: {
+            status: string;
+            value: { data: TVShowDetails };
+        }) => (status === 'fulfilled' ? value.data.networks : null)
+    ) as NetworksEntity[];
+    const relevantNetworkIds = new Set(
+        relevantNetworks.flat().map(({ id }) => id)
+    );
+    ids = ids.filter((id) => relevantNetworkIds.has(id));
 
     const paths = ids.map((id) => {
         if (id) return { params: { id: id + '' } };
