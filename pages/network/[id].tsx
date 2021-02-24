@@ -108,34 +108,6 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
 };
 
 export const getStaticPaths: GetStaticPaths = async () => {
-    let ids: number[];
-    const date = new Date();
-    date.setDate(date.getDate() - 2);
-    const month = date.getMonth() + 1;
-    const day = date.getDate();
-    const year = date.getFullYear();
-    const res = await tmdbFetchGzip.get(
-        `/tv_network_ids_${addLeadingZeroToDate(month)}_${addLeadingZeroToDate(
-            day
-        )}_${year}.json.gz`,
-        {
-            responseType: 'arraybuffer',
-            headers: {
-                'Accept-Encoding': 'gzip'
-            }
-        }
-    );
-
-    const uncompressed = await ungzip(res.data);
-    ids = uncompressed
-        .toString()
-        .trim()
-        .split('\n')
-        .map((line) => {
-            const json = JSON.parse(line);
-            return json.id;
-        });
-
     const {
         data: { results: popularTVShowData }
     }: ResponseWithResults<TVShow> = await tmdbFetch.get('/tv/popular');
@@ -179,12 +151,11 @@ export const getStaticPaths: GetStaticPaths = async () => {
             value: { data: TVShowDetails };
         }) => (status === 'fulfilled' ? value.data.networks : null)
     ) as NetworksEntity[];
-    const relevantNetworkIds = new Set(
-        relevantNetworks.flat().map(({ id }) => id)
-    );
-    ids = ids.filter((id) => relevantNetworkIds.has(id));
+    const relevantNetworkIds = [
+        ...new Set(relevantNetworks.flat().map(({ id }) => id))
+    ];
 
-    const paths = ids.map((id) => {
+    const paths = relevantNetworkIds.map((id) => {
         if (id) return { params: { id: id + '' } };
         console.log('error' + id);
         return { params: { id: null } };
