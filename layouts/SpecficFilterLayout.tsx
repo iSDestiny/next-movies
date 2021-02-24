@@ -123,7 +123,8 @@ const LayoutHeader = ({
     selected,
     setSelected,
     config,
-    company
+    company,
+    type
 }: LayoutHeaderProps) => {
     const { colorMode } = useColorMode();
     const [gray300, gray700] = useToken('colors', ['gray.300', 'gray.700']);
@@ -188,25 +189,27 @@ const LayoutHeader = ({
                 justify="center"
                 p={{ base: '0.3rem', sm: '0.5rem' }}
             >
-                <Menu>
-                    <MenuButton
-                        as={Button}
-                        variant="ghost"
-                        rightIcon={<FaCaretDown />}
-                    >
-                        {selected === 0 ? 'Movies' : 'TV Shows'}
-                    </MenuButton>
-                    <Portal>
-                        <MenuList>
-                            <MenuItem onClick={() => setSelected(0)}>
-                                Movies
-                            </MenuItem>
-                            <MenuItem onClick={() => setSelected(1)}>
-                                TV Shows
-                            </MenuItem>
-                        </MenuList>
-                    </Portal>
-                </Menu>
+                {type !== 'network' && (
+                    <Menu>
+                        <MenuButton
+                            as={Button}
+                            variant="ghost"
+                            rightIcon={<FaCaretDown />}
+                        >
+                            {selected === 0 ? 'Movies' : 'TV Shows'}
+                        </MenuButton>
+                        <Portal>
+                            <MenuList>
+                                <MenuItem onClick={() => setSelected(0)}>
+                                    Movies
+                                </MenuItem>
+                                <MenuItem onClick={() => setSelected(1)}>
+                                    TV Shows
+                                </MenuItem>
+                            </MenuList>
+                        </Portal>
+                    </Menu>
+                )}
                 <Menu>
                     <MenuButton
                         as={Button}
@@ -280,9 +283,10 @@ const SpecficFilterLayout = ({
     categories,
     heading,
     config,
-    company
+    company,
+    type
 }: LayoutProps) => {
-    const [selected, setSelected] = useState(0);
+    const [selected, setSelected] = useState(type === 'network' ? 1 : 0);
     const isLoading = categories[selected]?.isLoading;
     const page = categories[selected].page;
 
@@ -299,6 +303,7 @@ const SpecficFilterLayout = ({
                 company={company}
                 selected={selected}
                 setSelected={setSelected}
+                type={type}
             />
             <Box width="100%" maxWidth="1400px" m="auto" p="1rem">
                 <CardGrid

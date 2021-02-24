@@ -23,7 +23,7 @@ const Network = ({ network, movies, tvShows, config }: NetworkProps) => {
     if (router.isFallback)
         return (
             <GeneralLayout title={`Loading Network...`}>
-                <SpecificFilterFallbackSkeleton type="company" />
+                <SpecificFilterFallbackSkeleton type="network" />
             </GeneralLayout>
         );
 
@@ -48,7 +48,7 @@ const Network = ({ network, movies, tvShows, config }: NetworkProps) => {
     return (
         <GeneralLayout title={`TV Shows on ${network.name}`}>
             <SpecficFilterLayout
-                type="company"
+                type="network"
                 config={config}
                 heading={network.name}
                 categories={categories}

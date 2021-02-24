@@ -101,14 +101,17 @@ const FallbackSkeletonHeader = ({
                     </Skeleton>
                 </HStack>
             </Box>
-            {type === 'company' && <MetaDataBarSkeleton />}
+            {(type === 'company' || type === 'network') && (
+                <MetaDataBarSkeleton />
+            )}
             <HStack
                 width="100%"
                 justify="center"
+                spacing="1rem"
                 p={{ base: '0.3rem', sm: '0.5rem' }}
             >
-                <Skeleton width="50px" height="20px" />
-                <Skeleton width="50px" height="20px" />
+                <Skeleton width="70px" height="35px" />
+                <Skeleton width="70px" height="35px" />
             </HStack>
         </VStack>
     );
