@@ -1,19 +1,20 @@
-import { Box, ButtonProps, useBreakpointValue } from '@chakra-ui/react';
+import { ButtonProps, useBreakpointValue } from '@chakra-ui/react';
 import {
-    Paginator,
-    Previous,
+    Container,
     Next,
     PageGroup,
-    Container
+    Paginator,
+    Previous
 } from 'chakra-paginator';
 import { FaCaretLeft, FaCaretRight } from 'react-icons/fa';
 
 interface PaginatorProps {
     quantity: number;
     pageChangeHandler: (currentPage: number) => void;
+    page?: number;
 }
 
-const Pagination = ({ quantity, pageChangeHandler }: PaginatorProps) => {
+const Pagination = ({ quantity, pageChangeHandler, page }: PaginatorProps) => {
     const btnSize = useBreakpointValue({ base: 'sm', lg: 'md' });
     const limit = useBreakpointValue({ base: 1, md: 2 });
 
@@ -49,6 +50,7 @@ const Pagination = ({ quantity, pageChangeHandler }: PaginatorProps) => {
             innerLimit={limit}
             outerLimit={limit}
             pagesQuantity={quantity}
+            currentPage={page}
             onPageChange={pageChangeHandler}
         >
             <Container align="center" justify="space-between" w="full">

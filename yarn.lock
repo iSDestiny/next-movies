@@ -1570,10 +1570,10 @@ caniuse-lite@^1.0.30001093, caniuse-lite@^1.0.30001113, caniuse-lite@^1.0.300011
   resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30001178.tgz#3ad813b2b2c7d585b0be0a2440e1e233c6eabdbc"
   integrity sha512-VtdZLC0vsXykKni8Uztx45xynytOi71Ufx9T8kHptSw9AL4dpqailUJJHavttuzUe1KYuBYtChiWv+BAb7mPmQ==
 
-chakra-paginator@^0.5.3:
-  version "0.5.3"
-  resolved "https://registry.yarnpkg.com/chakra-paginator/-/chakra-paginator-0.5.3.tgz#1887daff607a99a88303124f79f139bb624be0d4"
-  integrity sha512-rYT4S0epl1xT/VEA4gIolq7OuxyPwdweZykdbkvo6t4qnW6X9gfxw1LVCBRBxLvaI8p8x+mC3suOzbcrzbNLmg==
+chakra-paginator@^0.6.3:
+  version "0.6.3"
+  resolved "https://registry.yarnpkg.com/chakra-paginator/-/chakra-paginator-0.6.3.tgz#fd512ce8fbb2e88dc8ef3137d2be767b05a99f59"
+  integrity sha512-mFFsH6+DbiRi3NhKPX70iQBB223Djp8P8ykpUejisTpoK8cNG3YYajzAlOS9ziinb19iYVnmn3II1Qf+AMy3zg==
   dependencies:
     lodash.union "^4.6.0"
 

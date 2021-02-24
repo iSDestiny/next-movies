@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
-import useSWR from 'swr';
+import useSWR from 'hooks/useSwr';
 import axios from 'axios';
+import isObjectNotNull from 'utils/isObjectNotNull';
 
 // CONVERT TO LAMBDA TO AVOID EXPOSING API KEY
 
@@ -18,9 +19,9 @@ export interface Filters {
     includeGenres?: string[] | string;
     excludeGenres?: string[] | string;
     includeKeywords?: string[] | string;
-    watchProviders?: string;
-    includeCompanies?: string;
-    includeNetworks?: string;
+    watchProviders?: number | string;
+    includeCompanies?: number | string;
+    includeNetworks?: number | string;
     language?: string;
 }
 
@@ -96,7 +97,8 @@ const fetchDiscover = async (
 const useDiscover = (
     type: string,
     initialData?: PopularMoviesAndPopularTVShows,
-    initialFilters?: Filters
+    initialFilters?: Filters,
+    shouldFetch?: boolean
 ) => {
     const [page, setPage] = useState(1);
     const [filters, setFilters] = useState<Filters>(
@@ -104,24 +106,27 @@ const useDiscover = (
     );
     const [sort, setSort] = useState('popularity.desc');
 
-    const initialKey = [
-        `/api/discover/${type}`,
-        1,
-        'popularity.desc',
-        initialFilters
-    ];
+    // const initialKey = [
+    //     `/api/discover/${type}`,
+    //     1,
+    //     'popularity.desc',
+    //     initialFilters
+    // ];
     const key = [`/api/discover/${type}`, page, sort, filters];
 
-    const { data, error } = useSWR<PopularMoviesAndPopularTVShows>(
-        key,
+    const { data, error } = useSWR<PopularMoviesAndPopularTVShows, any>(
+        shouldFetch ? key : null,
         fetchDiscover,
-        { initialData: key === initialKey ? initialData : undefined }
+        { initialData }
     );
 
     useEffect(() => {
-        console.log(page);
-        console.log(data);
-    }, [page, data]);
+        console.log(data?.page, data);
+    }, [data]);
+
+    useEffect(() => {
+        setFilters(initialFilters);
+    }, [shouldFetch]);
 
     return {
         data,

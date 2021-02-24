@@ -1,13 +1,10 @@
-import useDiscover, { Filters } from 'hooks/useDiscover';
+import useDiscover from 'hooks/useDiscover';
 import GeneralLayout from 'layouts/GeneralLayout';
 import SpecficFilterLayout from 'layouts/SpecficFilterLayout';
 import { GetStaticPaths, GetStaticProps } from 'next';
-import { ungzip } from 'node-gzip';
-import React, { useEffect, useState } from 'react';
-import addLeadingZeroToDate from 'utils/addLeadingZeroToDate';
+import React from 'react';
 import replaceSpacesWithDashes from 'utils/replaceSpacesWithDashes';
 import tmdbFetch from 'utils/tmdbFetch';
-import tmdbFetchGzip from 'utils/tmdbFetchGzip';
 
 interface GenreProps {
     genre: GenresEntityOrKeywordsEntity;

@@ -5,7 +5,7 @@ import SpecificFilterFallbackSkeleton from 'layouts/SpecificFilterLayoutSkeleton
 import { GetStaticPaths, GetStaticProps } from 'next';
 import { useRouter } from 'next/router';
 import { ungzip } from 'node-gzip';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import addLeadingZeroToDate from 'utils/addLeadingZeroToDate';
 import getAllFetchResponseResults from 'utils/getAllFetchResponseResults';
 import tmdbFetch from 'utils/tmdbFetch';
@@ -21,30 +21,26 @@ interface NetworkProps {
 const Network = ({ network, movies, tvShows, config }: NetworkProps) => {
     const router = useRouter();
 
+    const tvShowCategory = useDiscover(
+        'tv',
+        tvShows as PopularMoviesAndPopularTVShows,
+        { includeNetworks: network ? network.id : null },
+        Boolean(network?.id)
+    );
+
+    const categories = [null, tvShowCategory];
+
+    useEffect(() => {
+        console.log(network);
+        console.log(tvShows);
+    }, [network]);
+
     if (router.isFallback)
         return (
             <GeneralLayout title={`Loading Network...`}>
                 <SpecificFilterFallbackSkeleton type="network" />
             </GeneralLayout>
         );
-
-    const movieCategory = useDiscover(
-        'movie',
-        movies as PopularMoviesAndPopularTVShows,
-        { includeNetworks: network.id + '' }
-    );
-    const tvShowCategory = useDiscover(
-        'tv',
-        tvShows as PopularMoviesAndPopularTVShows,
-        { includeNetworks: network.id + '' }
-    );
-
-    const categories = [movieCategory, tvShowCategory];
-
-    useEffect(() => {
-        console.log(network);
-        console.log(categories);
-    }, []);
 
     return (
         <GeneralLayout title={`TV Shows on ${network.name}`}>
@@ -61,7 +57,6 @@ const Network = ({ network, movies, tvShows, config }: NetworkProps) => {
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
     const { id } = params;
-    let movies: PopularMovies;
     let tvShows: PopularTVShows;
     let config: TMDBConfig;
     let network: ProductionCompanyDetails;
@@ -70,15 +65,10 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
         const { data: configData } = await tmdbFetch.get('/configuration');
         const { data: tvData } = await tmdbFetch.get('/discover/tv', {
             params: {
-                with_companies: id
+                with_networks: id
             }
         });
 
-        const { data: movieData } = await tmdbFetch.get('/discover/movie', {
-            params: {
-                with_companies: id
-            }
-        });
         const {
             data: companyData
         }: { data: ProductionCompanyDetails } = await tmdbFetch.get(
@@ -86,7 +76,6 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
         );
 
         config = configData;
-        movies = movieData;
         tvShows = tvData;
         network = companyData;
 
@@ -95,7 +84,6 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
         return {
             props: {
                 network,
-                movies,
                 tvShows,
                 config
             },

@@ -318,7 +318,7 @@ const SpecficFilterLayout = ({
                     minHeight="50px"
                     minWidth="100%"
                 >
-                    {categories && (
+                    {!isLoading && (
                         <>
                             <Box
                                 display={
@@ -331,6 +331,7 @@ const SpecficFilterLayout = ({
                                 <Pagination
                                     quantity={categories[0]?.data?.total_pages}
                                     pageChangeHandler={categories[0]?.setPage}
+                                    page={categories[0]?.data?.page}
                                 />
                             </Box>
                             <Box
@@ -344,6 +345,7 @@ const SpecficFilterLayout = ({
                                 <Pagination
                                     quantity={categories[1]?.data?.total_pages}
                                     pageChangeHandler={categories[1]?.setPage}
+                                    page={categories[1]?.data?.page}
                                 />
                             </Box>
                         </>
