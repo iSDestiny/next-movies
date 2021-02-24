@@ -7,6 +7,7 @@ import { useRouter } from 'next/router';
 import { ungzip } from 'node-gzip';
 import React, { useEffect } from 'react';
 import addLeadingZeroToDate from 'utils/addLeadingZeroToDate';
+import getAllFetchResponseResults from 'utils/getAllFetchResponseResults';
 import tmdbFetch from 'utils/tmdbFetch';
 import tmdbFetchGzip from 'utils/tmdbFetchGzip';
 
@@ -108,33 +109,13 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
 };
 
 export const getStaticPaths: GetStaticPaths = async () => {
-    const {
-        data: { results: popularTVShowData }
-    }: ResponseWithResults<TVShow> = await tmdbFetch.get('/tv/popular');
-
-    const {
-        data: { results: topRatedTVShowData }
-    }: ResponseWithResults<TVShow> = await tmdbFetch.get('/tv/top_rated');
-
-    const {
-        data: { results: onTheAirTVShowData }
-    }: ResponseWithResults<TVShow> = await tmdbFetch.get('/tv/on_the_air');
-
-    const {
-        data: { results: airingTodayTVShowData }
-    }: ResponseWithResults<TVShow> = await tmdbFetch.get('/tv/airing_today');
-
-    const {
-        data: { results: trendingData }
-    }: ResponseWithResults<TVShow> = await tmdbFetch.get('/trending/tv/week');
-
-    const relevantTVData = [
-        ...popularTVShowData,
-        ...topRatedTVShowData,
-        ...onTheAirTVShowData,
-        ...airingTodayTVShowData,
-        ...trendingData
-    ];
+    const relevantTVData = await getAllFetchResponseResults<TVShow>([
+        '/tv/popular',
+        '/tv/top_rated',
+        '/tv/on_the_air',
+        '/tv/airing_today',
+        '/trending/tv/week'
+    ]);
     const relevantTVIds = [...new Set(relevantTVData.map(({ id }) => id))];
     const relevantTVDetailsRes = (await Promise.allSettled(
         relevantTVIds.map((id) => {
