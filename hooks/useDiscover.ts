@@ -106,12 +106,6 @@ const useDiscover = (
     );
     const [sort, setSort] = useState('popularity.desc');
 
-    // const initialKey = [
-    //     `/api/discover/${type}`,
-    //     1,
-    //     'popularity.desc',
-    //     initialFilters
-    // ];
     const key = [`/api/discover/${type}`, page, sort, filters];
 
     const { data, error } = useSWR<PopularMoviesAndPopularTVShows, any>(

@@ -31,7 +31,6 @@ const PersonSideData = ({ personData, config }: PersonSideDataProps) => {
         deathday,
         combined_credits,
         gender,
-        homepage,
         known_for_department,
         place_of_birth,
         profile_path
@@ -39,15 +38,16 @@ const PersonSideData = ({ personData, config }: PersonSideDataProps) => {
     const known_credits =
         combined_credits[known_for_department === 'Acting' ? 'cast' : 'crew']
             .length;
+    const birthdayBody = deathday
+        ? birthday
+        : `${birthday} (${calculateAge(new Date(birthday))} years old)`;
     const personalInfo = [
-        { heading: 'Known For', body: known_for_department },
-        { heading: 'Known Credits', body: known_credits },
+        { heading: 'Known For', body: known_for_department || '-' },
+        { heading: 'Known Credits', body: known_credits ? known_credits : 0 },
         { heading: 'Gender', body: gender === 2 ? 'Male' : 'Female' },
         {
             heading: 'Birthday',
-            body: deathday
-                ? birthday
-                : `${birthday} (${calculateAge(new Date(birthday))} years old)`
+            body: birthday ? birthdayBody : '-'
         },
         {
             heading: 'Day of Death',
@@ -85,7 +85,11 @@ const PersonSideData = ({ personData, config }: PersonSideDataProps) => {
                 {dimensions && (
                     <Image
                         className="border-round"
-                        src={`${secure_base_url}${profile_sizes[profileSize]}${profile_path}`}
+                        src={
+                            profile_path
+                                ? `${secure_base_url}${profile_sizes[profileSize]}${profile_path}`
+                                : '/images/profile-placeholder.png'
+                        }
                         alt={`${name} profile`}
                         width={dimensions[0]}
                         height={dimensions[1]}
@@ -134,15 +138,21 @@ const PersonSideData = ({ personData, config }: PersonSideDataProps) => {
                             listStyleType="none"
                             spacing="0.2rem"
                         >
-                            {also_known_as.map((name, index) => (
-                                <Text
-                                    as="li"
-                                    fontSize={textSize}
-                                    key={`${name}-${index}`}
-                                >
-                                    {name}
-                                </Text>
-                            ))}
+                            {also_known_as && also_known_as.length > 0 ? (
+                                <>
+                                    {also_known_as.map((name, index) => (
+                                        <Text
+                                            as="li"
+                                            fontSize={textSize}
+                                            key={`${name}-${index}`}
+                                        >
+                                            {name}
+                                        </Text>
+                                    ))}
+                                </>
+                            ) : (
+                                <Text size="sm">-</Text>
+                            )}
                         </VStack>
                     </GridItem>
                 </Grid>

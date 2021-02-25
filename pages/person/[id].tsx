@@ -73,7 +73,8 @@ const Person = ({ personData, config, knownFor }: PersonProps) => {
                             Biography
                         </Heading>
                         <Text fontSize={{ base: 'sm', md: 'md' }}>
-                            {biography}
+                            {biography ||
+                                `We don't have a biography for ${name}`}
                         </Text>
                     </Box>
                     <Box width="100%">

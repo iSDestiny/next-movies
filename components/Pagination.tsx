@@ -32,7 +32,6 @@ const Pagination = ({ quantity, pageChangeHandler, page }: PaginatorProps) => {
 
     const activeStyles: ButtonProps = {
         ...baseStyles,
-
         colorScheme: 'teal'
     };
 
