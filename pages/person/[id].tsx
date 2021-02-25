@@ -81,20 +81,24 @@ const Person = ({ personData, config, knownFor }: PersonProps) => {
                         <Heading size="md" mb="0.5rem">
                             Known for
                         </Heading>
-                        <ShowCarousel
-                            name="known for"
-                            items={knownFor}
-                            base_url={secure_base_url}
-                            poster_sizes={poster_sizes}
-                            noOfSlides={noOfSlides}
-                            naturalHeight={2300}
-                            starSize={starSize}
-                            headingSize={carouselHeadingSize}
-                            ratingSize={ratingSize}
-                            buttonSize={buttonSize}
-                        />
+                        {knownFor?.length > 0 ? (
+                            <ShowCarousel
+                                name="known for"
+                                items={knownFor}
+                                base_url={secure_base_url}
+                                poster_sizes={poster_sizes}
+                                noOfSlides={noOfSlides}
+                                naturalHeight={2300}
+                                starSize={starSize}
+                                headingSize={carouselHeadingSize}
+                                ratingSize={ratingSize}
+                                buttonSize={buttonSize}
+                            />
+                        ) : (
+                            <Text size="sm">{`${name} is not known for any movies or tv shows`}</Text>
+                        )}
                     </Box>
-                    <Credits credits={combined_credits} />
+                    {combined_credits && <Credits credits={combined_credits} />}
                 </VStack>
             </Stack>
         </GeneralLayout>
