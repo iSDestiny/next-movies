@@ -4,21 +4,17 @@ import SpecficFilterLayout from 'layouts/SpecficFilterLayout';
 import SpecificFilterFallbackSkeleton from 'layouts/SpecificFilterLayoutSkeleton';
 import { GetStaticPaths, GetStaticProps } from 'next';
 import { useRouter } from 'next/router';
-import { ungzip } from 'node-gzip';
-import React, { useEffect, useState } from 'react';
-import addLeadingZeroToDate from 'utils/addLeadingZeroToDate';
+import React, { useEffect } from 'react';
 import getAllFetchResponseResults from 'utils/getAllFetchResponseResults';
 import tmdbFetch from 'utils/tmdbFetch';
-import tmdbFetchGzip from 'utils/tmdbFetchGzip';
 
 interface NetworkProps {
     network: ProductionCompanyDetails;
-    movies: PopularMovies;
     tvShows: PopularTVShows;
     config: TMDBConfig;
 }
 
-const Network = ({ network, movies, tvShows, config }: NetworkProps) => {
+const Network = ({ network, tvShows, config }: NetworkProps) => {
     const router = useRouter();
 
     const tvShowCategory = useDiscover(
@@ -29,11 +25,6 @@ const Network = ({ network, movies, tvShows, config }: NetworkProps) => {
     );
 
     const categories = [null, tvShowCategory];
-
-    useEffect(() => {
-        console.log(network);
-        console.log(tvShows);
-    }, [network]);
 
     if (router.isFallback)
         return (

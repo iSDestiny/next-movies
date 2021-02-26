@@ -1,7 +1,9 @@
 import useDiscover from 'hooks/useDiscover';
 import GeneralLayout from 'layouts/GeneralLayout';
 import SpecficFilterLayout from 'layouts/SpecficFilterLayout';
+import SpecificFilterFallbackSkeleton from 'layouts/SpecificFilterLayoutSkeleton';
 import { GetStaticPaths, GetStaticProps } from 'next';
+import { useRouter } from 'next/router';
 import React from 'react';
 import replaceSpacesWithDashes from 'utils/replaceSpacesWithDashes';
 import tmdbFetch from 'utils/tmdbFetch';
@@ -14,6 +16,7 @@ interface GenreProps {
 }
 
 const Genre = ({ genre, movies, tvShows, config }: GenreProps) => {
+    const router = useRouter();
     const movieCategory = useDiscover(
         'movie',
         movies as PopularMoviesAndPopularTVShows,
@@ -30,6 +33,13 @@ const Genre = ({ genre, movies, tvShows, config }: GenreProps) => {
     );
 
     const categories = [movieCategory, tvShowCategory];
+
+    if (router.isFallback)
+        return (
+            <GeneralLayout title={`Loading Network...`}>
+                <SpecificFilterFallbackSkeleton type="genre" />
+            </GeneralLayout>
+        );
 
     return (
         <GeneralLayout title={`Genre: ${genre.name}`}>
