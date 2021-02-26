@@ -4,8 +4,8 @@ import SpecficFilterLayout from 'layouts/SpecficFilterLayout';
 import SpecificFilterFallbackSkeleton from 'layouts/SpecificFilterLayoutSkeleton';
 import { GetStaticPaths, GetStaticProps } from 'next';
 import { useRouter } from 'next/router';
-import React, { useEffect } from 'react';
-import getAllFetchResponseResults from 'utils/getAllFetchResponseResults';
+import getAllCompanyOrNetworkIds from 'utils/getAllCompanyOrNetworkIds';
+import getAllFetchResponseResultIds from 'utils/getAllFetchResponseResultIds';
 import tmdbFetch from 'utils/tmdbFetch';
 
 interface NetworkProps {
@@ -88,32 +88,17 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
 };
 
 export const getStaticPaths: GetStaticPaths = async () => {
-    const relevantTVData = await getAllFetchResponseResults<TVShow>([
-        '/tv/popular',
-        '/tv/top_rated',
-        '/tv/on_the_air',
-        '/tv/airing_today',
-        '/trending/tv/week'
-    ]);
-    const relevantTVIds = [...new Set(relevantTVData.map(({ id }) => id))];
-    const relevantTVDetailsRes = (await Promise.allSettled(
-        relevantTVIds.map((id) => {
-            return tmdbFetch.get(`/tv/${id}`);
-        })
-    )) as any;
-
-    const relevantNetworks = relevantTVDetailsRes.map(
-        ({
-            status,
-            value
-        }: {
-            status: string;
-            value: { data: TVShowDetails };
-        }) => (status === 'fulfilled' ? value.data.networks : null)
-    ) as NetworksEntity[];
-    const relevantNetworkIds = [
-        ...new Set(relevantNetworks.flat().map(({ id }) => id))
-    ];
+    const relevantNetworkIds = await getAllCompanyOrNetworkIds(
+        [
+            '/tv/popular',
+            '/tv/top_rated',
+            '/tv/on_the_air',
+            '/tv/airing_today',
+            '/trending/tv/week'
+        ],
+        'tv',
+        'networks'
+    );
 
     const paths = relevantNetworkIds.map((id) => {
         if (id) return { params: { id: id + '' } };

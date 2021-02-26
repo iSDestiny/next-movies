@@ -1,12 +1,13 @@
 import useDiscover from 'hooks/useDiscover';
 import GeneralLayout from 'layouts/GeneralLayout';
 import SpecficFilterLayout from 'layouts/SpecficFilterLayout';
+import SpecificFilterFallbackSkeleton from 'layouts/SpecificFilterLayoutSkeleton';
 import { GetStaticPaths, GetStaticProps } from 'next';
-import { ungzip } from 'node-gzip';
+import { useRouter } from 'next/router';
 import React, { useEffect } from 'react';
-import addLeadingZeroToDate from 'utils/addLeadingZeroToDate';
+import getAllCompanyOrNetworkIds from 'utils/getAllCompanyOrNetworkIds';
+import getAllFetchResponseResultIds from 'utils/getAllFetchResponseResultIds';
 import tmdbFetch from 'utils/tmdbFetch';
-import tmdbFetchGzip from 'utils/tmdbFetchGzip';
 
 interface CompanyProps {
     company: ProductionCompanyDetails;
@@ -16,15 +17,18 @@ interface CompanyProps {
 }
 
 const Company = ({ company, movies, tvShows, config }: CompanyProps) => {
+    const router = useRouter();
     const movieCategory = useDiscover(
         'movie',
         movies as PopularMoviesAndPopularTVShows,
-        { includeCompanies: company.id + '' }
+        { includeCompanies: company?.id },
+        Boolean(company?.id)
     );
     const tvShowCategory = useDiscover(
         'tv',
         tvShows as PopularMoviesAndPopularTVShows,
-        { includeCompanies: company.id + '' }
+        { includeCompanies: company?.id },
+        Boolean(company?.id)
     );
 
     const categories = [movieCategory, tvShowCategory];
@@ -34,8 +38,15 @@ const Company = ({ company, movies, tvShows, config }: CompanyProps) => {
         console.log(categories);
     }, []);
 
+    if (router.isFallback)
+        return (
+            <GeneralLayout title="Loading movies and shows...">
+                <SpecificFilterFallbackSkeleton type="company" />;
+            </GeneralLayout>
+        );
+
     return (
-        <GeneralLayout title={`Keyword: "${company.name}"`}>
+        <GeneralLayout title={`Movies and Shows by "${company.name}"`}>
             <SpecficFilterLayout
                 type="company"
                 config={config}
@@ -93,35 +104,35 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
 };
 
 export const getStaticPaths: GetStaticPaths = async () => {
-    let ids: number[];
-    const date = new Date();
-    date.setDate(date.getDate() - 2);
-    const month = date.getMonth() + 1;
-    const day = date.getDate();
-    const year = date.getFullYear();
-    const res = await tmdbFetchGzip.get(
-        `/production_company_ids_${addLeadingZeroToDate(
-            month
-        )}_${addLeadingZeroToDate(day)}_${year}.json.gz`,
-        {
-            responseType: 'arraybuffer',
-            headers: {
-                'Accept-Encoding': 'gzip'
-            }
-        }
+    const relevantMovieCompanyIds = await getAllCompanyOrNetworkIds(
+        [
+            '/movie/popular',
+            '/movie/top_rated',
+            '/movie/upcoming',
+            '/movie/now_playing',
+            '/trending/movie/week'
+        ],
+        'movie',
+        'production_companies'
     );
 
-    const uncompressed = await ungzip(res.data);
-    ids = uncompressed
-        .toString()
-        .trim()
-        .split('\n')
-        .map((line) => {
-            const json = JSON.parse(line);
-            return json.id;
-        });
+    const relevantTVCompanyIds = await getAllCompanyOrNetworkIds(
+        [
+            '/tv/popular',
+            '/tv/top_rated',
+            '/tv/on_the_air',
+            '/tv/airing_today',
+            '/trending/tv/week'
+        ],
+        'tv',
+        'production_companies'
+    );
 
-    const paths = ids.map((id) => {
+    const relevantCompanyIds = [
+        ...new Set([...relevantMovieCompanyIds, ...relevantTVCompanyIds])
+    ];
+
+    const paths = relevantCompanyIds.map((id) => {
         if (id) return { params: { id: id + '' } };
         console.log('error' + id);
         return { params: { id: null } };
