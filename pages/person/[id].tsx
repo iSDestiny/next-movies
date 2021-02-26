@@ -10,10 +10,13 @@ import Credits from 'components/Credits';
 import PersonSideData from 'components/PersonSideData';
 import ShowCarousel from 'components/ShowCarousel';
 import GeneralLayout from 'layouts/GeneralLayout';
+import PersonPageSkeleton from 'layouts/PersonPageSkeleton.tsx';
 import { GetStaticPaths, GetStaticProps } from 'next';
+import { useRouter } from 'next/router';
 import { ungzip } from 'node-gzip';
 import { useEffect } from 'react';
 import addLeadingZeroToDate from 'utils/addLeadingZeroToDate';
+import getAllFetchResponseResultIds from 'utils/getAllFetchResponseResultIds';
 import tmdbFetch from 'utils/tmdbFetch';
 import tmdbFetchGzip from 'utils/tmdbFetchGzip';
 
@@ -24,7 +27,9 @@ interface PersonProps {
 }
 
 const Person = ({ personData, config, knownFor }: PersonProps) => {
-    const { name, combined_credits, biography } = personData;
+    const router = useRouter();
+
+    const { name, combined_credits, biography } = personData || {};
     const isMobile = useBreakpointValue({ base: true, lg: false });
     const noOfSlides = useBreakpointValue([3, 4, 5, 6, 7]);
     const buttonSize = ['1rem', '1.5rem', '2rem'];
@@ -43,7 +48,9 @@ const Person = ({ personData, config, knownFor }: PersonProps) => {
         console.log(knownFor);
     }, []);
 
-    const { secure_base_url, poster_sizes } = config.images;
+    const { secure_base_url, poster_sizes } = config?.images || {};
+
+    if (router.isFallback) return <PersonPageSkeleton />;
 
     return (
         <GeneralLayout title={name}>
@@ -161,33 +168,12 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
 };
 
 export const getStaticPaths: GetStaticPaths = async () => {
-    let ids: number[];
-    const date = new Date();
-    date.setDate(date.getDate() - 2);
-    const month = date.getMonth() + 1;
-    const day = date.getDate();
-    const year = date.getFullYear();
-    const res = await tmdbFetchGzip.get(
-        `/person_ids_${addLeadingZeroToDate(month)}_${addLeadingZeroToDate(
-            day
-        )}_${year}.json.gz`,
-        {
-            responseType: 'arraybuffer',
-            headers: {
-                'Accept-Encoding': 'gzip'
-            }
-        }
+    const {
+        data: { results }
+    }: ResponseWithResults<PersonResultItem> = await tmdbFetch.get(
+        '/person/popular'
     );
-
-    const uncompressed = await ungzip(res.data);
-    ids = uncompressed
-        .toString()
-        .trim()
-        .split('\n')
-        .map((line) => {
-            const json = JSON.parse(line);
-            return json.id;
-        });
+    const ids = results.map(({ id }) => id);
 
     const paths = ids.map((id) => {
         if (id) return { params: { id: id + '' } };
