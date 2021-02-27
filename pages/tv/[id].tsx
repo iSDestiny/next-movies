@@ -14,11 +14,14 @@ import ShowCarousel from 'components/ShowCarousel';
 import ShowHeader from 'components/ShowHeader';
 import ShowSideData from 'components/ShowSideData';
 import GeneralLayout from 'layouts/GeneralLayout';
+import ShowPageSkeleton from 'layouts/ShowPageSkeleton.tsx';
 import { GetStaticPaths, GetStaticProps } from 'next';
 import NextLink from 'next/link';
+import { useRouter } from 'next/router';
 import { ungzip } from 'node-gzip';
 import React, { useEffect } from 'react';
 import addLeadingZeroToDate from 'utils/addLeadingZeroToDate';
+import getAllFetchResponseResultIds from 'utils/getAllFetchResponseResultIds';
 import tmdbFetch from 'utils/tmdbFetch';
 import tmdbFetchGzip from 'utils/tmdbFetchGzip';
 
@@ -29,6 +32,8 @@ interface TVShowProps {
 }
 
 const TVShow = ({ tvShowData, config, languages }: TVShowProps) => {
+    const router = useRouter();
+
     const noOfSlides = useBreakpointValue([3, 3, 4, 4, 5]);
     const backdropSlides = useBreakpointValue({ base: 1, sm: 2 });
     const naturalHeight = useBreakpointValue([2200, 2050, 2000, 2000, 2100]);
@@ -44,12 +49,8 @@ const TVShow = ({ tvShowData, config, languages }: TVShowProps) => {
         '0.85rem',
         '0.9rem'
     ];
-    const {
-        secure_base_url,
-        poster_sizes,
-        backdrop_sizes,
-        logo_sizes
-    } = config.images;
+    const { secure_base_url, poster_sizes, backdrop_sizes, logo_sizes } =
+        config?.images || {};
     const {
         name: title,
         genres,
@@ -59,15 +60,19 @@ const TVShow = ({ tvShowData, config, languages }: TVShowProps) => {
         original_language,
         status,
         seasons,
-        keywords: { results: keywords },
+        keywords: { keywords = [] as GenresEntityOrKeywordsEntity[] } = {},
         tagline,
         overview,
         vote_average,
         vote_count,
-        videos: { results: videos },
-        recommendations: { results: recommendations },
-        similar: { results: similar },
-        content_ratings: { results: content_ratings },
+        videos: { results: videos = [] as VideoResultsEntity[] } = {},
+        recommendations: {
+            results: recommendations = [] as ResultsEntity2[]
+        } = {},
+        similar: { results: similar = [] as ResultsEntity2[] } = {},
+        content_ratings: {
+            results: content_ratings = [] as ContentResultsEntity[]
+        } = {},
         credits,
         created_by,
         type,
@@ -78,27 +83,25 @@ const TVShow = ({ tvShowData, config, languages }: TVShowProps) => {
         production_countries,
         episode_run_time: runtime,
         networks
-    } = tvShowData;
-    const certification = content_ratings.find(
+    } = tvShowData || {};
+    const certification = content_ratings?.find(
         ({ iso_3166_1 }) =>
             iso_3166_1 === 'US' ||
             iso_3166_1 === production_countries[0].iso_3166_1
     )?.rating;
-    const posters: Media[] =
-        images && images.posters
-            ? images.posters.map(({ file_path }) => ({
-                  path: `${secure_base_url}${poster_sizes[2]}${file_path}`,
-                  original: `${secure_base_url}${poster_sizes[6]}${file_path}`
-              }))
-            : [];
-    const backdrops: Media[] =
-        images && images.posters
-            ? images.backdrops.map(({ file_path }) => ({
-                  path: `${secure_base_url}${backdrop_sizes[1]}${file_path}`,
-                  original: `${secure_base_url}${backdrop_sizes[3]}${file_path}`
-              }))
-            : [];
-    const origLanguage = languages.find(
+    const posters: Media[] = images?.posters
+        ? images.posters.map(({ file_path }) => ({
+              path: `${secure_base_url}${poster_sizes[2]}${file_path}`,
+              original: `${secure_base_url}${poster_sizes[6]}${file_path}`
+          }))
+        : [];
+    const backdrops: Media[] = images?.backdrops
+        ? images.backdrops.map(({ file_path }) => ({
+              path: `${secure_base_url}${backdrop_sizes[1]}${file_path}`,
+              original: `${secure_base_url}${backdrop_sizes[3]}${file_path}`
+          }))
+        : [];
+    const origLanguage = languages?.find(
         ({ iso_639_1 }) => iso_639_1 === original_language
     ).english_name;
 
@@ -149,6 +152,8 @@ const TVShow = ({ tvShowData, config, languages }: TVShowProps) => {
     useEffect(() => {
         console.log(tvShowData);
     }, []);
+
+    if (router.isFallback) return <ShowPageSkeleton />;
 
     return (
         <GeneralLayout title={title}>
@@ -301,33 +306,13 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
 };
 
 export const getStaticPaths: GetStaticPaths = async () => {
-    let ids: number[];
-    const date = new Date();
-    date.setDate(date.getDate() - 2);
-    const month = date.getMonth() + 1;
-    const day = date.getDate();
-    const year = date.getFullYear();
-    const res = await tmdbFetchGzip.get(
-        `/tv_series_ids_${addLeadingZeroToDate(month)}_${addLeadingZeroToDate(
-            day
-        )}_${year}.json.gz`,
-        {
-            responseType: 'arraybuffer',
-            headers: {
-                'Accept-Encoding': 'gzip'
-            }
-        }
-    );
-
-    const uncompressed = await ungzip(res.data);
-    ids = uncompressed
-        .toString()
-        .trim()
-        .split('\n')
-        .map((line) => {
-            const json = JSON.parse(line);
-            return json.id;
-        });
+    const ids = await getAllFetchResponseResultIds<TVShow>([
+        '/tv/popular',
+        '/tv/top_rated',
+        '/tv/on_the_air',
+        '/tv/airing_today',
+        '/trending/tv/week'
+    ]);
 
     const paths = ids.map((id) => {
         if (id) return { params: { id: id + '' } };
