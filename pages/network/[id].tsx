@@ -4,7 +4,7 @@ import SpecficFilterLayout from 'layouts/SpecficFilterLayout';
 import SpecificFilterFallbackSkeleton from 'layouts/SpecificFilterLayoutSkeleton';
 import { GetStaticPaths, GetStaticProps } from 'next';
 import { useRouter } from 'next/router';
-import getAllCompanyOrNetworkIds from 'utils/getAllCompanyOrNetworkIds';
+import getAllShowPropertyIds from 'utils/getAllShowPropertyIds';
 import getAllFetchResponseResultIds from 'utils/getAllFetchResponseResultIds';
 import tmdbFetch from 'utils/tmdbFetch';
 
@@ -88,7 +88,10 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
 };
 
 export const getStaticPaths: GetStaticPaths = async () => {
-    const relevantNetworkIds = await getAllCompanyOrNetworkIds(
+    const relevantNetworkIds = await getAllShowPropertyIds<
+        TVShow,
+        NetworksEntityOrProductionCompaniesEntity
+    >(
         [
             '/tv/popular',
             '/tv/top_rated',

@@ -1,12 +1,14 @@
 import useDiscover from 'hooks/useDiscover';
 import GeneralLayout from 'layouts/GeneralLayout';
 import SpecficFilterLayout from 'layouts/SpecficFilterLayout';
+import SpecificFilterFallbackSkeleton from 'layouts/SpecificFilterLayoutSkeleton';
 import { GetStaticPaths, GetStaticProps } from 'next';
-import { ungzip } from 'node-gzip';
-import React, { useEffect } from 'react';
-import addLeadingZeroToDate from 'utils/addLeadingZeroToDate';
+import { useRouter } from 'next/router';
+import React from 'react';
+import getAllFetchResponseResultIds, {
+    HasId
+} from 'utils/getAllFetchResponseResultIds';
 import tmdbFetch from 'utils/tmdbFetch';
-import tmdbFetchGzip from 'utils/tmdbFetchGzip';
 
 interface KeywordProps {
     keyword: GenresEntityOrKeywordsEntity;
@@ -16,27 +18,33 @@ interface KeywordProps {
 }
 
 const Keyword = ({ keyword, movies, tvShows, config }: KeywordProps) => {
+    const router = useRouter();
+
     const movieCategory = useDiscover(
         'movie',
         movies as PopularMoviesAndPopularTVShows,
         {
-            includeKeywords: keyword.id + ''
-        }
+            includeKeywords: keyword ? keyword.id + '' : null
+        },
+        Boolean(keyword?.id)
     );
     const tvShowCategory = useDiscover(
         'tv',
         tvShows as PopularMoviesAndPopularTVShows,
         {
-            includeKeywords: keyword.id + ''
-        }
+            includeKeywords: keyword ? keyword.id + '' : null
+        },
+        Boolean(keyword?.id)
     );
 
     const categories = [movieCategory, tvShowCategory];
 
-    useEffect(() => {
-        console.log(keyword);
-        console.log(categories);
-    }, []);
+    if (router.isFallback)
+        return (
+            <GeneralLayout title="Loading keyword movies and shows...">
+                <SpecificFilterFallbackSkeleton />
+            </GeneralLayout>
+        );
 
     return (
         <GeneralLayout title={`Keyword: "${keyword.name}"`}>
@@ -95,34 +103,58 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
     }
 };
 
+async function getKeywordIds<T extends HasId>(
+    paths: string[],
+    media_type: 'movie' | 'tv'
+) {
+    const results = await getAllFetchResponseResultIds<T>(paths);
+    const details = (await Promise.allSettled(
+        results.map((id) =>
+            tmdbFetch.get(`/${media_type}/${id}`, {
+                params: {
+                    append_to_response: 'keywords'
+                }
+            })
+        )
+    )) as any;
+    const relevantItems = details.map(
+        ({
+            status,
+            value
+        }: {
+            status: string;
+            value: { data: TVShowDetails | MovieDetails };
+        }) => (status === 'fulfilled' ? value.data.keywords.keywords : null)
+    ) as GenresEntityOrKeywordsEntity[];
+    return [...new Set(relevantItems.flat().map((keyword) => keyword?.id))];
+}
+
 export const getStaticPaths: GetStaticPaths = async () => {
-    let ids: number[];
-    const date = new Date();
-    date.setDate(date.getDate() - 2);
-    const month = date.getMonth() + 1;
-    const day = date.getDate();
-    const year = date.getFullYear();
-    const res = await tmdbFetchGzip.get(
-        `/keyword_ids_${addLeadingZeroToDate(month)}_${addLeadingZeroToDate(
-            day
-        )}_${year}.json.gz`,
-        {
-            responseType: 'arraybuffer',
-            headers: {
-                'Accept-Encoding': 'gzip'
-            }
-        }
+    const movieKeywordIds = await getKeywordIds<Movie>(
+        [
+            '/movie/popular',
+            '/movie/top_rated',
+            '/movie/upcoming',
+            '/movie/now_playing',
+            '/trending/movie/week'
+        ],
+        'movie'
     );
 
-    const uncompressed = await ungzip(res.data);
-    ids = uncompressed
-        .toString()
-        .trim()
-        .split('\n')
-        .map((line) => {
-            const json = JSON.parse(line);
-            return json.id;
-        });
+    const tvShowKeywordIds = await getKeywordIds<TVShow>(
+        [
+            '/tv/popular',
+            '/tv/top_rated',
+            '/tv/on_the_air',
+            '/tv/airing_today',
+            '/trending/tv/week'
+        ],
+        'tv'
+    );
+
+    const ids = [...new Set([...tvShowKeywordIds, ...movieKeywordIds])].filter(
+        (id) => id !== null && id !== undefined
+    );
 
     const paths = ids.map((id) => {
         if (id) return { params: { id: id + '' } };

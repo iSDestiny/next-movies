@@ -3,14 +3,20 @@ import getAllFetchResponseResultIds, {
 } from 'utils/getAllFetchResponseResultIds';
 import tmdbFetch from './tmdbFetch';
 
-async function getAllCompanyOrNetworkIds<T extends HasId>(
+async function getAllShowPropertyIds<T extends HasId, A extends HasId>(
     paths: string[],
     media_type: 'tv' | 'movie',
-    prop_type: 'production_companies' | 'networks'
+    prop_type: string
 ) {
     const results = await getAllFetchResponseResultIds<T>(paths);
     const details = (await Promise.allSettled(
-        results.map((id) => tmdbFetch.get(`${media_type}/${id}`))
+        results.map((id) =>
+            tmdbFetch.get(`/${media_type}/${id}`, {
+                params: {
+                    append_to_response: 'keywords'
+                }
+            })
+        )
     )) as any;
     const relevantItems = details.map(
         ({
@@ -18,10 +24,10 @@ async function getAllCompanyOrNetworkIds<T extends HasId>(
             value
         }: {
             status: string;
-            value: { data: TVShowDetails };
+            value: { data: TVShowDetails | MovieDetails };
         }) => (status === 'fulfilled' ? value.data[prop_type] : null)
-    ) as NetworksEntityOrProductionCompaniesEntity[];
+    ) as A[];
     return [...new Set(relevantItems.flat().map(({ id }) => id))];
 }
 
-export default getAllCompanyOrNetworkIds;
+export default getAllShowPropertyIds;

@@ -5,7 +5,7 @@ import SpecificFilterFallbackSkeleton from 'layouts/SpecificFilterLayoutSkeleton
 import { GetStaticPaths, GetStaticProps } from 'next';
 import { useRouter } from 'next/router';
 import React, { useEffect } from 'react';
-import getAllCompanyOrNetworkIds from 'utils/getAllCompanyOrNetworkIds';
+import getAllShowPropertyIds from 'utils/getAllShowPropertyIds';
 import getAllFetchResponseResultIds from 'utils/getAllFetchResponseResultIds';
 import tmdbFetch from 'utils/tmdbFetch';
 
@@ -40,7 +40,7 @@ const Company = ({ company, movies, tvShows, config }: CompanyProps) => {
 
     if (router.isFallback)
         return (
-            <GeneralLayout title="Loading movies and shows...">
+            <GeneralLayout title="Loading company movies and shows...">
                 <SpecificFilterFallbackSkeleton type="company" />;
             </GeneralLayout>
         );
@@ -104,7 +104,10 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
 };
 
 export const getStaticPaths: GetStaticPaths = async () => {
-    const relevantMovieCompanyIds = await getAllCompanyOrNetworkIds(
+    const relevantMovieCompanyIds = await getAllShowPropertyIds<
+        Movie,
+        NetworksEntityOrProductionCompaniesEntity
+    >(
         [
             '/movie/popular',
             '/movie/top_rated',
@@ -116,7 +119,10 @@ export const getStaticPaths: GetStaticPaths = async () => {
         'production_companies'
     );
 
-    const relevantTVCompanyIds = await getAllCompanyOrNetworkIds(
+    const relevantTVCompanyIds = await getAllShowPropertyIds<
+        TVShow,
+        NetworksEntityOrProductionCompaniesEntity
+    >(
         [
             '/tv/popular',
             '/tv/top_rated',
