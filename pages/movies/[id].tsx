@@ -15,12 +15,9 @@ import GeneralLayout from 'layouts/GeneralLayout';
 import ShowPageSkeleton from 'layouts/ShowPageSkeleton.tsx';
 import { GetStaticPaths, GetStaticProps } from 'next';
 import { useRouter } from 'next/router';
-import { ungzip } from 'node-gzip';
 import React, { useEffect } from 'react';
-import addLeadingZeroToDate from 'utils/addLeadingZeroToDate';
 import getAllFetchResponseResultIds from 'utils/getAllFetchResponseResultIds';
 import tmdbFetch from 'utils/tmdbFetch';
-import tmdbFetchGzip from 'utils/tmdbFetchGzip';
 interface MovieProps {
     movieData: MovieDetails;
     config: TMDBConfig;

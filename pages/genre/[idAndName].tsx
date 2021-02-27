@@ -21,15 +21,17 @@ const Genre = ({ genre, movies, tvShows, config }: GenreProps) => {
         'movie',
         movies as PopularMoviesAndPopularTVShows,
         {
-            includeGenres: genre.id + ''
-        }
+            includeGenres: genre ? genre.id + '' : null
+        },
+        Boolean(genre?.id)
     );
     const tvShowCategory = useDiscover(
         'tv',
         tvShows as PopularMoviesAndPopularTVShows,
         {
-            includeGenres: genre.id + ''
-        }
+            includeGenres: genre ? genre.id + '' : null
+        },
+        Boolean(genre?.id)
     );
 
     const categories = [movieCategory, tvShowCategory];
