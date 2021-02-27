@@ -74,7 +74,7 @@ const Movie = ({ movieData, config, languages }: MovieProps) => {
     const certification = release_dates?.find(
         ({ iso_3166_1 }) =>
             iso_3166_1 === 'US' ||
-            iso_3166_1 === production_countries[0].iso_3166_1
+            iso_3166_1 === production_countries[0]?.iso_3166_1
     )?.release_dates[0].certification;
     const posters: Media[] = images?.posters
         ? images.posters.map(({ file_path }) => ({

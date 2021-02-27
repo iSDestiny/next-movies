@@ -84,7 +84,7 @@ const TVShow = ({ tvShowData, config, languages }: TVShowProps) => {
     const certification = content_ratings?.find(
         ({ iso_3166_1 }) =>
             iso_3166_1 === 'US' ||
-            iso_3166_1 === production_countries[0].iso_3166_1
+            iso_3166_1 === production_countries[0]?.iso_3166_1
     )?.rating;
     const posters: Media[] = images?.posters
         ? images.posters.map(({ file_path }) => ({
