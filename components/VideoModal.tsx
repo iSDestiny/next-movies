@@ -1,4 +1,5 @@
 import {
+    AspectRatio,
     Flex,
     Modal,
     ModalBody,
@@ -6,6 +7,7 @@ import {
     ModalContent,
     ModalHeader,
     ModalOverlay,
+    Portal,
     useBreakpointValue
 } from '@chakra-ui/react';
 import ReactPlayer from 'react-player/youtube';
@@ -18,53 +20,59 @@ interface VideoModalProps {
 }
 
 const VideoModal = ({ url, name, isOpen, onClose }: VideoModalProps) => {
-    const width = useBreakpointValue({
-        base: '365px',
-        md: '755px',
-        sm: '650px',
-        lg: '1000px',
-        xl: '1280px'
-    });
-
-    const height = useBreakpointValue({
-        base: '205px',
-        sm: '366px',
-        md: '425px',
-        lg: '563px',
-        xl: '720px'
-    });
     return (
-        <Modal
-            isOpen={isOpen}
-            onClose={onClose}
-            isCentered
-            size="6xl"
-            motionPreset="scale"
-            preserveScrollBarGap
-            blockScrollOnMount
-            allowPinchZoom
-        >
-            <ModalOverlay>
-                <ModalContent bgColor="black" as={Flex} justify="center" p="0">
-                    <ModalHeader
-                        color="white"
-                        fontSize={{ base: '1rem', md: '1.1rem', lg: '1.3rem' }}
+        <Portal>
+            <Modal
+                isOpen={isOpen}
+                onClose={onClose}
+                isCentered
+                size="6xl"
+                motionPreset="scale"
+                preserveScrollBarGap
+                blockScrollOnMount
+                allowPinchZoom
+            >
+                <ModalOverlay zIndex="9998">
+                    <ModalContent
+                        bgColor="black"
+                        justify="center"
+                        m="1rem"
+                        zIndex="9999"
                     >
-                        {name}
-                    </ModalHeader>
-                    <ModalCloseButton color="white" />
-                    <ModalBody as={Flex} justify="center" p="0px">
-                        <ReactPlayer
-                            url={url}
-                            width={width}
-                            height={height}
-                            playing
-                            controls
-                        />
-                    </ModalBody>
-                </ModalContent>
-            </ModalOverlay>
-        </Modal>
+                        <>
+                            <ModalHeader
+                                color="white"
+                                fontSize={{
+                                    base: '0.8rem',
+                                    sm: '1rem',
+                                    md: '1.1rem',
+                                    lg: '1.3rem'
+                                }}
+                            >
+                                {name}
+                            </ModalHeader>
+                            <ModalCloseButton color="white" />
+                            <ModalBody
+                                as={AspectRatio}
+                                justify="center"
+                                p="0px"
+                                ratio={1280 / 720}
+                                maxHeight="70vh"
+                                maxWidth="1280px"
+                            >
+                                <ReactPlayer
+                                    url={url}
+                                    width="100%"
+                                    height="100%"
+                                    playing
+                                    controls
+                                />
+                            </ModalBody>
+                        </>
+                    </ModalContent>
+                </ModalOverlay>
+            </Modal>
+        </Portal>
     );
 };
 
