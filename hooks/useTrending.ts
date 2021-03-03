@@ -17,7 +17,7 @@ const useTrending = (
     initialData?: Trending
 ) => {
     const [page, setPage] = useState(1);
-    const key = [`/trending/${mediaType}/${timeWindow}`, page];
+    const key = [`/api/trending/${mediaType}/${timeWindow}`, page];
 
     const { data, error } = useSWR<Trending, any>(key, fetchTrending, {
         initialData

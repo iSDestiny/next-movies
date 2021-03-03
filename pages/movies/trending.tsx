@@ -1,5 +1,6 @@
+import useTrending from 'hooks/useTrending';
 import GeneralLayout from 'layouts/GeneralLayout';
-import TrendingLayout from 'layouts/TrendingLayout';
+import TrendingLayout, { TrendingCategory } from 'layouts/TrendingLayout';
 import { GetStaticProps } from 'next';
 import { useEffect } from 'react';
 import tmdbFetch from 'utils/tmdbFetch';
@@ -7,24 +8,47 @@ import tmdbFetch from 'utils/tmdbFetch';
 interface TrendingMoviesProps {
     trendingDaily: Trending;
     trendingWeekly: Trending;
+    config: TMDBConfig;
 }
 
 const TrendingMovies = ({
     trendingDaily,
-    trendingWeekly
+    trendingWeekly,
+    config
 }: TrendingMoviesProps) => {
-    useEffect(() => {
-        console.log(trendingDaily);
-        console.log(trendingWeekly);
-    }, []);
+    const {
+        data: daily,
+        isLoading: isDailyLoading,
+        setPage: setDailyPage,
+        page: dailyPage
+    } = useTrending('movie', 'day', trendingDaily);
+    const {
+        data: weekly,
+        isLoading: isWeeklyLoading,
+        setPage: setWeeklyPage,
+        page: weeklyPage
+    } = useTrending('movie', 'week', trendingWeekly);
 
-    // const {data: daily, isLoading: isDailyLoading, } = use:w
+    const categories: TrendingCategory[] = [
+        {
+            trending: daily,
+            isLoading: isDailyLoading,
+            setPage: setDailyPage,
+            page: dailyPage
+        },
+        {
+            trending: weekly,
+            isLoading: isWeeklyLoading,
+            setPage: setWeeklyPage,
+            page: weeklyPage
+        }
+    ];
 
     return (
         <GeneralLayout title="Trending Movies">
             <TrendingLayout
-                daily={trendingDaily}
-                weekly={trendingWeekly}
+                config={config}
+                categories={categories}
                 mediaType="movie"
             />
         </GeneralLayout>
@@ -43,10 +67,15 @@ export const getStaticProps: GetStaticProps = async () => {
         '/trending/movie/week'
     );
 
+    const {
+        data: config
+    }: ResponseWithDetails<TMDBConfig> = await tmdbFetch.get('/configuration');
+
     return {
         props: {
             trendingDaily,
-            trendingWeekly
+            trendingWeekly,
+            config
         },
         revalidate: 3600
     };
