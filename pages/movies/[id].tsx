@@ -123,7 +123,8 @@ const Movie = ({ movieData, config, languages }: MovieProps) => {
         console.log(languages);
     }, []);
 
-    if (router.isFallback) return <ShowPageSkeleton />;
+    // if (router.isFallback) return <ShowPageSkeleton />;
+    return <ShowPageSkeleton />;
 
     return (
         <GeneralLayout title={title}>

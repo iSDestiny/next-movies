@@ -1,9 +1,13 @@
+import { Box } from '@chakra-ui/react';
 import GeneralLayout from 'layouts/GeneralLayout';
+import ShowPageSkeletonHeader from './ShowPageSkeletonHeader';
 
 const ShowPageSkeleton = () => {
     return (
         <GeneralLayout title="Loading...">
-            <div></div>
+            <Box as="main">
+                <ShowPageSkeletonHeader />
+            </Box>
         </GeneralLayout>
     );
 };
