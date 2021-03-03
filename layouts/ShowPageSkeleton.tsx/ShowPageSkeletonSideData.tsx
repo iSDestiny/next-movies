@@ -28,7 +28,11 @@ const ShowPageSkeletonSideData = ({ mediaType }) => {
                     <Section heading="Networks" spacing="0.5rem">
                         <VStack spacing="0.5rem" align="flex-start">
                             {[...Array(3).keys()].map((num) => (
-                                <Skeleton width="120px" height="50px" />
+                                <Skeleton
+                                    width="120px"
+                                    height="50px"
+                                    key={num}
+                                />
                             ))}
                         </VStack>
                     </Section>
