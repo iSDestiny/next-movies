@@ -123,8 +123,7 @@ const Movie = ({ movieData, config, languages }: MovieProps) => {
         console.log(languages);
     }, []);
 
-    // if (router.isFallback) return <ShowPageSkeleton />;
-    return <ShowPageSkeleton />;
+    if (router.isFallback) return <ShowPageSkeleton mediaType="movie" />;
 
     return (
         <GeneralLayout title={title}>
@@ -288,7 +287,6 @@ export const getStaticPaths: GetStaticPaths = async () => {
 
     const paths = ids.map((id) => {
         if (id) return { params: { id: id + '' } };
-        console.log('error' + id);
         return { params: { id: null } };
     });
 

@@ -146,11 +146,7 @@ const TVShow = ({ tvShowData, config, languages }: TVShowProps) => {
         { heading: 'Original Language', data: origLanguage }
     ];
 
-    useEffect(() => {
-        console.log(tvShowData);
-    }, []);
-
-    if (router.isFallback) return <ShowPageSkeleton />;
+    if (router.isFallback) return <ShowPageSkeleton mediaType="tv" />;
 
     return (
         <GeneralLayout title={title}>
