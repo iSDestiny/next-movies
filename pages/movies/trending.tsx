@@ -66,7 +66,6 @@ export const getStaticProps: GetStaticProps = async () => {
     }: ResponseWithDetails<Trending> = await tmdbFetch.get(
         '/trending/movie/week'
     );
-
     const {
         data: config
     }: ResponseWithDetails<TMDBConfig> = await tmdbFetch.get('/configuration');
