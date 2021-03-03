@@ -15,6 +15,7 @@ import {
 } from '@chakra-ui/react';
 import { useViewportScroll } from 'framer-motion';
 import NextLink from 'next/link';
+import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import FocusLock from 'react-focus-lock';
 import { FaCaretDown, FaMoon, FaSearch, FaSun, FaTimes } from 'react-icons/fa';
@@ -24,6 +25,7 @@ import MotionBox from './MotionBox';
 import SearchBar from './SearchBar';
 
 const Navbar = () => {
+    const router = useRouter();
     const [isSearchOpen, setIsSearchOpen] = useState(false);
     const [isNavHidden, setIsNavHidden] = useState(false);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -158,22 +160,42 @@ const Navbar = () => {
                                         bgColor={menuBgColor}
                                     >
                                         <MenuItem
-                                            _focus={{ bgColor: menuHoverColor }}
+                                            _focus={{
+                                                bgColor: menuHoverColor
+                                            }}
+                                            onClick={() =>
+                                                router.push('/movies')
+                                            }
                                         >
                                             <NextLink href="/movies" passHref>
-                                                <Link color={textColor}>
+                                                <Link
+                                                    _focus={{
+                                                        outline: 'none'
+                                                    }}
+                                                    color={textColor}
+                                                    width="100%"
+                                                >
                                                     Browse
                                                 </Link>
                                             </NextLink>
                                         </MenuItem>
                                         <MenuItem
                                             _focus={{ bgColor: menuHoverColor }}
+                                            onClick={() =>
+                                                router.push('/movies/trending')
+                                            }
                                         >
                                             <NextLink
                                                 href="/movies/trending"
                                                 passHref
                                             >
-                                                <Link color={textColor}>
+                                                <Link
+                                                    _focus={{
+                                                        outline: 'none'
+                                                    }}
+                                                    color={textColor}
+                                                    width="100%"
+                                                >
                                                     Trending
                                                 </Link>
                                             </NextLink>
@@ -201,21 +223,37 @@ const Navbar = () => {
                                     >
                                         <MenuItem
                                             _focus={{ bgColor: menuHoverColor }}
+                                            onClick={() => router.push('/tv')}
                                         >
                                             <NextLink href="/tv" passHref>
-                                                <Link color={textColor}>
+                                                <Link
+                                                    _focus={{
+                                                        outline: 'none'
+                                                    }}
+                                                    color={textColor}
+                                                    width="100%"
+                                                >
                                                     Browse
                                                 </Link>
                                             </NextLink>
                                         </MenuItem>
                                         <MenuItem
                                             _focus={{ bgColor: menuHoverColor }}
+                                            onClick={() =>
+                                                router.push('/tv/trending')
+                                            }
                                         >
                                             <NextLink
                                                 href="/tv/trending"
                                                 passHref
                                             >
-                                                <Link color={textColor}>
+                                                <Link
+                                                    _focus={{
+                                                        outline: 'none'
+                                                    }}
+                                                    color={textColor}
+                                                    width="100%"
+                                                >
                                                     Trending
                                                 </Link>
                                             </NextLink>
