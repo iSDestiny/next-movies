@@ -16,7 +16,10 @@ interface TVProps {
 
 const TV = ({ config, genres, languages }: TVProps) => {
     const { data, page, setSort, setFilters, setPage, isLoading } = useDiscover(
-        'tv'
+        'tv',
+        null,
+        {},
+        true
     );
 
     useEffect(() => {

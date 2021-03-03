@@ -2,9 +2,9 @@ import {
     Box,
     Heading,
     Stack,
+    Text,
     useBreakpointValue,
-    VStack,
-    Text
+    VStack
 } from '@chakra-ui/react';
 import CastCarousel from 'components/CastCarousel';
 import MediaGroup, { MediaGroupItem } from 'components/MediaGroup';
@@ -12,12 +12,12 @@ import ShowCarousel from 'components/ShowCarousel';
 import ShowHeader from 'components/ShowHeader';
 import ShowSideData from 'components/ShowSideData';
 import GeneralLayout from 'layouts/GeneralLayout';
+import ShowPageSkeleton from 'layouts/ShowPageSkeleton.tsx';
 import { GetStaticPaths, GetStaticProps } from 'next';
-import { ungzip } from 'node-gzip';
+import { useRouter } from 'next/router';
 import React, { useEffect } from 'react';
-import addLeadingZeroToDate from 'utils/addLeadingZeroToDate';
+import getAllFetchResponseResultIds from 'utils/getAllFetchResponseResultIds';
 import tmdbFetch from 'utils/tmdbFetch';
-import tmdbFetchGzip from 'utils/tmdbFetchGzip';
 interface MovieProps {
     movieData: MovieDetails;
     config: TMDBConfig;
@@ -25,6 +25,7 @@ interface MovieProps {
 }
 
 const Movie = ({ movieData, config, languages }: MovieProps) => {
+    const router = useRouter();
     const noOfSlides = useBreakpointValue([3, 3, 4, 4, 5]);
     const backdropSlides = useBreakpointValue({ base: 1, sm: 2 });
     const naturalHeight = useBreakpointValue([2200, 2050, 2000, 2000, 2100]);
@@ -40,7 +41,8 @@ const Movie = ({ movieData, config, languages }: MovieProps) => {
         '0.85rem',
         '0.9rem'
     ];
-    const { secure_base_url, poster_sizes, backdrop_sizes } = config.images;
+    const { secure_base_url, poster_sizes, backdrop_sizes } =
+        config?.images || {};
     const {
         title,
         original_title,
@@ -52,40 +54,40 @@ const Movie = ({ movieData, config, languages }: MovieProps) => {
         original_language,
         budget,
         status,
-        keywords: { keywords },
+        keywords: { keywords = [] as GenresEntityOrKeywordsEntity[] } = {},
         production_countries,
         tagline,
         overview,
         vote_average,
         vote_count,
         runtime,
-        videos: { results: videos },
-        recommendations: { results: recommendations },
+        videos: { results: videos = [] as VideoResultsEntity[] } = {},
+        recommendations: {
+            results: recommendations = [] as ResultsEntity2[]
+        } = {},
         credits,
         images,
-        similar: { results: similar },
-        reviews: { results: reviews },
-        release_dates: { results: release_dates }
-    } = movieData;
-    const certification = release_dates.find(
+        similar: { results: similar = [] as ResultsEntity2[] } = {},
+        reviews: { results: reviews = [] as ResultsEntity1[] } = {},
+        release_dates: { results: release_dates = [] as ResultsEntity[] } = {}
+    } = movieData || {};
+    const certification = release_dates?.find(
         ({ iso_3166_1 }) =>
             iso_3166_1 === 'US' ||
-            iso_3166_1 === production_countries[0].iso_3166_1
+            iso_3166_1 === production_countries[0]?.iso_3166_1
     )?.release_dates[0].certification;
-    const posters: Media[] =
-        images && images.posters
-            ? images.posters.map(({ file_path }) => ({
-                  path: `${secure_base_url}${poster_sizes[2]}${file_path}`,
-                  original: `${secure_base_url}${poster_sizes[6]}${file_path}`
-              }))
-            : [];
-    const backdrops: Media[] =
-        images && images.posters
-            ? images.backdrops.map(({ file_path }) => ({
-                  path: `${secure_base_url}${backdrop_sizes[1]}${file_path}`,
-                  original: `${secure_base_url}${backdrop_sizes[3]}${file_path}`
-              }))
-            : [];
+    const posters: Media[] = images?.posters
+        ? images.posters.map(({ file_path }) => ({
+              path: `${secure_base_url}${poster_sizes[2]}${file_path}`,
+              original: `${secure_base_url}${poster_sizes[6]}${file_path}`
+          }))
+        : [];
+    const backdrops: Media[] = images?.backdrops
+        ? images.backdrops.map(({ file_path }) => ({
+              path: `${secure_base_url}${backdrop_sizes[1]}${file_path}`,
+              original: `${secure_base_url}${backdrop_sizes[3]}${file_path}`
+          }))
+        : [];
 
     const media: MediaGroupItem[] = [
         {
@@ -104,7 +106,7 @@ const Movie = ({ movieData, config, languages }: MovieProps) => {
             noOfSlides: backdropSlides
         }
     ];
-    const origLanguage = languages.find(
+    const origLanguage = languages?.find(
         ({ iso_639_1 }) => iso_639_1 === original_language
     ).english_name;
     const sideDataItems = [
@@ -120,6 +122,8 @@ const Movie = ({ movieData, config, languages }: MovieProps) => {
         console.log(config);
         console.log(languages);
     }, []);
+
+    if (router.isFallback) return <ShowPageSkeleton mediaType="movie" />;
 
     return (
         <GeneralLayout title={title}>
@@ -239,68 +243,56 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
     let movieData: MovieDetails;
     let config: TMDBConfig;
     let languages: Language[];
-    const { data: configData } = await tmdbFetch.get('/configuration');
-    const { data: languageData } = await tmdbFetch.get(
-        '/configuration/languages'
-    );
 
-    const { data } = await tmdbFetch.get(`/movie/${id}`, {
-        params: {
-            append_to_response:
-                'release_dates,reviews,similar,images,credits,videos,recommendations,keywords'
-        }
-    });
+    try {
+        const { data: configData } = await tmdbFetch.get('/configuration');
+        const { data: languageData } = await tmdbFetch.get(
+            '/configuration/languages'
+        );
 
-    config = configData;
-    movieData = data;
-    languages = languageData;
+        const { data } = await tmdbFetch.get(`/movie/${id}`, {
+            params: {
+                append_to_response:
+                    'release_dates,reviews,similar,images,credits,videos,recommendations,keywords'
+            }
+        });
 
-    return {
-        props: {
-            movieData,
-            config,
-            languages
-        }
-    };
+        config = configData;
+        movieData = data;
+        languages = languageData;
+
+        return {
+            props: {
+                movieData,
+                config,
+                languages
+            },
+            revalidate: 3600
+        };
+    } catch (err) {
+        return {
+            notFound: true
+        };
+    }
 };
 
 export const getStaticPaths: GetStaticPaths = async () => {
-    let ids: number[];
-    const date = new Date();
-    const month = date.getMonth() + 1;
-    const day = date.getDate();
-    const year = date.getFullYear();
-    const res = await tmdbFetchGzip.get(
-        `/movie_ids_${addLeadingZeroToDate(month)}_${addLeadingZeroToDate(
-            day
-        )}_${year}.json.gz`,
-        {
-            responseType: 'arraybuffer',
-            headers: {
-                'Accept-Encoding': 'gzip'
-            }
-        }
-    );
-
-    const uncompressed = await ungzip(res.data);
-    ids = uncompressed
-        .toString()
-        .trim()
-        .split('\n')
-        .map((line) => {
-            const json = JSON.parse(line);
-            return json.id;
-        });
+    const ids = await getAllFetchResponseResultIds<Movie>([
+        '/movie/popular',
+        '/movie/top_rated',
+        '/movie/upcoming',
+        '/movie/now_playing',
+        '/trending/movie/week'
+    ]);
 
     const paths = ids.map((id) => {
         if (id) return { params: { id: id + '' } };
-        console.log('error' + id);
         return { params: { id: null } };
     });
 
     return {
         paths,
-        fallback: false
+        fallback: true
     };
 };
 

@@ -230,6 +230,7 @@ const Search = ({ query, config }: SearchProps) => {
                                 key={`${query}-${mediaType}-${index}`}
                                 quantity={data?.total_pages}
                                 pageChangeHandler={categories[index].setPage}
+                                page={data?.page}
                             />
                         </Box>
                     ))}

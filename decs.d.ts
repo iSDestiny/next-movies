@@ -648,3 +648,20 @@ interface CertificationDetails {
     meaning?: string;
     order?: number;
 }
+
+interface ResponseWithResults<T> {
+    data: {
+        results: T[];
+    };
+}
+
+interface ResponseWithDetails<T> {
+    data: T;
+}
+
+interface PersonResultItem {
+    id: integer;
+    profile_path?: string;
+    adult?: boolean;
+    known_for: KnownForEntity[];
+}

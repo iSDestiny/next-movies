@@ -1,43 +1,42 @@
-import useDiscover, { Filters } from 'hooks/useDiscover';
+import useDiscover from 'hooks/useDiscover';
 import GeneralLayout from 'layouts/GeneralLayout';
 import SpecficFilterLayout from 'layouts/SpecficFilterLayout';
+import SpecificFilterFallbackSkeleton from 'layouts/SpecificFilterLayoutSkeleton';
 import { GetStaticPaths, GetStaticProps } from 'next';
-import { ungzip } from 'node-gzip';
-import React, { useEffect, useState } from 'react';
-import addLeadingZeroToDate from 'utils/addLeadingZeroToDate';
+import { useRouter } from 'next/router';
+import getAllShowPropertyIds from 'utils/getAllShowPropertyIds';
+import getAllFetchResponseResultIds from 'utils/getAllFetchResponseResultIds';
 import tmdbFetch from 'utils/tmdbFetch';
-import tmdbFetchGzip from 'utils/tmdbFetchGzip';
 
 interface NetworkProps {
     network: ProductionCompanyDetails;
-    movies: PopularMovies;
     tvShows: PopularTVShows;
     config: TMDBConfig;
 }
 
-const Network = ({ network, movies, tvShows, config }: NetworkProps) => {
-    const movieCategory = useDiscover(
-        'movie',
-        movies as PopularMoviesAndPopularTVShows,
-        { includeNetworks: network.id + '' }
-    );
+const Network = ({ network, tvShows, config }: NetworkProps) => {
+    const router = useRouter();
+
     const tvShowCategory = useDiscover(
         'tv',
         tvShows as PopularMoviesAndPopularTVShows,
-        { includeNetworks: network.id + '' }
+        { includeNetworks: network ? network.id : null },
+        Boolean(network?.id)
     );
 
-    const categories = [movieCategory, tvShowCategory];
+    const categories = [null, tvShowCategory];
 
-    useEffect(() => {
-        console.log(network);
-        console.log(categories);
-    }, []);
+    if (router.isFallback)
+        return (
+            <GeneralLayout title={`Loading Network...`}>
+                <SpecificFilterFallbackSkeleton type="network" />
+            </GeneralLayout>
+        );
 
     return (
-        <GeneralLayout title={`Keyword: "${network.name}"`}>
+        <GeneralLayout title={`TV Shows on ${network.name}`}>
             <SpecficFilterLayout
-                type="company"
+                type="network"
                 config={config}
                 heading={network.name}
                 categories={categories}
@@ -49,72 +48,62 @@ const Network = ({ network, movies, tvShows, config }: NetworkProps) => {
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
     const { id } = params;
-    let movies: PopularMovies;
     let tvShows: PopularTVShows;
     let config: TMDBConfig;
     let network: ProductionCompanyDetails;
 
-    const { data: configData } = await tmdbFetch.get('/configuration');
-    const { data: tvData } = await tmdbFetch.get('/discover/tv', {
-        params: {
-            with_companies: id
-        }
-    });
-    const { data: movieData } = await tmdbFetch.get('/discover/movie', {
-        params: {
-            with_companies: id
-        }
-    });
-    const {
-        data: companyData
-    }: { data: ProductionCompanyDetails } = await tmdbFetch.get(
-        `/network/${id}`
-    );
+    try {
+        const { data: configData } = await tmdbFetch.get('/configuration');
+        const { data: tvData } = await tmdbFetch.get('/discover/tv', {
+            params: {
+                with_networks: id
+            }
+        });
 
-    config = configData;
-    movies = movieData;
-    tvShows = tvData;
-    network = companyData;
+        const {
+            data: companyData
+        }: { data: ProductionCompanyDetails } = await tmdbFetch.get(
+            `/network/${id}`
+        );
 
-    return {
-        props: {
-            network,
-            movies,
-            tvShows,
-            config
-        }
-    };
+        config = configData;
+        tvShows = tvData;
+        network = companyData;
+
+        if (!network) throw new Error('network is null');
+
+        return {
+            props: {
+                network,
+                tvShows,
+                config
+            },
+            revalidate: 3600
+        };
+    } catch (err) {
+        return {
+            notFound: true
+        };
+    }
 };
 
 export const getStaticPaths: GetStaticPaths = async () => {
-    let ids: number[];
-    const date = new Date();
-    const month = date.getMonth() + 1;
-    const day = date.getDate();
-    const year = date.getFullYear();
-    const res = await tmdbFetchGzip.get(
-        `/tv_network_ids_${addLeadingZeroToDate(month)}_${addLeadingZeroToDate(
-            day
-        )}_${year}.json.gz`,
-        {
-            responseType: 'arraybuffer',
-            headers: {
-                'Accept-Encoding': 'gzip'
-            }
-        }
+    const relevantNetworkIds = await getAllShowPropertyIds<
+        TVShow,
+        NetworksEntityOrProductionCompaniesEntity
+    >(
+        [
+            '/tv/popular',
+            '/tv/top_rated',
+            '/tv/on_the_air',
+            '/tv/airing_today',
+            '/trending/tv/week'
+        ],
+        'tv',
+        'networks'
     );
 
-    const uncompressed = await ungzip(res.data);
-    ids = uncompressed
-        .toString()
-        .trim()
-        .split('\n')
-        .map((line) => {
-            const json = JSON.parse(line);
-            return json.id;
-        });
-
-    const paths = ids.map((id) => {
+    const paths = relevantNetworkIds.map((id) => {
         if (id) return { params: { id: id + '' } };
         console.log('error' + id);
         return { params: { id: null } };
@@ -122,7 +111,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
 
     return {
         paths,
-        fallback: false
+        fallback: true
     };
 };
 

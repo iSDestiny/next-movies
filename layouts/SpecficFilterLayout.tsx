@@ -49,8 +49,8 @@ interface Category {
 }
 
 interface LayoutProps {
-    categories: Category[];
-    heading: string;
+    categories?: Category[];
+    heading?: string;
     type?: string;
     config?: TMDBConfig;
     company?: ProductionCompanyDetails;
@@ -66,8 +66,6 @@ interface MetaDataBarProps {
 }
 
 const MetaDataBar = ({ company }: MetaDataBarProps) => {
-    const { colorMode } = useColorMode();
-
     if (company) {
         const { name, headquarters, homepage, origin_country } = company;
         return (
@@ -125,14 +123,15 @@ const LayoutHeader = ({
     selected,
     setSelected,
     config,
-    company
+    company,
+    type
 }: LayoutHeaderProps) => {
     const { colorMode } = useColorMode();
     const [gray300, gray700] = useToken('colors', ['gray.300', 'gray.700']);
     const borderColor = colorMode === 'light' ? gray300 : gray700;
     const amountSize = useBreakpointValue({ base: 'sm', md: 'md' });
     const headingSize = useBreakpointValue({ base: 'md', md: 'lg' });
-    const { secure_base_url, logo_sizes } = config.images;
+    const { secure_base_url, logo_sizes } = config?.images;
     const logoSize = useBreakpointValue({
         base: logo_sizes[0],
         md: logo_sizes[1]
@@ -190,25 +189,27 @@ const LayoutHeader = ({
                 justify="center"
                 p={{ base: '0.3rem', sm: '0.5rem' }}
             >
-                <Menu>
-                    <MenuButton
-                        as={Button}
-                        variant="ghost"
-                        rightIcon={<FaCaretDown />}
-                    >
-                        {selected === 0 ? 'Movies' : 'TV Shows'}
-                    </MenuButton>
-                    <Portal>
-                        <MenuList>
-                            <MenuItem onClick={() => setSelected(0)}>
-                                Movies
-                            </MenuItem>
-                            <MenuItem onClick={() => setSelected(1)}>
-                                TV Shows
-                            </MenuItem>
-                        </MenuList>
-                    </Portal>
-                </Menu>
+                {type !== 'network' && (
+                    <Menu>
+                        <MenuButton
+                            as={Button}
+                            variant="ghost"
+                            rightIcon={<FaCaretDown />}
+                        >
+                            {selected === 0 ? 'Movies' : 'TV Shows'}
+                        </MenuButton>
+                        <Portal>
+                            <MenuList>
+                                <MenuItem onClick={() => setSelected(0)}>
+                                    Movies
+                                </MenuItem>
+                                <MenuItem onClick={() => setSelected(1)}>
+                                    TV Shows
+                                </MenuItem>
+                            </MenuList>
+                        </Portal>
+                    </Menu>
+                )}
                 <Menu>
                     <MenuButton
                         as={Button}
@@ -223,11 +224,11 @@ const LayoutHeader = ({
                                 title="Popularity"
                                 type="radio"
                                 onChange={(value) =>
-                                    categories[selected].setSort(
+                                    categories[selected]?.setSort(
                                         value as string
                                     )
                                 }
-                                value={categories[selected].sort}
+                                value={categories[selected]?.sort}
                             >
                                 <MenuItemOption value="popularity.asc">
                                     Ascending
@@ -240,7 +241,7 @@ const LayoutHeader = ({
                                 title="Rating"
                                 type="radio"
                                 onChange={(value) =>
-                                    categories[selected].setSort(
+                                    categories[selected]?.setSort(
                                         value as string
                                     )
                                 }
@@ -257,11 +258,11 @@ const LayoutHeader = ({
                                 title="Release Date"
                                 type="radio"
                                 onChange={(value) =>
-                                    categories[selected].setSort(
+                                    categories[selected]?.setSort(
                                         value as string
                                     )
                                 }
-                                value={categories[selected].sort}
+                                value={categories[selected]?.sort}
                             >
                                 <MenuItemOption value="primary_release_date.asc">
                                     Ascending
@@ -282,14 +283,16 @@ const SpecficFilterLayout = ({
     categories,
     heading,
     config,
-    company
+    company,
+    type
 }: LayoutProps) => {
-    const [selected, setSelected] = useState(0);
+    const [selected, setSelected] = useState(type === 'network' ? 1 : 0);
     const isLoading = categories[selected]?.isLoading;
+    const page = categories[selected].page;
 
     useEffect(() => {
         window.scrollTo({ top: 0, behavior: 'smooth' });
-    }, [categories[selected].page]);
+    }, [page]);
 
     return (
         <Box as="main" width="100%">
@@ -300,6 +303,7 @@ const SpecficFilterLayout = ({
                 company={company}
                 selected={selected}
                 setSelected={setSelected}
+                type={type}
             />
             <Box width="100%" maxWidth="1400px" m="auto" p="1rem">
                 <CardGrid
@@ -307,32 +311,46 @@ const SpecficFilterLayout = ({
                     items={categories[selected]?.data?.results}
                     isLoading={isLoading}
                 />
-                <Box
-                    display={
-                        categories[0]?.data?.results?.length > 0 &&
-                        selected === 0
-                            ? 'block'
-                            : 'none'
-                    }
+                <Skeleton
+                    isLoaded={!isLoading}
+                    startColor="white"
+                    endColor="white"
+                    minHeight="50px"
+                    minWidth="100%"
                 >
-                    <Pagination
-                        quantity={categories[0]?.data?.total_pages}
-                        pageChangeHandler={categories[0].setPage}
-                    />
-                </Box>
-                <Box
-                    display={
-                        categories[1]?.data?.results?.length > 0 &&
-                        selected === 1
-                            ? 'block'
-                            : 'none'
-                    }
-                >
-                    <Pagination
-                        quantity={categories[1]?.data?.total_pages}
-                        pageChangeHandler={categories[1].setPage}
-                    />
-                </Box>
+                    {!isLoading && (
+                        <>
+                            <Box
+                                display={
+                                    categories[0]?.data?.results?.length > 0 &&
+                                    selected === 0
+                                        ? 'block'
+                                        : 'none'
+                                }
+                            >
+                                <Pagination
+                                    quantity={categories[0]?.data?.total_pages}
+                                    pageChangeHandler={categories[0]?.setPage}
+                                    page={categories[0]?.data?.page}
+                                />
+                            </Box>
+                            <Box
+                                display={
+                                    categories[1]?.data?.results?.length > 0 &&
+                                    selected === 1
+                                        ? 'block'
+                                        : 'none'
+                                }
+                            >
+                                <Pagination
+                                    quantity={categories[1]?.data?.total_pages}
+                                    pageChangeHandler={categories[1]?.setPage}
+                                    page={categories[1]?.data?.page}
+                                />
+                            </Box>
+                        </>
+                    )}
+                </Skeleton>
             </Box>
         </Box>
     );

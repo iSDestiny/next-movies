@@ -19,7 +19,10 @@ const Movies = ({ config, certifications, genres, languages }: MoviesProps) => {
     const USCerts = certifications['US'];
 
     const { data, page, setSort, setFilters, setPage, isLoading } = useDiscover(
-        'movie'
+        'movie',
+        null,
+        {},
+        true
     );
 
     useEffect(() => {

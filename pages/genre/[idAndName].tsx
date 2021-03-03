@@ -1,13 +1,12 @@
-import useDiscover, { Filters } from 'hooks/useDiscover';
+import useDiscover from 'hooks/useDiscover';
 import GeneralLayout from 'layouts/GeneralLayout';
 import SpecficFilterLayout from 'layouts/SpecficFilterLayout';
+import SpecificFilterFallbackSkeleton from 'layouts/SpecificFilterLayoutSkeleton';
 import { GetStaticPaths, GetStaticProps } from 'next';
-import { ungzip } from 'node-gzip';
-import React, { useEffect, useState } from 'react';
-import addLeadingZeroToDate from 'utils/addLeadingZeroToDate';
+import { useRouter } from 'next/router';
+import React from 'react';
 import replaceSpacesWithDashes from 'utils/replaceSpacesWithDashes';
 import tmdbFetch from 'utils/tmdbFetch';
-import tmdbFetchGzip from 'utils/tmdbFetchGzip';
 
 interface GenreProps {
     genre: GenresEntityOrKeywordsEntity;
@@ -17,22 +16,32 @@ interface GenreProps {
 }
 
 const Genre = ({ genre, movies, tvShows, config }: GenreProps) => {
+    const router = useRouter();
     const movieCategory = useDiscover(
         'movie',
         movies as PopularMoviesAndPopularTVShows,
         {
-            includeGenres: genre.id + ''
-        }
+            includeGenres: genre ? genre.id + '' : null
+        },
+        Boolean(genre?.id)
     );
     const tvShowCategory = useDiscover(
         'tv',
         tvShows as PopularMoviesAndPopularTVShows,
         {
-            includeGenres: genre.id + ''
-        }
+            includeGenres: genre ? genre.id + '' : null
+        },
+        Boolean(genre?.id)
     );
 
     const categories = [movieCategory, tvShowCategory];
+
+    if (router.isFallback)
+        return (
+            <GeneralLayout title={`Loading Network...`}>
+                <SpecificFilterFallbackSkeleton type="genre" />
+            </GeneralLayout>
+        );
 
     return (
         <GeneralLayout title={`Genre: ${genre.name}`}>
@@ -55,30 +64,37 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
     let tvShows: PopularTVShows;
     let config: TMDBConfig;
 
-    const { data: configData } = await tmdbFetch.get('/configuration');
-    const { data: tvData } = await tmdbFetch.get('/discover/tv', {
-        params: {
-            with_genres: id
-        }
-    });
-    const { data: movieData } = await tmdbFetch.get('/discover/movie', {
-        params: {
-            with_genres: id
-        }
-    });
+    try {
+        const { data: configData } = await tmdbFetch.get('/configuration');
+        const { data: tvData } = await tmdbFetch.get('/discover/tv', {
+            params: {
+                with_genres: id
+            }
+        });
+        const { data: movieData } = await tmdbFetch.get('/discover/movie', {
+            params: {
+                with_genres: id
+            }
+        });
 
-    config = configData;
-    movies = movieData;
-    tvShows = tvData;
+        config = configData;
+        movies = movieData;
+        tvShows = tvData;
 
-    return {
-        props: {
-            genre: { id, name },
-            movies,
-            tvShows,
-            config
-        }
-    };
+        return {
+            props: {
+                genre: { id, name },
+                movies,
+                tvShows,
+                config
+            },
+            revalidate: 3600
+        };
+    } catch (err) {
+        return {
+            notFound: true
+        };
+    }
 };
 
 export const getStaticPaths: GetStaticPaths = async () => {
@@ -99,7 +115,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
 
     return {
         paths,
-        fallback: false
+        fallback: true
     };
 };
 
