@@ -3,7 +3,7 @@ import CardSkeleton from './CardSkeleton';
 import ShowCard from './ShowCard';
 
 interface CardGridProps {
-    items: MovieAndTVShow[];
+    items: MovieAndTVShow[] | TrendingResultsEntity[];
     isLoading: boolean;
     config: TMDBConfig;
 }

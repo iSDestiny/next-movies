@@ -1,14 +1,12 @@
 import {
     AspectRatio,
-    Flex,
     Modal,
     ModalBody,
     ModalCloseButton,
     ModalContent,
     ModalHeader,
     ModalOverlay,
-    Portal,
-    useBreakpointValue
+    Portal
 } from '@chakra-ui/react';
 import ReactPlayer from 'react-player/youtube';
 
