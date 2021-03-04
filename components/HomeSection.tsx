@@ -26,7 +26,7 @@ interface HomeSectionProps {
 
 function HomeSection({ heading, carousels, config }: HomeSectionProps) {
     const [currentCarousel, setCurrentCarousel] = useState(0);
-    const { base_url, poster_sizes } = config.images;
+    const { secure_base_url, poster_sizes } = config.images;
     const headingSize = useBreakpointValue(['sm', 'md', 'lg']);
     const buttonSize = useBreakpointValue({ base: 'xs', sm: 'sm', lg: 'md' });
     const noOfSlides = useBreakpointValue([3, 4, 5, 6, 7]);
@@ -65,7 +65,7 @@ function HomeSection({ heading, carousels, config }: HomeSectionProps) {
             <ShowCarousel
                 name={carousels[currentCarousel].name}
                 items={carousels[currentCarousel].items}
-                base_url={base_url}
+                base_url={secure_base_url}
                 poster_sizes={poster_sizes}
                 noOfSlides={noOfSlides}
                 naturalHeight={naturalHeight}

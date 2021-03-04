@@ -34,7 +34,7 @@ const CarouselSlide = ({
     title,
     media_type
 }: CarouselSlideProps) => {
-    const { base_url, poster_sizes, backdrop_sizes } = config.images;
+    const { secure_base_url, poster_sizes, backdrop_sizes } = config.images;
     const [isHover, setIsHover] = useState(false);
     const [isHoverPoster, setIsHoverPoster] = useState(false);
 
@@ -70,7 +70,7 @@ const CarouselSlide = ({
                             onClick={() => setTrailerMode(index, true)}
                         >
                             <Image
-                                src={`${base_url}${backdrop_sizes[2]}${backdrop_path}`}
+                                src={`${secure_base_url}${backdrop_sizes[2]}${backdrop_path}`}
                                 alt={`${name || title} backdrop`}
                                 layout="fill"
                                 objectFit="fill"
@@ -133,7 +133,7 @@ const CarouselSlide = ({
                                 position="relative"
                             >
                                 <Image
-                                    src={`${base_url}${poster_sizes[1]}${poster_path}`}
+                                    src={`${secure_base_url}${poster_sizes[1]}${poster_path}`}
                                     alt={`${name || title} poster`}
                                     layout="fill"
                                     objectFit="contain"

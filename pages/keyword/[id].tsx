@@ -4,6 +4,7 @@ import SpecficFilterLayout from 'layouts/SpecficFilterLayout';
 import SpecificFilterFallbackSkeleton from 'layouts/SpecificFilterLayoutSkeleton';
 import { GetStaticPaths, GetStaticProps } from 'next';
 import { useRouter } from 'next/router';
+import capitalize from 'utils/capitalize';
 import getAllFetchResponseResultIds, {
     HasId
 } from 'utils/getAllFetchResponseResultIds';
@@ -46,7 +47,9 @@ const Keyword = ({ keyword, movies, tvShows, config }: KeywordProps) => {
         );
 
     return (
-        <GeneralLayout title={`Keyword: "${keyword.name}" Movies and TV Shows`}>
+        <GeneralLayout
+            title={`"${capitalize(keyword.name)}" Movies and TV Shows`}
+        >
             <SpecficFilterLayout
                 config={config}
                 heading={keyword.name}

@@ -4,6 +4,7 @@ import SpecficFilterLayout from 'layouts/SpecficFilterLayout';
 import SpecificFilterFallbackSkeleton from 'layouts/SpecificFilterLayoutSkeleton';
 import { GetStaticPaths, GetStaticProps } from 'next';
 import { useRouter } from 'next/router';
+import capitalize from 'utils/capitalize';
 import getAllShowPropertyIds from 'utils/getAllShowPropertyIds';
 import tmdbFetch from 'utils/tmdbFetch';
 
@@ -33,7 +34,7 @@ const Network = ({ network, tvShows, config }: NetworkProps) => {
         );
 
     return (
-        <GeneralLayout title={`TV Shows on ${network.name}`}>
+        <GeneralLayout title={`TV Shows on ${capitalize(network.name)}`}>
             <SpecficFilterLayout
                 type="network"
                 config={config}

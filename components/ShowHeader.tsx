@@ -55,10 +55,6 @@ const ShowHeader = ({
     poster_path
 }: ShowHeaderProps) => {
     const { secure_base_url, backdrop_sizes, poster_sizes } = config.images;
-    const posterLayout = useBreakpointValue<'intrinsic' | 'fixed'>({
-        base: 'intrinsic',
-        lg: 'fixed'
-    });
     const posterWidth = useBreakpointValue([
         '100px',
         '150px',
