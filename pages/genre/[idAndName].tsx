@@ -4,7 +4,6 @@ import SpecficFilterLayout from 'layouts/SpecficFilterLayout';
 import SpecificFilterFallbackSkeleton from 'layouts/SpecificFilterLayoutSkeleton';
 import { GetStaticPaths, GetStaticProps } from 'next';
 import { useRouter } from 'next/router';
-import React from 'react';
 import replaceSpacesWithDashes from 'utils/replaceSpacesWithDashes';
 import tmdbFetch from 'utils/tmdbFetch';
 
@@ -44,7 +43,7 @@ const Genre = ({ genre, movies, tvShows, config }: GenreProps) => {
         );
 
     return (
-        <GeneralLayout title={`Genre: ${genre.name}`}>
+        <GeneralLayout title={`${genre.name} Movies and TV Shows`}>
             <SpecficFilterLayout
                 config={config}
                 heading={genre.name}

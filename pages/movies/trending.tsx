@@ -2,7 +2,6 @@ import useTrending from 'hooks/useTrending';
 import GeneralLayout from 'layouts/GeneralLayout';
 import TrendingLayout, { TrendingCategory } from 'layouts/TrendingLayout';
 import { GetStaticProps } from 'next';
-import { useEffect } from 'react';
 import tmdbFetch from 'utils/tmdbFetch';
 
 interface TrendingMoviesProps {

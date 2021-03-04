@@ -4,7 +4,6 @@ import SpecficFilterLayout from 'layouts/SpecficFilterLayout';
 import SpecificFilterFallbackSkeleton from 'layouts/SpecificFilterLayoutSkeleton';
 import { GetStaticPaths, GetStaticProps } from 'next';
 import { useRouter } from 'next/router';
-import React from 'react';
 import getAllFetchResponseResultIds, {
     HasId
 } from 'utils/getAllFetchResponseResultIds';
@@ -47,7 +46,7 @@ const Keyword = ({ keyword, movies, tvShows, config }: KeywordProps) => {
         );
 
     return (
-        <GeneralLayout title={`Keyword: "${keyword.name}"`}>
+        <GeneralLayout title={`Keyword: "${keyword.name}" Movies and TV Shows`}>
             <SpecficFilterLayout
                 config={config}
                 heading={keyword.name}

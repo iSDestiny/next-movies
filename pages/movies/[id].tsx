@@ -15,7 +15,6 @@ import GeneralLayout from 'layouts/GeneralLayout';
 import ShowPageSkeleton from 'layouts/ShowPageSkeleton.tsx';
 import { GetStaticPaths, GetStaticProps } from 'next';
 import { useRouter } from 'next/router';
-import React, { useEffect } from 'react';
 import getAllFetchResponseResultIds from 'utils/getAllFetchResponseResultIds';
 import tmdbFetch from 'utils/tmdbFetch';
 interface MovieProps {
@@ -117,16 +116,18 @@ const Movie = ({ movieData, config, languages }: MovieProps) => {
         { heading: 'Revenue', data: revenue, isDollar: true }
     ];
 
-    useEffect(() => {
-        console.log(movieData);
-        console.log(config);
-        console.log(languages);
-    }, []);
-
     if (router.isFallback) return <ShowPageSkeleton mediaType="movie" />;
 
     return (
-        <GeneralLayout title={title}>
+        <GeneralLayout
+            title={title}
+            description={overview}
+            imgSrc={
+                poster_path
+                    ? `${secure_base_url}${backdrop_sizes[3]}${poster_path}`
+                    : '/images/default-placeholder-image.png'
+            }
+        >
             <Box as="main">
                 <ShowHeader
                     {...{

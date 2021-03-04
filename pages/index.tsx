@@ -1,18 +1,9 @@
-import { GetStaticProps } from 'next';
-import Head from 'next/head';
-import Navbar from '../components/Navbar';
-import tmdbFetch from 'utils/tmdbFetch';
-import { useEffect } from 'react';
-import { Box, Flex, Heading, useBreakpointValue } from '@chakra-ui/react';
-import TrailerCarousel from 'components/TrailerCarousel';
-import axios from 'axios';
-import ShowCarousel from 'components/ShowCarousel';
+import { Flex, Heading, useBreakpointValue } from '@chakra-ui/react';
 import HomeSection from 'components/HomeSection';
-import Footer from 'components/Footer';
-import tmdbFetchGzip from 'utils/tmdbFetchGzip';
-import addLeadingZeroToDate from 'utils/addLeadingZeroToDate';
-import { ungzip } from 'node-gzip';
+import TrailerCarousel from 'components/TrailerCarousel';
 import GeneralLayout from 'layouts/GeneralLayout';
+import { GetStaticProps } from 'next';
+import tmdbFetch from 'utils/tmdbFetch';
 
 interface HomeProps {
     trending: Trending;
@@ -42,16 +33,7 @@ const Home = ({
     onTheAirTVShows
 }: HomeProps) => {
     const headingSize = useBreakpointValue(['sm', 'md', 'lg']);
-    useEffect(() => {
-        console.log(trending);
-        console.log(config);
-        console.log(videos);
-        console.log(popularTVShows);
-        console.log(popularMovies);
-        console.log(topRatedMovies);
-        console.log(nowPlayingMovies);
-        console.log(airingTodayTVShows);
-    }, []);
+
     return (
         <GeneralLayout title="Home">
             <Flex

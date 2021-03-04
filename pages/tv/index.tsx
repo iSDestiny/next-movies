@@ -27,7 +27,7 @@ const TV = ({ config, genres, languages }: TVProps) => {
     }, [page]);
 
     return (
-        <GeneralLayout title="TV Shows">
+        <GeneralLayout title="Browse TV Shows">
             <Stack
                 align="flex-start"
                 p="1.5rem 1rem"

@@ -26,18 +26,11 @@ const Movies = ({ config, certifications, genres, languages }: MoviesProps) => {
     );
 
     useEffect(() => {
-        console.log(config);
-        console.log(USCerts);
-        console.log(genres);
-        console.log(languages);
-    }, []);
-
-    useEffect(() => {
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }, [page]);
 
     return (
-        <GeneralLayout title="Movies">
+        <GeneralLayout title="Browse Movies">
             <Stack
                 align="flex-start"
                 p="1.5rem 1rem"

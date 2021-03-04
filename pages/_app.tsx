@@ -7,6 +7,8 @@ import 'pure-react-carousel/dist/react-carousel.es.css';
 import 'react-datepicker/dist/react-datepicker.css';
 import 'styles/datePicker.scss';
 import 'styles/reactSlider.scss';
+import SEO from 'next-seo.config';
+import { DefaultSeo } from 'next-seo';
 
 import theme from 'theme';
 
@@ -19,7 +21,7 @@ function MyApp({ Component, pageProps, router }: AppProps) {
                     name="viewport"
                 />
             </Head>
-            {/* <DefaultSeo {...SEO} /> */}
+            <DefaultSeo {...SEO} />
             <ChakraProvider theme={theme}>
                 <AnimatePresence exitBeforeEnter>
                     <Component {...pageProps} key={router.asPath} />

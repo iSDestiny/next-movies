@@ -5,7 +5,6 @@ import SpecificFilterFallbackSkeleton from 'layouts/SpecificFilterLayoutSkeleton
 import { GetStaticPaths, GetStaticProps } from 'next';
 import { useRouter } from 'next/router';
 import getAllShowPropertyIds from 'utils/getAllShowPropertyIds';
-import getAllFetchResponseResultIds from 'utils/getAllFetchResponseResultIds';
 import tmdbFetch from 'utils/tmdbFetch';
 
 interface NetworkProps {

@@ -149,7 +149,15 @@ const TVShow = ({ tvShowData, config, languages }: TVShowProps) => {
     if (router.isFallback) return <ShowPageSkeleton mediaType="tv" />;
 
     return (
-        <GeneralLayout title={title}>
+        <GeneralLayout
+            title={title}
+            description={overview}
+            imgSrc={
+                poster_path
+                    ? `${secure_base_url}${backdrop_sizes[3]}${poster_path}`
+                    : '/images/default-placeholder-image.png'
+            }
+        >
             <Box as="main">
                 <ShowHeader
                     {...{

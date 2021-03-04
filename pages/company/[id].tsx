@@ -4,9 +4,7 @@ import SpecficFilterLayout from 'layouts/SpecficFilterLayout';
 import SpecificFilterFallbackSkeleton from 'layouts/SpecificFilterLayoutSkeleton';
 import { GetStaticPaths, GetStaticProps } from 'next';
 import { useRouter } from 'next/router';
-import React, { useEffect } from 'react';
 import getAllShowPropertyIds from 'utils/getAllShowPropertyIds';
-import getAllFetchResponseResultIds from 'utils/getAllFetchResponseResultIds';
 import tmdbFetch from 'utils/tmdbFetch';
 
 interface CompanyProps {
@@ -32,11 +30,6 @@ const Company = ({ company, movies, tvShows, config }: CompanyProps) => {
     );
 
     const categories = [movieCategory, tvShowCategory];
-
-    useEffect(() => {
-        console.log(company);
-        console.log(categories);
-    }, []);
 
     if (router.isFallback)
         return (

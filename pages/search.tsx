@@ -5,8 +5,7 @@ import {
     GridItem,
     Stack,
     Text,
-    useBreakpointValue,
-    useColorMode
+    useBreakpointValue
 } from '@chakra-ui/react';
 import CardSkeleton from 'components/CardSkeleton';
 import CategoryMenu, { MobileCategoryMenu } from 'components/CategoryMenu';
@@ -16,7 +15,7 @@ import ShowCard from 'components/ShowCard';
 import useSearch from 'hooks/useSearch';
 import GeneralLayout from 'layouts/GeneralLayout';
 import { GetServerSideProps } from 'next';
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import tmdbFetch from 'utils/tmdbFetch';
 
 interface SearchProps {
@@ -176,7 +175,7 @@ const Search = ({ query, config }: SearchProps) => {
     );
 
     return (
-        <GeneralLayout title={query} key={query}>
+        <GeneralLayout title={`Search: "${query}"`} key={query}>
             <Stack
                 direction={{ base: 'column', lg: 'row' }}
                 align="flex-start"

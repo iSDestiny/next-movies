@@ -13,12 +13,7 @@ import GeneralLayout from 'layouts/GeneralLayout';
 import PersonPageSkeleton from 'layouts/PersonPageSkeleton.tsx';
 import { GetStaticPaths, GetStaticProps } from 'next';
 import { useRouter } from 'next/router';
-import { ungzip } from 'node-gzip';
-import { useEffect } from 'react';
-import addLeadingZeroToDate from 'utils/addLeadingZeroToDate';
-import getAllFetchResponseResultIds from 'utils/getAllFetchResponseResultIds';
 import tmdbFetch from 'utils/tmdbFetch';
-import tmdbFetchGzip from 'utils/tmdbFetchGzip';
 
 interface PersonProps {
     personData: PersonDetails;
@@ -43,17 +38,21 @@ const Person = ({ personData, config, knownFor }: PersonProps) => {
         '0.9rem'
     ];
 
-    useEffect(() => {
-        console.log(personData);
-        console.log(knownFor);
-    }, []);
-
-    const { secure_base_url, poster_sizes } = config?.images || {};
+    const { secure_base_url, poster_sizes, profile_sizes } =
+        config?.images || {};
 
     if (router.isFallback) return <PersonPageSkeleton />;
 
     return (
-        <GeneralLayout title={name}>
+        <GeneralLayout
+            title={name}
+            description={biography}
+            imgSrc={
+                personData.profile_path
+                    ? `${secure_base_url}${profile_sizes[2]}${personData.profile_path}`
+                    : '/images/default-placeholder-image.png'
+            }
+        >
             <Stack
                 direction={{ base: 'column', lg: 'row' }}
                 as="main"
