@@ -74,6 +74,7 @@ const CastCarousel = ({
                                                         ? `${secure_base_url}${profile_sizes[2]}${profile_path}`
                                                         : '/images/profile-placeholder.png'
                                                 }
+                                                alt={`${name} profile`}
                                                 width={138}
                                                 height={178}
                                             />

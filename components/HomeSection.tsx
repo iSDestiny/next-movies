@@ -74,44 +74,6 @@ function HomeSection({ heading, carousels, config }: HomeSectionProps) {
                 headingSize={['0.7rem', '0.78rem', '0.95rem', '1rem', '1.1rem']}
                 buttonSize={['1.5rem', '2rem', '2.5rem']}
             />
-            {/* <AnimatePresence>
-                {carousels.map(({ name, items }, index) => {
-                    if (currentCarousel === index)
-                        return (
-                            <ShowCarousel
-                                name={name}
-                                items={items}
-                                base_url={base_url}
-                                poster_sizes={poster_sizes}
-                                noOfSlides={noOfSlides}
-                                naturalHeight={naturalHeight}
-                                starSize={[
-                                    '0.8rem',
-                                    '1rem',
-                                    '1.2rem',
-                                    '1.4rem',
-                                    '1.5rem'
-                                ]}
-                                ratingSize={[
-                                    '0.75rem',
-                                    '0.78rem',
-                                    '0.95rem',
-                                    '1rem',
-                                    '1.1rem'
-                                ]}
-                                headingSize={[
-                                    '0.7rem',
-                                    '0.78rem',
-                                    '0.95rem',
-                                    '1rem',
-                                    '1.1rem'
-                                ]}
-                                buttonSize={['1.5rem', '2rem', '2.5rem']}
-                            />
-                        );
-                    return null;
-                })}
-            </AnimatePresence> */}
         </VStack>
     );
 }

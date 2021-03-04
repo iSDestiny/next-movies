@@ -46,7 +46,7 @@ const Thumbnails = ({ config, trendingResults, height }: ThumbnailsProps) => {
             overflow="scroll"
             width={{ base: '100%', lg: 'auto' }}
         >
-            {trendingResults.map(({ poster_path, id }, index) => (
+            {trendingResults.map(({ poster_path, id, name, title }, index) => (
                 <Box position="relative" key={id}>
                     <ScrollIntoViewIfNeeded active={index === currentSlide}>
                         <Box
@@ -58,8 +58,9 @@ const Thumbnails = ({ config, trendingResults, height }: ThumbnailsProps) => {
                         >
                             <Image
                                 src={`${base_url}${poster_sizes[0]}${poster_path}`}
+                                alt={`${name || title} thumbnail`}
                                 width={92}
-                                height={137}
+                                height={138}
                             />
                         </Box>
                         <Box

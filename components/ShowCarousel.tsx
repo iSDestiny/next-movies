@@ -108,7 +108,7 @@ function ShowCarousel({
                                                     alt={`${
                                                         name || title
                                                     } poster`}
-                                                    height={276}
+                                                    height={278}
                                                     width={185}
                                                 />
                                             </Box>
