@@ -85,7 +85,7 @@ const Navbar = () => {
                     bgColor="gray.900"
                     position="fixed"
                     width="100%"
-                    zIndex="9999"
+                    zIndex="9000"
                 >
                     <Flex
                         as="nav"

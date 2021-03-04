@@ -1,4 +1,4 @@
-import { Box, Grid, GridItem, SimpleGrid, Text } from '@chakra-ui/react';
+import { Grid, GridItem, Text } from '@chakra-ui/react';
 import CardSkeleton from './CardSkeleton';
 import ShowCard from './ShowCard';
 

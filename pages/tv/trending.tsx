@@ -5,29 +5,29 @@ import { GetStaticProps } from 'next';
 import { useEffect } from 'react';
 import tmdbFetch from 'utils/tmdbFetch';
 
-interface TrendingMoviesProps {
+interface TrendingTVShowsProps {
     trendingDaily: Trending;
     trendingWeekly: Trending;
     config: TMDBConfig;
 }
 
-const TrendingMovies = ({
+const TrendingTVShows = ({
     trendingDaily,
     trendingWeekly,
     config
-}: TrendingMoviesProps) => {
+}: TrendingTVShowsProps) => {
     const {
         data: daily,
         isLoading: isDailyLoading,
         setPage: setDailyPage,
         page: dailyPage
-    } = useTrending('movie', 'day', trendingDaily);
+    } = useTrending('tv', 'day', trendingDaily);
     const {
         data: weekly,
         isLoading: isWeeklyLoading,
         setPage: setWeeklyPage,
         page: weeklyPage
-    } = useTrending('movie', 'week', trendingWeekly);
+    } = useTrending('tv', 'week', trendingWeekly);
 
     const categories: TrendingCategory[] = [
         {
@@ -45,11 +45,11 @@ const TrendingMovies = ({
     ];
 
     return (
-        <GeneralLayout title="Trending Movies">
+        <GeneralLayout title="Trending TV Shows">
             <TrendingLayout
                 config={config}
                 categories={categories}
-                mediaType="movie"
+                mediaType="tv"
             />
         </GeneralLayout>
     );
@@ -58,14 +58,10 @@ const TrendingMovies = ({
 export const getStaticProps: GetStaticProps = async () => {
     const {
         data: trendingDaily
-    }: ResponseWithDetails<Trending> = await tmdbFetch.get(
-        '/trending/movie/day'
-    );
+    }: ResponseWithDetails<Trending> = await tmdbFetch.get('/trending/tv/day');
     const {
         data: trendingWeekly
-    }: ResponseWithDetails<Trending> = await tmdbFetch.get(
-        '/trending/movie/week'
-    );
+    }: ResponseWithDetails<Trending> = await tmdbFetch.get('/trending/tv/week');
     const {
         data: config
     }: ResponseWithDetails<TMDBConfig> = await tmdbFetch.get('/configuration');
@@ -80,4 +76,4 @@ export const getStaticProps: GetStaticProps = async () => {
     };
 };
 
-export default TrendingMovies;
+export default TrendingTVShows;
