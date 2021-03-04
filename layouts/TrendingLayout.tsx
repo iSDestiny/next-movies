@@ -108,7 +108,10 @@ const TrendingLayout = ({
             <Box width="100%" maxWidth="1400px" m="auto" p="1rem" as="main">
                 <CardGrid
                     config={config}
-                    items={categories[selected]?.trending?.results}
+                    items={
+                        categories[selected]?.trending
+                            ?.results as MovieAndTVShow[]
+                    }
                     isLoading={isLoading}
                 />
                 <Skeleton
