@@ -131,9 +131,15 @@ const CarouselSlide = ({
                                 }}
                                 onClick={(e) => e.stopPropagation()}
                                 position="relative"
+                                color="transparent"
                             >
+                                {`${name || title} poster`}
                                 <Image
-                                    src={`${secure_base_url}${poster_sizes[1]}${poster_path}`}
+                                    src={
+                                        poster_path
+                                            ? `${secure_base_url}${poster_sizes[2]}${poster_path}`
+                                            : '/images/default-placeholder-image.png'
+                                    }
                                     alt={`${name || title} poster`}
                                     layout="fill"
                                     objectFit="contain"

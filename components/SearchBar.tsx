@@ -136,6 +136,7 @@ const SearchBar = ({ isOpen, onClose }: SearchBarProps) => {
                         />
                         <Input
                             ref={ref}
+                            label="Search"
                             onChange={handleOnChange}
                             onKeyDown={handleKeyDown}
                             value={query}

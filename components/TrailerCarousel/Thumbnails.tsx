@@ -18,7 +18,7 @@ interface ThumbnailsProps {
 }
 
 const Thumbnails = ({ config, trendingResults, height }: ThumbnailsProps) => {
-    const { base_url, poster_sizes } = config.images;
+    const { secure_base_url, poster_sizes } = config.images;
     const carouselContext = useContext(CarouselContext);
     const [currentSlide, setCurrentSlide] = useState(
         carouselContext.state.currentSlide
@@ -57,7 +57,11 @@ const Thumbnails = ({ config, trendingResults, height }: ThumbnailsProps) => {
                             height="137px"
                         >
                             <Image
-                                src={`${base_url}${poster_sizes[0]}${poster_path}`}
+                                src={
+                                    poster_path
+                                        ? `${secure_base_url}${poster_sizes[0]}${poster_path}`
+                                        : '/images/default-placeholder-image.png'
+                                }
                                 alt={`${name || title} thumbnail`}
                                 width={92}
                                 height={138}
