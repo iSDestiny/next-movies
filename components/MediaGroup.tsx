@@ -5,12 +5,12 @@ import {
     HStack,
     VStack,
     Text,
-    Flex,
     useBreakpointValue
 } from '@chakra-ui/react';
 import { useState } from 'react';
-import MediaCarousel from './MediaCarousel';
-import VideoCarousel from './VideoCarousel';
+import dynamic from 'next/dynamic';
+const MediaCarousel = dynamic(import('./MediaCarousel'));
+const VideoCarousel = dynamic(import('./VideoCarousel'));
 
 export interface MediaGroupItem {
     type: 'poster' | 'backdrop' | 'video';

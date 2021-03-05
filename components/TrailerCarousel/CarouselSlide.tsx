@@ -4,7 +4,8 @@ import Image from 'next/image';
 import MotionBox from '../MotionBox';
 import NextLink from 'next/link';
 import { useState } from 'react';
-import VideoModal from 'components/VideoModal';
+import dynamic from 'next/dynamic';
+const VideoModal = dynamic(import('components/VideoModal'));
 import { FaPlay } from 'react-icons/fa';
 
 interface CarouselSlideProps {
@@ -214,12 +215,14 @@ const CarouselSlide = ({
                 </Box>
             </Slide>
 
-            <VideoModal
-                url={`https://youtu.be/${videos[0].key}`}
-                name={videos[0].name}
-                isOpen={trailerModes[index]}
-                onClose={() => setTrailerMode(index, false)}
-            />
+            {trailerModes[index] && (
+                <VideoModal
+                    url={`https://youtu.be/${videos[0].key}`}
+                    name={videos[0].name}
+                    isOpen={trailerModes[index]}
+                    onClose={() => setTrailerMode(index, false)}
+                />
+            )}
         </>
     );
 };

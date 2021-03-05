@@ -5,7 +5,8 @@ import { useState } from 'react';
 import { FaPlay } from 'react-icons/fa';
 import Carousel from './Carousel';
 import MotionBox from './MotionBox';
-import VideoModal from './VideoModal';
+import dynamic from 'next/dynamic';
+const VideoModal = dynamic(import('./VideoModal'));
 
 interface VideoCarouselProps {
     naturalHeight: number;
@@ -63,9 +64,10 @@ const VideoCarousel = ({
             totalSlides={videos.length}
             buttonXPos="1rem"
             buttonYPos="40%"
+            name="Video Carousel"
         >
             {videos.map(({ id, key, site, name }, index) => (
-                <Box key={id}>
+                <Box key={id} as="li">
                     <Box
                         as={Slide}
                         index={index}
@@ -105,12 +107,14 @@ const VideoCarousel = ({
                             <Icon as={FaPlay} fontSize="2rem" color="white" />
                         </MotionBox>
                     </Box>
-                    <VideoModal
-                        url={`https://youtu.be/${key}`}
-                        name={name}
-                        isOpen={videoModes[index]}
-                        onClose={() => setVideoMode(index, false)}
-                    />
+                    {videoModes[index] && (
+                        <VideoModal
+                            url={`https://youtu.be/${key}`}
+                            name={name}
+                            isOpen={videoModes[index]}
+                            onClose={() => setVideoMode(index, false)}
+                        />
+                    )}
                 </Box>
             ))}
         </Carousel>

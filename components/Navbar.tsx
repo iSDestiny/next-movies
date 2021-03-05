@@ -20,10 +20,11 @@ import { useEffect, useState } from 'react';
 import FocusLock from 'react-focus-lock';
 import { FaCaretDown, FaMoon, FaSearch, FaSun, FaTimes } from 'react-icons/fa';
 import MenuToggle from './MenuToggle';
-import MobileNav from './MobileNav';
 import MotionBox from './MotionBox';
 import SearchBar from './SearchBar';
 import Image from 'next/image';
+import dynamic from 'next/dynamic';
+const MobileNav = dynamic(import('./MobileNav'));
 
 const Navbar = () => {
     const router = useRouter();
@@ -73,10 +74,12 @@ const Navbar = () => {
 
     return (
         <FocusLock disabled={!isMenuOpen}>
-            <MobileNav
-                isOpen={isMenuOpen}
-                onClose={() => setIsMenuOpen(false)}
-            />
+            {isMenuOpen && (
+                <MobileNav
+                    isOpen={isMenuOpen}
+                    onClose={() => setIsMenuOpen(false)}
+                />
+            )}
             <DarkMode>
                 <MotionBox
                     initial={false}

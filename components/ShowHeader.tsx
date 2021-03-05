@@ -20,8 +20,9 @@ import Image from 'next/image';
 import { useState } from 'react';
 import { FaPlay, FaRegStar, FaStar } from 'react-icons/fa';
 import DotDivider from './DotDivider';
-import VideoModal from './VideoModal';
 import replaceSpacesWithDashes from 'utils/replaceSpacesWithDashes';
+import dynamic from 'next/dynamic';
+const VideoModal = dynamic(import('./VideoModal'));
 
 interface ShowHeaderProps {
     config: TMDBConfig;
