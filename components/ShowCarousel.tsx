@@ -77,6 +77,7 @@ function ShowCarousel({
                     ) => (
                         <Box
                             as={Slide}
+                            tag="li"
                             key={`${carouselName}-${
                                 name || title
                             }-${id}-${index}`}

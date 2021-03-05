@@ -41,9 +41,7 @@ const Carousel: FunctionComponent<CarouselProps> = ({
                 infinite
             >
                 <Box position="relative">
-                    <Slider>
-                        <li>{children}</li>
-                    </Slider>
+                    <Slider>{children}</Slider>
                     {noOfSlides < totalSlides && (
                         <>
                             <Box

@@ -58,8 +58,13 @@ const CarouselSlide = ({
 
     if (videos && videos.length <= 0) return null;
     return (
-        <Box cursor="pointer" as="li">
-            <Slide index={index}>
+        <>
+            <Slide
+                index={index}
+                tag="li"
+                className="clickable"
+                aria-label={`${name || title} slide`}
+            >
                 <Box height="100%" bgColor="rgba(0,0,0,0.8)">
                     <Box
                         onMouseEnter={() => setIsHover(true)}
@@ -214,7 +219,7 @@ const CarouselSlide = ({
                 isOpen={trailerModes[index]}
                 onClose={() => setTrailerMode(index, false)}
             />
-        </Box>
+        </>
     );
 };
 
