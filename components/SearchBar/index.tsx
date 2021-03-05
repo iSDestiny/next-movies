@@ -1,16 +1,12 @@
 import {
     Box,
     Flex,
-    HStack,
-    Icon,
     Input,
     InputGroup,
-    InputLeftElement,
-    Skeleton,
-    Text,
-    VStack
+    InputLeftElement
 } from '@chakra-ui/react';
 import useSearch from 'hooks/useSearch';
+import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 import {
     ChangeEvent,
@@ -20,10 +16,9 @@ import {
     useRef,
     useState
 } from 'react';
-import { FaFilm, FaSearch, FaTv, FaUser } from 'react-icons/fa';
+import { FaSearch } from 'react-icons/fa';
 import mod from 'utils/mod';
 import MotionBox from '../MotionBox';
-import dynamic from 'next/dynamic';
 const SearchBarLoading = dynamic(import('./SearchBarLoading'));
 const SearchBarResults = dynamic(import('./SearchBarResults'));
 
