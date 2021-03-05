@@ -23,6 +23,7 @@ import MenuToggle from './MenuToggle';
 import MobileNav from './MobileNav';
 import MotionBox from './MotionBox';
 import SearchBar from './SearchBar';
+import Image from 'next/image';
 
 const Navbar = () => {
     const router = useRouter();
@@ -93,7 +94,8 @@ const Navbar = () => {
                         align="center"
                         maxW="1400px"
                         margin="auto"
-                        padding="0 1rem"
+                        py="0px"
+                        px={{ base: '1rem', lg: '0px' }}
                         height="65px"
                     >
                         <HStack
@@ -118,25 +120,20 @@ const Navbar = () => {
                                     }
                                 />
                             </MotionBox>
-                            <Box as="li" zIndex="4" mr="2rem">
+                            <Box as="li" zIndex="4" mr="0px">
                                 <NextLink href="/" passHref>
                                     <Link
                                         zIndex="4"
                                         color="white"
                                         onClick={() => setIsMenuOpen(false)}
                                     >
-                                        Next Movies
-                                        {/* <Image
+                                        <Image
                                             priority
-                                            width="220"
-                                            height="50"
-                                            alt="personal brand logo"
-                                            src={
-                                                colorMode === 'light'
-                                                    ? '/static/logos/brand/j-full-logo-transparent-black.png'
-                                                    : '/static/logos/brand/j-full-logo-transparent-white.png'
-                                            }
-                                        /> */}
+                                            width={190}
+                                            height={42}
+                                            alt="brand logo"
+                                            src="/images/next-movies-logo.png"
+                                        />
                                     </Link>
                                 </NextLink>
                             </Box>
