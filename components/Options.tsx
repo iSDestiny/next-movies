@@ -13,7 +13,8 @@ import {
     VStack,
     chakra,
     Wrap,
-    WrapItem
+    WrapItem,
+    Input
 } from '@chakra-ui/react';
 import { Filters } from 'hooks/useDiscover';
 import { Dispatch, FunctionComponent, SetStateAction, useState } from 'react';
@@ -46,7 +47,7 @@ interface SortOptions {
 const SortOptions = ({ sort, setSort }: SortOptions) => {
     return (
         <Box>
-            <Heading as="h4" size="sm" fontWeight="normal" mb="0.5rem">
+            <Heading as="h3" size="sm" fontWeight="normal" mb="0.5rem">
                 Sort Results By
             </Heading>
             <Select
@@ -75,7 +76,7 @@ const FilterOptionsSection: FunctionComponent<{ heading: string }> = ({
 }) => {
     return (
         <VStack align="flex-start" spacing="0.5rem" w="100%">
-            <Heading as="h4" size="sm" fontWeight="normal">
+            <Heading as="h3" size="sm" fontWeight="normal">
                 {heading}
             </Heading>
             {children}
@@ -95,10 +96,10 @@ const FilterOptionsAccordionSection: FunctionComponent<{ heading: string }> = ({
             border="0px solid transparent"
         >
             <AccordionItem py="0px" w="100%">
-                <Box as="h4" pb="0.5rem">
+                <Box as="h2" pb="0.5rem">
                     <AccordionButton p="0px">
                         <Heading
-                            as="h4"
+                            as="span"
                             size="sm"
                             fontWeight="normal"
                             textAlign="left"
@@ -261,6 +262,13 @@ const FilterOptions = ({
                     onChange={changeFromDateHandler}
                     selectsStart
                     startDate={fromDate}
+                    customInput={
+                        <Input
+                            variant="outline"
+                            label="from-release-date"
+                            width="100%"
+                        />
+                    }
                     endDate={toDate}
                     placeholderText="From"
                 />
@@ -271,6 +279,13 @@ const FilterOptions = ({
                     startDate={fromDate}
                     endDate={toDate}
                     minDate={fromDate}
+                    customInput={
+                        <Input
+                            variant="outline"
+                            label="to-release-date"
+                            width="100%"
+                        />
+                    }
                     placeholderText="To"
                 />
             </FilterOptionsSection>
