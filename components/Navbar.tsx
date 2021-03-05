@@ -13,7 +13,7 @@ import {
     Tooltip,
     useColorMode
 } from '@chakra-ui/react';
-import { useViewportScroll } from 'framer-motion';
+import { AnimatePresence, useViewportScroll } from 'framer-motion';
 import NextLink from 'next/link';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
@@ -21,10 +21,10 @@ import FocusLock from 'react-focus-lock';
 import { FaCaretDown, FaMoon, FaSearch, FaSun, FaTimes } from 'react-icons/fa';
 import MenuToggle from './MenuToggle';
 import MotionBox from './MotionBox';
-import SearchBar from './SearchBar';
 import Image from 'next/image';
 import dynamic from 'next/dynamic';
 const MobileNav = dynamic(import('./MobileNav'));
+const SearchBar = dynamic(import('./SearchBar'));
 
 const Navbar = () => {
     const router = useRouter();
@@ -307,10 +307,15 @@ const Navbar = () => {
                             </HStack>
                         </HStack>
                     </Flex>
-                    <SearchBar
-                        isOpen={isSearchOpen}
-                        onClose={() => setIsSearchOpen(false)}
-                    />
+                    <AnimatePresence>
+                        {isSearchOpen && (
+                            <SearchBar
+                                isOpen={isSearchOpen}
+                                onClose={() => setIsSearchOpen(false)}
+                                key="search-bar"
+                            />
+                        )}
+                    </AnimatePresence>
                 </MotionBox>
             </DarkMode>
         </FocusLock>

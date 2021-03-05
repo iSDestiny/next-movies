@@ -1,23 +1,19 @@
 import {
     Box,
-    DarkMode,
     Flex,
     HStack,
     Icon,
     Input,
     InputGroup,
     InputLeftElement,
-    useColorMode,
-    Text,
-    VStack,
     Skeleton,
-    UnorderedList,
-    ListItem
+    Text,
+    VStack
 } from '@chakra-ui/react';
 import useSearch from 'hooks/useSearch';
+import { useRouter } from 'next/router';
 import {
     ChangeEvent,
-    Component,
     FormEvent,
     KeyboardEvent,
     useEffect,
@@ -25,9 +21,11 @@ import {
     useState
 } from 'react';
 import { FaFilm, FaSearch, FaTv, FaUser } from 'react-icons/fa';
-import { useRouter } from 'next/router';
-import MotionBox from './MotionBox';
 import mod from 'utils/mod';
+import MotionBox from '../MotionBox';
+import dynamic from 'next/dynamic';
+const SearchBarLoading = dynamic(import('./SearchBarLoading'));
+const SearchBarResults = dynamic(import('./SearchBarResults'));
 
 interface SearchBarProps {
     isOpen: boolean;
@@ -35,8 +33,8 @@ interface SearchBarProps {
 }
 
 const SearchBar = ({ isOpen, onClose }: SearchBarProps) => {
-    const [currSelection, setCurrSelection] = useState(0);
     const ref = useRef<HTMLInputElement>();
+    const [currSelection, setCurrSelection] = useState(0);
     const [query, setQuery] = useState('');
     const { data, isLoading } = useSearch(
         'multi',
@@ -114,7 +112,8 @@ const SearchBar = ({ isOpen, onClose }: SearchBarProps) => {
             bgColor="white"
             variants={searchVariants}
             animate={isOpen ? 'open' : 'closed'}
-            initial={false}
+            initial="closed"
+            exit="closed"
             transform="translateX(-100%)"
             position="absolute"
         >
@@ -150,90 +149,15 @@ const SearchBar = ({ isOpen, onClose }: SearchBarProps) => {
                     </InputGroup>
                 </Flex>
             </Box>
-            <VStack
-                as="ul"
-                listStyleType="none"
-                align="center"
-                width="100%"
-                spacing="0px"
-                borderX="1px solid #BDC6C7"
-                color="black"
-            >
-                {data && data.results.length > 0 ? (
-                    data.results
-                        .slice(0, 10)
-                        .map(({ media_type, name, title, id }, index) => {
-                            let film: any;
-                            if (media_type === 'movie') film = FaFilm;
-                            else if (media_type === 'tv') film = FaTv;
-                            else if (media_type === 'person') film = FaUser;
-
-                            return (
-                                <Box
-                                    key={id}
-                                    as="li"
-                                    _hover={{
-                                        bgColor: 'gray.100'
-                                    }}
-                                    bgColor={
-                                        currSelection - 1 === index
-                                            ? 'gray.100'
-                                            : 'white'
-                                    }
-                                    cursor="pointer"
-                                    onClick={() => goToEntity(media_type, id)}
-                                    width="100%"
-                                    borderBottom="1px solid #BDC6C7"
-                                >
-                                    <HStack
-                                        width="100%"
-                                        spacing="0.5rem"
-                                        align="center"
-                                        justify="flex-start"
-                                        maxWidth="1400px"
-                                        m="auto"
-                                        px="0.7rem"
-                                        key={id}
-                                    >
-                                        <Icon as={film} />
-                                        <Text size="sm" noOfLines={1}>
-                                            {name || title}
-                                        </Text>
-                                    </HStack>
-                                </Box>
-                            );
-                        })
-                ) : (
-                    <VStack
-                        as="ul"
-                        listStyleType="none"
-                        spacing="0.3rem"
-                        width="100%"
-                        display={query.trim().length > 0 ? 'flex' : 'none'}
-                        align="center"
-                        justify="center"
-                        borderBottom="1px solid #BDC6C7"
-                    >
-                        <Box as="li" maxWidth="1400px" m="auto" p="0.5rem 1rem">
-                            {!isLoading ? (
-                                <Text size="lg" p="1rem" fontWeight="bold">
-                                    No results
-                                </Text>
-                            ) : (
-                                [...Array(10).keys()].map((num) => (
-                                    <Skeleton
-                                        height="16px"
-                                        width="100%"
-                                        key={num}
-                                        startColor="gray.200"
-                                        endColor="gray.400"
-                                    />
-                                ))
-                            )}
-                        </Box>
-                    </VStack>
-                )}
-            </VStack>
+            {data && data.results.length > 0 && !isLoading ? (
+                <SearchBarResults
+                    data={data}
+                    currSelection={currSelection}
+                    goToEntity={goToEntity}
+                />
+            ) : (
+                <SearchBarLoading query={query} isLoading={isLoading} />
+            )}
         </MotionBox>
     );
 };
