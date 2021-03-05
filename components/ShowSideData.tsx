@@ -39,10 +39,8 @@ const SideDataItem = ({
         return data;
     };
     return (
-        <Box>
-            <Heading as="h4" size={headingSize}>
-                {heading}
-            </Heading>
+        <Box width="100%">
+            <Heading size={headingSize}>{heading}</Heading>
             {heading !== 'Networks' ? (
                 <Text>{data ? displayData() : '-'}</Text>
             ) : (
@@ -64,11 +62,11 @@ const ShowSideData = ({ items, keywords, headingSize }: ShowSideDataProps) => {
                     headingSize={headingSize}
                 />
             ))}
-            <Box>
+            <Box width="100%">
                 <Heading as="h2" size={headingSize} mb="0.5rem">
                     Keywords
                 </Heading>
-                <Wrap>
+                <Wrap width="100%">
                     {keywords.length > 0
                         ? keywords.map(({ name, id }) => (
                               <WrapItem key={id}>
