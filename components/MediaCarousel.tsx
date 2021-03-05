@@ -44,6 +44,7 @@ function MediaCarousel({
                         <NextLink href={original} passHref>
                             <Link
                                 target="_blank"
+                                rel="noopener noreferrer"
                                 aria-label={`${name}-${index}`}
                             >
                                 <Image
