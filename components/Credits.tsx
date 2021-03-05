@@ -128,10 +128,6 @@ const CastCredits = ({ cast }: CastCreditsProps) => {
         (a, b) => parseInt(b) - parseInt(a)
     );
 
-    useEffect(() => {
-        console.log(castByYear);
-    }, []);
-
     return (
         <Box as="section" width="100%">
             <Heading size="md" mb="1rem">

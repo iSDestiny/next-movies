@@ -115,10 +115,6 @@ const useDiscover = (
     );
 
     useEffect(() => {
-        console.log(data?.page, data);
-    }, [data]);
-
-    useEffect(() => {
         setFilters(initialFilters);
     }, [shouldFetch]);
 

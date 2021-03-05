@@ -317,7 +317,6 @@ export const getStaticPaths: GetStaticPaths = async () => {
 
     const paths = ids.map((id) => {
         if (id) return { params: { id: id + '' } };
-        console.log('error' + id);
         return { params: { id: null } };
     });
 

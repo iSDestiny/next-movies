@@ -22,10 +22,7 @@ const useSearch = (type: string, query: string, shouldFetch: boolean) => {
     return {
         data,
         page,
-        setPage: (newPage: number) => {
-            console.log(type);
-            setPage(newPage);
-        },
+        setPage: (newPage: number) => setPage(newPage),
         isLoading: !data && !error,
         isError: error
     };
