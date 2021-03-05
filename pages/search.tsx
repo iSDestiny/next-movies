@@ -98,15 +98,7 @@ const Search = ({ query, config }: SearchProps) => {
 
                           if (mediaType === 'movie' || mediaType === 'tv')
                               return (
-                                  <GridItem
-                                      key={id}
-                                      w="100%"
-                                      height={{
-                                          base: '150px',
-                                          lg: '190px'
-                                      }}
-                                      borderRadius="8px"
-                                  >
+                                  <GridItem key={id}>
                                       <ShowCard
                                           href={
                                               mediaType === 'movie'
