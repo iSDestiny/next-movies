@@ -41,7 +41,7 @@ const TrailerCarousel = ({
     if (!results || !trailers) return null;
 
     const filteredResults = results.filter(
-        (res, index) =>
+        (_, index) =>
             trailers[index] &&
             trailers[index].results &&
             trailers[index].results.length > 0
@@ -53,7 +53,7 @@ const TrailerCarousel = ({
     const [trailerModes, setTrailerModes] = useState<boolean[]>(
         [...Array(filteredVideos.length).keys()].map(() => false)
     );
-    const { ref, width, height } = useDimensions<HTMLDivElement>();
+    const { ref, height } = useDimensions<HTMLDivElement>();
 
     const setTrailerMode = (index: number, status: boolean) => {
         setTrailerModes((prev) => {
@@ -62,11 +62,6 @@ const TrailerCarousel = ({
             return newTrailer;
         });
     };
-
-    useEffect(() => {
-        console.log(filteredResults);
-        console.log(filteredVideos);
-    }, []);
 
     return (
         <Stack

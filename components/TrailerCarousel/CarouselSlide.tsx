@@ -58,7 +58,7 @@ const CarouselSlide = ({
 
     if (videos && videos.length <= 0) return null;
     return (
-        <Box cursor="pointer">
+        <Box cursor="pointer" as="li">
             <Slide index={index}>
                 <Box height="100%" bgColor="rgba(0,0,0,0.8)">
                     <Box
