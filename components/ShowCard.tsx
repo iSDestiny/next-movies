@@ -53,6 +53,7 @@ const ShowCard = ({
         <NextLink href={href} passHref>
             <Link
                 _focus={{ outline: 'none' }}
+                aria-label={title}
                 onFocus={() => setIsFocused(true)}
                 onBlur={() => setIsFocused(false)}
             >

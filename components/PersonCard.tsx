@@ -51,6 +51,7 @@ const PersonCard = ({
                 _focus={{ outline: 'none' }}
                 onFocus={() => setIsFocused(true)}
                 onBlur={() => setIsFocused(false)}
+                aria-label={name}
             >
                 <Flex
                     bgColor={isFocused ? focusColor : 'transparent'}

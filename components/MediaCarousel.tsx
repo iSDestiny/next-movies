@@ -34,10 +34,18 @@ function MediaCarousel({
             name="Media"
         >
             {items.map(({ path, original }, index) => (
-                <Slide key={`${path}-${index}`} index={index}>
+                <Slide
+                    key={`${path}-${index}`}
+                    index={index}
+                    tag="li"
+                    aria-label={`${name}-${index} slide`}
+                >
                     <MotionBox animate={{ opacity: 1 }} opacity={0}>
                         <NextLink href={original} passHref>
-                            <Link target="_blank">
+                            <Link
+                                target="_blank"
+                                aria-label={`${name}-${index}`}
+                            >
                                 <Image
                                     alt={`${name}-${index}`}
                                     src={path}

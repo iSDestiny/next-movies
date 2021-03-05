@@ -65,7 +65,7 @@ const ShowSideData = ({ items, keywords, headingSize }: ShowSideDataProps) => {
                 />
             ))}
             <Box>
-                <Heading as="h4" size={headingSize} mb="0.5rem">
+                <Heading as="h2" size={headingSize} mb="0.5rem">
                     Keywords
                 </Heading>
                 <Wrap>

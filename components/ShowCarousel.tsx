@@ -80,6 +80,7 @@ function ShowCarousel({
                                         _hover={{
                                             textDecor: 'none'
                                         }}
+                                        aria-label={title || name}
                                     >
                                         <Box ref={observe}>
                                             <Box position="relative" id="hello">

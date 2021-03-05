@@ -123,6 +123,7 @@ const CarouselSlide = ({
                             passHref
                         >
                             <Link
+                                aria-label={name || title}
                                 flexShrink={0}
                                 height={['90px', 134, 170, 230]}
                                 width={['60px', 90, 114, 154]}
@@ -138,7 +139,6 @@ const CarouselSlide = ({
                                 position="relative"
                                 color="transparent"
                             >
-                                {`${name || title} poster`}
                                 <Image
                                     src={
                                         poster_path
@@ -174,6 +174,7 @@ const CarouselSlide = ({
                             passHref
                         >
                             <Link
+                                aria-label={name || title}
                                 onMouseEnter={() => setIsHover(false)}
                                 onMouseLeave={() => setIsHover(true)}
                                 onClick={(e) => e.stopPropagation()}
