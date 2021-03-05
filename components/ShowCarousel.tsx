@@ -1,29 +1,11 @@
-import {
-    Link,
-    Box,
-    Text,
-    Heading,
-    Icon,
-    useBreakpointValue,
-    Flex,
-    Tooltip
-} from '@chakra-ui/react';
-import {
-    ButtonBack,
-    ButtonNext,
-    CarouselProvider,
-    Slider,
-    Slide
-} from 'pure-react-carousel';
+import { Box, Flex, Heading, Icon, Link, Text } from '@chakra-ui/react';
 import Image from 'next/image';
 import NextLink from 'next/link';
-import { FaAngleLeft, FaAngleRight, FaRegStar, FaStar } from 'react-icons/fa';
-import MotionBox from './MotionBox';
-import { AnimatePresence } from 'framer-motion';
-import Rating from './Rating';
+import { Slide } from 'pure-react-carousel';
 import useDimensions from 'react-cool-dimensions';
-import { createRef, useEffect, useRef, useState } from 'react';
+import { FaRegStar, FaStar } from 'react-icons/fa';
 import Carousel from './Carousel';
+import MotionBox from './MotionBox';
 
 interface ShowCarouselProps {
     name: string;
@@ -62,6 +44,7 @@ function ShowCarousel({
                 totalSlides={items.length}
                 buttonYPos="25%"
                 buttonXPos="1.35rem"
+                name={carouselName}
             >
                 {items.map(
                     (

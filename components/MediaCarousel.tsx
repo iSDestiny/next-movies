@@ -31,6 +31,7 @@ function MediaCarousel({
             totalSlides={items.length}
             buttonXPos="1rem"
             buttonYPos="40%"
+            name="Media"
         >
             {items.map(({ path, original }, index) => (
                 <Slide key={`${path}-${index}`} index={index}>

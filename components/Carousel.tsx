@@ -16,6 +16,7 @@ interface CarouselProps {
     totalSlides: number;
     buttonYPos: string | string[];
     buttonXPos: string | string[];
+    name: string;
 }
 
 const Carousel: FunctionComponent<CarouselProps> = ({
@@ -26,7 +27,8 @@ const Carousel: FunctionComponent<CarouselProps> = ({
     naturalHeight,
     totalSlides,
     buttonYPos,
-    buttonXPos
+    buttonXPos,
+    name
 }) => {
     return (
         <Box width="100%">
@@ -41,7 +43,7 @@ const Carousel: FunctionComponent<CarouselProps> = ({
                 infinite
             >
                 <Box position="relative">
-                    <Slider>{children}</Slider>
+                    <Slider aria-label={`${name} carousel`}>{children}</Slider>
                     {noOfSlides < totalSlides && (
                         <>
                             <Box

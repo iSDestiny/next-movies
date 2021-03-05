@@ -58,6 +58,7 @@ const CastCarousel = ({
                     totalSlides={cast.length}
                     buttonYPos="25%"
                     buttonXPos="1rem"
+                    name="Cast"
                 >
                     {cast.map(
                         ({ id, character, name, profile_path }, index) => (

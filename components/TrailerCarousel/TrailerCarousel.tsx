@@ -1,31 +1,15 @@
+import { Box, Icon, Stack } from '@chakra-ui/react';
 import {
-    Box,
-    Flex,
-    Heading,
-    Icon,
-    Link,
-    Stack,
-    Tooltip,
-    VStack
-} from '@chakra-ui/react';
-import {
-    CarouselProvider,
-    Slider,
     ButtonBack,
-    ButtonNext
+    ButtonNext,
+    CarouselProvider,
+    Slider
 } from 'pure-react-carousel';
-import ModalVideo from 'react-modal-video';
-import Image from 'next/image';
-import ReactPlayer from 'react-player/youtube';
-import { useEffect, useState } from 'react';
-import VideoModal from '../VideoModal';
-import { FaAngleLeft, FaAngleRight, FaPlay } from 'react-icons/fa';
-import { GrPrevious, GrNext } from 'react-icons/gr';
-import MotionBox from '../MotionBox';
-import NextLink from 'next/link';
+import { useState } from 'react';
+import useDimensions from 'react-cool-dimensions';
+import { FaAngleLeft, FaAngleRight } from 'react-icons/fa';
 import CarouselSlide from './CarouselSlide';
 import Thumbnails from './Thumbnails';
-import useDimensions from 'react-cool-dimensions';
 
 interface TrailerCarouselProps {
     results: Trending['results'];
@@ -78,7 +62,7 @@ const TrailerCarousel = ({
         >
             <Box position="relative" w="100%">
                 <Box ref={ref}>
-                    <Slider>
+                    <Slider aria-label="Trailer Carousel">
                         {filteredResults.map(
                             (
                                 {
