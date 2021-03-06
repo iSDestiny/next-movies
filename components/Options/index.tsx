@@ -29,7 +29,13 @@ const Options = (props: OptionsProps) => {
     const { setSort, setFilters } = props;
 
     const { colorMode } = useColorMode();
-    const [newFilters, setNewFilters] = useState<Filters>({});
+    const [newFilters, setNewFilters] = useState<Filters>({
+        runtimeGreater: 0,
+        runtimeLess: 400,
+        ratingGreater: 0,
+        ratingLess: 10,
+        voteCountGreater: 0
+    });
     const [newSort, setNewSort] = useState('popularity.desc');
     const [gray300, gray700] = useToken('colors', ['gray.300', 'gray.700']);
     const borderColor = colorMode === 'light' ? gray300 : gray700;

@@ -73,6 +73,12 @@ const FilterOptionsAccordionSection: FunctionComponent<{ heading: string }> = ({
     );
 };
 
+const convertYYYYMMDDToDate = (date: string) => {
+    if (!date) return null;
+    const [year, month, day] = date.split('-');
+    return new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
+};
+
 const FilterOptions = ({
     type,
     genres,
@@ -81,13 +87,21 @@ const FilterOptions = ({
     filters,
     setFilters
 }: FilterProps) => {
-    const { releaseDateGreater, releaseDateLess } = filters;
+    const {
+        releaseDateGreater,
+        releaseDateLess,
+        voteCountGreater,
+        ratingGreater,
+        ratingLess,
+        runtimeGreater,
+        runtimeLess
+    } = filters;
 
     const [fromDate, setFromDate] = useState<Date>(
-        releaseDateGreater ? new Date(releaseDateGreater) : null
+        releaseDateGreater ? convertYYYYMMDDToDate(releaseDateGreater) : null
     );
     const [toDate, setToDate] = useState<Date>(
-        releaseDateGreater ? new Date(releaseDateLess) : null
+        releaseDateGreater ? convertYYYYMMDDToDate(releaseDateLess) : null
     );
 
     const convertDateToYYYYMMDD = (date: Date) => {
@@ -319,6 +333,7 @@ const FilterOptions = ({
                     thumbClassName="example-thumb"
                     trackClassName="example-track"
                     defaultValue={[0, 10]}
+                    value={[ratingGreater, ratingLess]}
                     onAfterChange={(value) =>
                         ratingChangeHandler(value as number[])
                     }
@@ -340,6 +355,7 @@ const FilterOptions = ({
                     onAfterChange={(value) =>
                         minVotesChangeHandler(value as number)
                     }
+                    value={voteCountGreater}
                     step={50}
                     min={0}
                     max={500}
@@ -356,6 +372,7 @@ const FilterOptions = ({
                     thumbClassName="example-thumb"
                     trackClassName="example-track"
                     defaultValue={[0, 400]}
+                    value={[runtimeGreater, runtimeLess]}
                     onAfterChange={(value) =>
                         runtimeChangeHandler(value as number[])
                     }
