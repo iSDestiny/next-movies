@@ -13,6 +13,7 @@ import {
 import { Filters } from 'hooks/useDiscover';
 import { useState } from 'react';
 import dynamic from 'next/dynamic';
+import { AnimatePresence } from 'framer-motion';
 const SortOptions = dynamic(import('./SortOptions'));
 const FilterOptions = dynamic(import('./FilterOptions'));
 
@@ -81,12 +82,14 @@ const Options = (props: OptionsProps) => {
                                 </AccordionButton>
                             </h3>
                             <AccordionPanel>
-                                {isExpanded && (
-                                    <SortOptions
-                                        sort={newSort}
-                                        setSort={setNewSort}
-                                    />
-                                )}
+                                <AnimatePresence>
+                                    {isExpanded && (
+                                        <SortOptions
+                                            sort={newSort}
+                                            setSort={setNewSort}
+                                        />
+                                    )}
+                                </AnimatePresence>
                             </AccordionPanel>
                         </>
                     )}
@@ -107,13 +110,15 @@ const Options = (props: OptionsProps) => {
                                 </AccordionButton>
                             </h3>
                             <AccordionPanel>
-                                {isExpanded && (
-                                    <FilterOptions
-                                        {...props}
-                                        filters={newFilters}
-                                        setFilters={setNewFilters}
-                                    />
-                                )}
+                                <AnimatePresence>
+                                    {isExpanded && (
+                                        <FilterOptions
+                                            {...props}
+                                            filters={newFilters}
+                                            setFilters={setNewFilters}
+                                        />
+                                    )}
+                                </AnimatePresence>
                             </AccordionPanel>
                         </>
                     )}

@@ -12,6 +12,7 @@ import {
     Wrap,
     WrapItem
 } from '@chakra-ui/react';
+import MotionBox from 'components/MotionBox';
 import { Filters } from 'hooks/useDiscover';
 import { Dispatch, FunctionComponent, SetStateAction, useState } from 'react';
 import DatePicker from 'react-datepicker';
@@ -225,7 +226,7 @@ const FilterOptions = ({
     };
 
     return (
-        <VStack align="flex-start" spacing="1rem">
+        <MotionBox as={VStack} align="flex-start" spacing="1rem">
             <FilterOptionsSection heading="Release Dates">
                 <DatePicker
                     selected={fromDate}
@@ -387,7 +388,7 @@ const FilterOptions = ({
                     pearling
                 />
             </FilterOptionsSection>
-        </VStack>
+        </MotionBox>
     );
 };
 
